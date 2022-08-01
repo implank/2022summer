@@ -48,6 +48,9 @@ func InitMySQL() (err error) {
 		&model.Identity{},
 		&model.Group{},
 		&model.Proj{},
+		&model.Prototype{},
+		&model.Uml{},
+		&model.Document{},
 	)
 
 	return global.DB.DB().Ping()
