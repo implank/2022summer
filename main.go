@@ -2,6 +2,7 @@ package main
 
 import (
 	"2022summer/initialize"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -10,9 +11,10 @@ func main() {
 		panic(err)
 	}
 	defer initialize.Close()
+	initialize.InitViper()
 
-	r := initialize.SetupRouter()
-
+	r := gin.Default()
+	initialize.SetupRouter(r)
 	if err := r.Run("localhost:8000"); err != nil {
 		panic(err)
 	}

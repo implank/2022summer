@@ -33,3 +33,14 @@ type GroupMembers struct {
 	Email    string
 	Status   string
 }
+
+//bind structure
+type RegisterQ struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+type LoginQ struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}

@@ -25,13 +25,13 @@ func InitMySQL() (err error) {
 		port = viper.GetString("db1.port")
 		user = viper.GetString("db1.user")
 		password = viper.GetString("db1.password")
-		dbstr = viper.GetString("db1.dbstr")
+		dbstr = viper.GetString("db1.dbname")
 	} else {
 		addr = viper.GetString("db2.addr")
 		port = viper.GetString("db2.port")
 		user = viper.GetString("db2.user")
 		password = viper.GetString("db2.password")
-		dbstr = viper.GetString("db2.dbstr")
+		dbstr = viper.GetString("db2.dbname")
 	}
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		user, password, addr, port, dbstr)
