@@ -7,10 +7,8 @@ import (
 
 func main() {
 	initialize.InitViper()
-	err := initialize.InitMySQL()
-	if err != nil {
-		panic(err)
-	}
+
+	initialize.InitMySQL()
 	defer initialize.Close()
 
 	r := gin.Default()

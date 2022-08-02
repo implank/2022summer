@@ -8,29 +8,31 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
-func InitMySQL() (err error) {
+func InitMySQL() {
 	// 配置数据
-	var addr, port, user, password, dbstr string
+	var addr, port, user, password, dbname string
 	if global.VP.GetBool("debug") {
 		addr = global.VP.GetString("db1.addr")
 		port = global.VP.GetString("db1.port")
 		user = global.VP.GetString("db1.user")
 		password = global.VP.GetString("db1.password")
-		dbstr = global.VP.GetString("db1.dbname")
+		dbname = global.VP.GetString("db1.dbname")
 	} else {
 		addr = global.VP.GetString("db2.addr")
 		port = global.VP.GetString("db2.port")
 		user = global.VP.GetString("db2.user")
 		password = global.VP.GetString("db2.password")
-		dbstr = global.VP.GetString("db2.dbname")
+		dbname = global.VP.GetString("db2.dbname")
 	}
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-		user, password, addr, port, dbstr)
-	fmt.Printf("dsn: %s\n", dsn)
+		user, password, addr, port, dbname)
+
 	// 连接数据库
+	var err error
 	global.DB, err = gorm.Open("mysql", dsn)
 	if err != nil {
-		panic(err)
+		panic(fmt.Errorf("数据库出问题啦: %s \n", err))
+		return
 	}
 
 	// 迁移
@@ -44,12 +46,20 @@ func InitMySQL() (err error) {
 		&model.Document{},
 	)
 
-	return global.DB.DB().Ping()
+	// 检查数据库连接是否存在, 好像没啥用
+	err = global.DB.DB().Ping()
+	if err != nil {
+		panic(fmt.Errorf("数据库出问题啦: %s \n", err))
+		return
+	}
+
+	return
 }
 
 func Close() {
 	err := global.DB.Close()
 	if err != nil {
+		panic(fmt.Errorf("数据库出问题啦: %s \n", err))
 		return
 	}
 }

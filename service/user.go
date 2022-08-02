@@ -27,8 +27,8 @@ func CreateUser(user *model.User) (err error) {
 	return
 }
 
-func UpdateUser(user *model.User) error {
-	err := global.DB.Save(user).Error
+func UpdateUser(user *model.User) (err error) {
+	err = global.DB.Save(user).Error
 	return err
 }
 
@@ -53,8 +53,8 @@ func CreateGroup(group *model.Group) (err error) { // 先创建 Group, 再创建
 	return
 }
 
-func UpdateGroup(group *model.Group) error {
-	err := global.DB.Save(group).Error
+func UpdateGroup(group *model.Group) (err error) {
+	err = global.DB.Save(group).Error
 	return err
 }
 
@@ -70,7 +70,7 @@ func QueryIdentity(userID uint64, groupID uint64) (identity model.Identity, notF
 }
 
 func GetUserHasGroups(userID uint64) (groups []model.Group, notFound bool) {
-	global.DB.Raw(
+	notFound = global.DB.Raw(
 		"SELECT * FROM identities, `groups` "+
 			"WHERE ? = identities.user_id "+
 			"AND `groups`.group_id = identities.group_id;", userID).Find(&groups).RecordNotFound()
@@ -79,7 +79,7 @@ func GetUserHasGroups(userID uint64) (groups []model.Group, notFound bool) {
 
 func GetGroupMembers(groupID uint64) (users []model.GroupMembers, notFound bool) {
 	// GroupMembers 比 User 多了一个身份, 少了一些其他信息, 可以 "直观地查看到成员的昵称、真实姓名、邮箱、身份"
-	global.DB.Raw(
+	notFound = global.DB.Raw(
 		"SELECT users.user_id AS user_id, username, real_name, email, status "+
 			"FROM identities, users "+
 			"WHERE users.user_id = identities.user_id "+
@@ -94,8 +94,8 @@ func CreateIdentity(identity *model.Identity) (err error) {
 	return
 }
 
-func UpdateIdentity(identity *model.Identity) error {
-	err := global.DB.Save(identity).Error
+func UpdateIdentity(identity *model.Identity) (err error) {
+	err = global.DB.Save(identity).Error
 	return err
 }
 
