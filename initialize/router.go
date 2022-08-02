@@ -11,8 +11,8 @@ import (
 )
 
 func SetupRouter(r *gin.Engine) {
-	r.Use(middleware.Cors())   // 跨域
-	r.Use(middleware.Logger()) // 日志
+	r.Use(middleware.Cors())         // 跨域
+	r.Use(middleware.LoggerToFile()) // 日志
 
 	docs.SwaggerInfo.BasePath = "/api/v1"
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
