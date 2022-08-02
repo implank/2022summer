@@ -2,6 +2,7 @@ package initialize
 
 import (
 	v1 "2022summer/api/v1"
+	"2022summer/docs"
 	"2022summer/middleware"
 	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"
@@ -13,6 +14,8 @@ func SetupRouter(r *gin.Engine) {
 	r.Use(middleware.Cors())   // 跨域
 	r.Use(middleware.Logger()) // 日志
 
+	docs.SwaggerInfo.BasePath = "/api/v1"
+	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	r.GET("/test", testGin)
@@ -23,6 +26,8 @@ func SetupRouter(r *gin.Engine) {
 		userGroup.POST("/login", v1.Login)
 		//userGroup.POST("/info", middleware.AuthRequired(), api.Info)
 	}
+
+	userGroup.POST("/info", middleware.AuthRequired(), v1.GetUserInfo)
 }
 
 func testGin(c *gin.Context) {

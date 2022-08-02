@@ -1,0 +1,75 @@
+definitions:
+  response.LoginA:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+      token:
+        type: string
+    type: object
+  response.LoginQ:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  response.RegisterA:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.RegisterQ:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 用户名，密码
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.LoginQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.LoginA'
+      tags:
+      - User
+  /register:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 用户名，密码
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.RegisterQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.RegisterA'
+      tags:
+      - User
+swagger: "2.0"

@@ -6,16 +6,16 @@ import (
 )
 
 func main() {
+	initialize.InitViper()
 	err := initialize.InitMySQL()
 	if err != nil {
 		panic(err)
 	}
 	defer initialize.Close()
-	initialize.InitViper()
 
 	r := gin.Default()
 	initialize.SetupRouter(r)
-	if err := r.Run("localhost:8000"); err != nil {
+	if err := r.Run(":8000"); err != nil {
 		panic(err)
 	}
 }
