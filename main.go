@@ -6,12 +6,10 @@ import (
 )
 
 func main() {
-	err := initialize.InitMySQL()
-	if err != nil {
-		panic(err)
-	}
-	defer initialize.Close()
 	initialize.InitViper()
+
+	initialize.InitMySQL()
+	defer initialize.Close()
 
 	r := gin.Default()
 	initialize.SetupRouter(r)
