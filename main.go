@@ -15,7 +15,7 @@ func main() {
 
 	r := gin.Default()
 	initialize.SetupRouter(r)
-	if err := r.Run(":8000"); err != nil {
+	if err := r.Run(":8889"); err != nil {
 		panic(err)
 	}
 }

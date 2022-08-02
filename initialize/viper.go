@@ -4,17 +4,21 @@ import (
 	"2022summer/global"
 	"fmt"
 	"github.com/spf13/viper"
+	"os"
+	"path/filepath"
 )
 
 func InitViper() (err error) {
-	// 配置文件
+	rootPath, _ := os.Executable()
+	rootPath = filepath.Dir(rootPath)
 	v := viper.New()
-	v.SetConfigFile("./config.yml") // 指定配置文件路径
-	err = v.ReadInConfig()          // 读取配置信息
-	if err != nil {                 // 读取配置信息失败
+	v.SetConfigFile("./config.yml")
+	err = v.ReadInConfig()
+	if err != nil {
 		panic(fmt.Errorf("Fatal error config file: %s \n", err))
 	}
-	v.WatchConfig()
+	v.Set("root_path", "./")
+
 	global.VP = v
 	return err
 }
