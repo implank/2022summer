@@ -24,7 +24,6 @@ func SetupRouter(r *gin.Engine) {
 	{
 		userGroup.POST("/register", v1.Register)
 		userGroup.POST("/login", v1.Login)
-		//userGroup.POST("/info", middleware.AuthRequired(), api.Info)
 	}
 
 	userGroup.POST("/info", middleware.AuthRequired(), v1.GetUserInfo)

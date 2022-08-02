@@ -74,6 +74,13 @@ func Login(c *gin.Context) {
 	})
 }
 
+// GetUserInfo
+// @Tags User
+// @Accept json
+// @Produce json
+// @Param data body response.GetUserInfoQ true "用户名，密码"
+// @Success 200 {object} response.GetUserInfoA
+// @Router /info [post]
 func GetUserInfo(c *gin.Context) {
 	poster, _ := c.Get("user")
 	data := utils.BindJsonAndValid(c, &response.GetUserInfoQ{}).(*response.GetUserInfoQ)

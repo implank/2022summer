@@ -1,4 +1,39 @@
 definitions:
+  model.User:
+    properties:
+      age:
+        type: integer
+      email:
+        type: string
+      password:
+        type: string
+      realName:
+        type: string
+      sex:
+        type: string
+      userID:
+        type: integer
+      userInfo:
+        type: string
+      username:
+        type: string
+    type: object
+  response.GetUserInfoA:
+    properties:
+      message:
+        type: string
+      poster:
+        $ref: '#/definitions/model.User'
+      success:
+        type: boolean
+      user:
+        $ref: '#/definitions/model.User'
+    type: object
+  response.GetUserInfoQ:
+    properties:
+      user_id:
+        type: integer
+    type: object
   response.LoginA:
     properties:
       message:
@@ -32,6 +67,26 @@ definitions:
 info:
   contact: {}
 paths:
+  /info:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 用户名，密码
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.GetUserInfoQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.GetUserInfoA'
+      tags:
+      - User
   /login:
     post:
       consumes:
