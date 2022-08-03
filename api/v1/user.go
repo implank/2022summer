@@ -21,8 +21,10 @@ func Register(c *gin.Context) {
 	data := utils.BindJsonAndValid(c, &response.RegisterQ{}).(*response.RegisterQ)
 	if _, notFound := service.QueryUserByUsername(data.Username); !notFound {
 		c.JSON(http.StatusOK, response.RegisterA{
-			Message: "用户名已存在",
-			Success: false,
+			CommonA: response.CommonA{
+				Message: "用户名已存在",
+				Success: false,
+			},
 		})
 		return
 	}
@@ -31,14 +33,18 @@ func Register(c *gin.Context) {
 		Username: data.Username,
 		Password: string(HashedPassword)}); err != nil {
 		c.JSON(http.StatusOK, response.RegisterA{
-			Message: "注册失败",
-			Success: false,
+			CommonA: response.CommonA{
+				Message: "注册失败",
+				Success: false,
+			},
 		})
 		return
 	}
 	c.JSON(http.StatusOK, response.RegisterA{
-		Message: "注册成功",
-		Success: true,
+		CommonA: response.CommonA{
+			Message: "注册成功",
+			Success: true,
+		},
 	})
 }
 
@@ -54,23 +60,29 @@ func Login(c *gin.Context) {
 	user, notFound := service.QueryUserByUsername(data.Username)
 	if notFound {
 		c.JSON(http.StatusOK, response.LoginA{
-			Message: "用户不存在",
-			Success: false,
+			CommonA: response.CommonA{
+				Message: "用户不存在",
+				Success: false,
+			},
 		})
 		return
 	}
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(data.Password)); err != nil {
 		c.JSON(http.StatusOK, response.LoginA{
-			Message: "密码错误",
-			Success: false,
+			CommonA: response.CommonA{
+				Message: "密码错误",
+				Success: false,
+			},
 		})
 		return
 	}
 	token := utils.GenerateToken(user.UserID)
 	c.JSON(http.StatusOK, response.LoginA{
-		Message: "登录成功",
-		Success: true,
-		Token:   token,
+		CommonA: response.CommonA{
+			Message: "登录成功",
+			Success: true,
+		},
+		Token: token,
 	})
 }
 
@@ -88,16 +100,22 @@ func GetUserInfo(c *gin.Context) {
 	print(data.UserID)
 	if notFound {
 		c.JSON(http.StatusOK, response.GetUserInfoA{
-			Message: "用户不存在",
-			Success: false,
-			Poster:  poster.(model.User),
+			CommonA: response.CommonA{
+				Message: "用户不存在",
+				Success: false,
+				Code:    200,
+			},
+			Poster: poster.(model.User),
 		})
 		return
 	}
 	c.JSON(http.StatusOK, response.GetUserInfoA{
-		Message: "获取用户信息成功",
-		Success: true,
-		Poster:  poster.(model.User),
-		User:    user,
+		CommonA: response.CommonA{
+			Message: "获取成功",
+			Success: true,
+			Code:    200,
+		},
+		Poster: poster.(model.User),
+		User:   user,
 	})
 }

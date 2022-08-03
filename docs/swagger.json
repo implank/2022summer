@@ -4,7 +4,7 @@
         "contact": {}
     },
     "paths": {
-        "/create_proj": {
+        "/group/remove_member": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -13,17 +13,16 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Proj1"
+                    "Group"
                 ],
-                "summary": "创建项目",
                 "parameters": [
                     {
-                        "description": "项目名称，项目详情（可选），所属团队ID",
+                        "description": "用户id，团队id",
                         "name": "data",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/response.CreateProjQ"
+                            "$ref": "#/definitions/response.RemoveMemberQ"
                         }
                     }
                 ],
@@ -31,208 +30,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.CreateProjA"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.CreateProjA"
-                        }
-                    }
-                }
-            }
-        },
-        "/delete_proj": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Proj1"
-                ],
-                "summary": "删除项目",
-                "parameters": [
-                    {
-                        "description": "项目ID",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/response.DeleteProjQ"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.DeleteProjA"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.DeleteProjA"
-                        }
-                    }
-                }
-            }
-        },
-        "/get_proj_all": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Proj1"
-                ],
-                "summary": "全部项目",
-                "parameters": [
-                    {
-                        "description": "无",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/response.GetProjAllQ"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.GetProjAllA"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.GetProjAllA"
-                        }
-                    }
-                }
-            }
-        },
-        "/get_proj_by_name": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Proj1"
-                ],
-                "summary": "搜索框",
-                "parameters": [
-                    {
-                        "description": "项目名称（不一定是全名，子串搜索）",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/response.GetProjByNameQ"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.GetProjByNameA"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.GetProjByNameA"
-                        }
-                    }
-                }
-            }
-        },
-        "/get_proj_create": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Proj1"
-                ],
-                "summary": "我创建的",
-                "parameters": [
-                    {
-                        "description": "无",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/response.GetProjCreateQ"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.GetProjCreateA"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.GetProjCreateA"
-                        }
-                    }
-                }
-            }
-        },
-        "/get_proj_join": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Proj1"
-                ],
-                "summary": "我参与的",
-                "parameters": [
-                    {
-                        "description": "无",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/response.GetProjJoinQ"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.GetProjJoinA"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.GetProjJoinA"
+                            "$ref": "#/definitions/response.RemoveMemberA"
                         }
                     }
                 }
@@ -302,45 +100,6 @@
                 }
             }
         },
-        "/move_proj_to_bin": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Proj1"
-                ],
-                "summary": "移入或移出回收站",
-                "parameters": [
-                    {
-                        "description": "项目ID",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/response.MoveProjBinQ"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.MoveProjBinA"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.MoveProjBinA"
-                        }
-                    }
-                }
-            }
-        },
         "/register": {
             "post": {
                 "consumes": [
@@ -372,74 +131,9 @@
                     }
                 }
             }
-        },
-        "/update_proj": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Proj1"
-                ],
-                "summary": "修改项目名称、项目描述",
-                "parameters": [
-                    {
-                        "description": "项目ID，项目名称（必填，可以填原名，不能和其他项目同名），项目详情（可选）",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/response.UpdateProjQ"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.UpdateProjA"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.UpdateProjA"
-                        }
-                    }
-                }
-            }
         }
     },
     "definitions": {
-        "model.Proj": {
-            "type": "object",
-            "properties": {
-                "group_id": {
-                    "description": "项目所属团队",
-                    "type": "integer"
-                },
-                "proj_id": {
-                    "type": "integer"
-                },
-                "proj_info": {
-                    "type": "string"
-                },
-                "proj_name": {
-                    "type": "string"
-                },
-                "status": {
-                    "description": "1 正常、2 回收站",
-                    "type": "integer"
-                },
-                "user_id": {
-                    "description": "项目创建者",
-                    "type": "integer"
-                }
-            }
-        },
         "model.User": {
             "type": "object",
             "properties": {
@@ -469,150 +163,12 @@
                 }
             }
         },
-        "response.CreateProjA": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "response.CreateProjQ": {
-            "type": "object",
-            "properties": {
-                "group_id": {
-                    "type": "integer"
-                },
-                "proj_info": {
-                    "type": "string"
-                },
-                "proj_name": {
-                    "type": "string"
-                }
-            }
-        },
-        "response.DeleteProjA": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "response.DeleteProjQ": {
-            "type": "object",
-            "properties": {
-                "proj_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "response.GetProjAllA": {
-            "type": "object",
-            "properties": {
-                "count": {
-                    "type": "integer"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "projs": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.Proj"
-                    }
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "response.GetProjAllQ": {
-            "type": "object"
-        },
-        "response.GetProjByNameA": {
-            "type": "object",
-            "properties": {
-                "count": {
-                    "type": "integer"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "projs": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.Proj"
-                    }
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "response.GetProjByNameQ": {
-            "type": "object",
-            "properties": {
-                "proj_name": {
-                    "type": "string"
-                }
-            }
-        },
-        "response.GetProjCreateA": {
-            "type": "object",
-            "properties": {
-                "count": {
-                    "type": "integer"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "projs": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.Proj"
-                    }
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "response.GetProjCreateQ": {
-            "type": "object"
-        },
-        "response.GetProjJoinA": {
-            "type": "object",
-            "properties": {
-                "count": {
-                    "type": "integer"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "projs": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.Proj"
-                    }
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "response.GetProjJoinQ": {
-            "type": "object"
-        },
         "response.GetUserInfoA": {
             "type": "object",
             "properties": {
+                "code": {
+                    "type": "integer"
+                },
                 "message": {
                     "type": "string"
                 },
@@ -638,6 +194,9 @@
         "response.LoginA": {
             "type": "object",
             "properties": {
+                "code": {
+                    "type": "integer"
+                },
                 "message": {
                     "type": "string"
                 },
@@ -660,28 +219,12 @@
                 }
             }
         },
-        "response.MoveProjBinA": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "response.MoveProjBinQ": {
-            "type": "object",
-            "properties": {
-                "proj_id": {
-                    "type": "integer"
-                }
-            }
-        },
         "response.RegisterA": {
             "type": "object",
             "properties": {
+                "code": {
+                    "type": "integer"
+                },
                 "message": {
                     "type": "string"
                 },
@@ -701,9 +244,12 @@
                 }
             }
         },
-        "response.UpdateProjA": {
+        "response.RemoveMemberA": {
             "type": "object",
             "properties": {
+                "code": {
+                    "type": "integer"
+                },
                 "message": {
                     "type": "string"
                 },
@@ -712,17 +258,14 @@
                 }
             }
         },
-        "response.UpdateProjQ": {
+        "response.RemoveMemberQ": {
             "type": "object",
             "properties": {
-                "proj_id": {
+                "group_id": {
                     "type": "integer"
                 },
-                "proj_info": {
-                    "type": "string"
-                },
-                "proj_name": {
-                    "type": "string"
+                "user_id": {
+                    "type": "integer"
                 }
             }
         }

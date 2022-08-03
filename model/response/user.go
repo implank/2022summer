@@ -8,8 +8,7 @@ type RegisterQ struct {
 }
 
 type RegisterA struct {
-	Message string `json:"message"`
-	Success bool   `json:"success"`
+	CommonA
 }
 
 type LoginQ struct {
@@ -18,9 +17,8 @@ type LoginQ struct {
 }
 
 type LoginA struct {
-	Message string `json:"message"`
-	Success bool   `json:"success"`
-	Token   string `json:"token"`
+	CommonA
+	Token string `json:"token"`
 }
 
 type GetUserInfoQ struct {
@@ -28,8 +26,7 @@ type GetUserInfoQ struct {
 }
 
 type GetUserInfoA struct {
-	Message string     `json:"message"`
-	Success bool       `json:"success"`
-	User    model.User `json:"user"`
-	Poster  model.User `json:"poster"`
+	CommonA
+	User   model.User `json:"user"`
+	Poster model.User `json:"poster"`
 }
