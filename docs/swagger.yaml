@@ -1,4 +1,22 @@
 definitions:
+  model.Proj:
+    properties:
+      groupID:
+        description: 项目所属团队
+        type: integer
+      projID:
+        type: integer
+      projInfo:
+        type: string
+      projName:
+        type: string
+      status:
+        description: 1 正常、2 回收站
+        type: integer
+      userID:
+        description: 项目创建者
+        type: integer
+    type: object
   model.User:
     properties:
       age:
@@ -17,6 +35,97 @@ definitions:
         type: string
       username:
         type: string
+    type: object
+  response.CreateProjA:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.CreateProjQ:
+    properties:
+      group_id:
+        type: integer
+      proj_info:
+        type: string
+      proj_name:
+        type: string
+    type: object
+  response.DeleteProjA:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.DeleteProjQ:
+    properties:
+      proj_id:
+        type: integer
+    type: object
+  response.GetProjAllA:
+    properties:
+      count:
+        type: integer
+      message:
+        type: string
+      projs:
+        items:
+          $ref: '#/definitions/model.Proj'
+        type: array
+      success:
+        type: boolean
+    type: object
+  response.GetProjAllQ:
+    type: object
+  response.GetProjByNameA:
+    properties:
+      count:
+        type: integer
+      message:
+        type: string
+      projs:
+        items:
+          $ref: '#/definitions/model.Proj'
+        type: array
+      success:
+        type: boolean
+    type: object
+  response.GetProjByNameQ:
+    properties:
+      proj_name:
+        type: string
+    type: object
+  response.GetProjCreateA:
+    properties:
+      count:
+        type: integer
+      message:
+        type: string
+      projs:
+        items:
+          $ref: '#/definitions/model.Proj'
+        type: array
+      success:
+        type: boolean
+    type: object
+  response.GetProjCreateQ:
+    type: object
+  response.GetProjJoinA:
+    properties:
+      count:
+        type: integer
+      message:
+        type: string
+      projs:
+        items:
+          $ref: '#/definitions/model.Proj'
+        type: array
+      success:
+        type: boolean
+    type: object
+  response.GetProjJoinQ:
     type: object
   response.GetUserInfoA:
     properties:
@@ -50,6 +159,18 @@ definitions:
       username:
         type: string
     type: object
+  response.MoveProjBinA:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.MoveProjBinQ:
+    properties:
+      proj_id:
+        type: integer
+    type: object
   response.RegisterA:
     properties:
       message:
@@ -64,9 +185,175 @@ definitions:
       username:
         type: string
     type: object
+  response.UpdateProjA:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.UpdateProjQ:
+    properties:
+      proj_id:
+        type: integer
+      proj_info:
+        type: string
+      proj_name:
+        type: string
+    type: object
 info:
   contact: {}
 paths:
+  /create_proj:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 项目名称，项目详情（可选），所属团队ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.CreateProjQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.CreateProjA'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.CreateProjA'
+      summary: 创建项目
+      tags:
+      - Proj1
+  /delete_proj:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 项目ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.DeleteProjQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.DeleteProjA'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.DeleteProjA'
+      summary: 删除项目
+      tags:
+      - Proj1
+  /get_proj_all:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 无
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.GetProjAllQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.GetProjAllA'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.GetProjAllA'
+      summary: 全部项目
+      tags:
+      - Proj1
+  /get_proj_by_name:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 项目名称（不一定是全名，子串搜索）
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.GetProjByNameQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.GetProjByNameA'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.GetProjByNameA'
+      summary: 搜索框
+      tags:
+      - Proj1
+  /get_proj_create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 无
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.GetProjCreateQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.GetProjCreateA'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.GetProjCreateA'
+      summary: 我创建的
+      tags:
+      - Proj1
+  /get_proj_join:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 无
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.GetProjJoinQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.GetProjJoinA'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.GetProjJoinA'
+      summary: 我参与的
+      tags:
+      - Proj1
   /info:
     post:
       consumes:
@@ -107,6 +394,31 @@ paths:
             $ref: '#/definitions/response.LoginA'
       tags:
       - User
+  /move_proj_to_bin:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 项目ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.MoveProjBinQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.MoveProjBinA'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.MoveProjBinA'
+      summary: 移入或移出回收站
+      tags:
+      - Proj1
   /register:
     post:
       consumes:
@@ -127,4 +439,29 @@ paths:
             $ref: '#/definitions/response.RegisterA'
       tags:
       - User
+  /update_proj:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 项目ID，项目名称（必填，可以填原名，不能和其他项目同名），项目详情（可选）
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.UpdateProjQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.UpdateProjA'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.UpdateProjA'
+      summary: 修改项目名称、项目描述
+      tags:
+      - Proj1
 swagger: "2.0"

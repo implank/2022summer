@@ -10,6 +10,11 @@ func QueryProjByProjName(projName string) (proj model.Proj, notFound bool) {
 	return proj, notFound
 }
 
+func GetProjsByProjNameBur(projName string) (projs []model.Proj) { // 模糊搜索
+	global.DB.Where("proj_name like '%" + projName + "%'").Find(&projs).RecordNotFound()
+	return projs
+}
+
 func QueryProjByProjID(projID uint64) (proj model.Proj, notFound bool) {
 	notFound = global.DB.Where("proj_id = ?", projID).First(&proj).RecordNotFound()
 	return proj, notFound
@@ -133,56 +138,56 @@ func DeleteDocument(document *model.Document) (err error) {
 	return err
 }
 
-func GetProjPrototypes(projID uint64, status int) (prototypes []model.Prototype, notFound bool) {
+func GetProjPrototypes(projID uint64, status int) (prototypes []model.Prototype) {
 	// status = 2 时, 查找回收站的项目, 后同
-	notFound = global.DB.Where("proj_id = ? and status = ?", projID, status).Find(&prototypes).RecordNotFound()
-	return prototypes, notFound
+	global.DB.Where("proj_id = ? and status = ?", projID, status).Find(&prototypes).RecordNotFound()
+	return prototypes
 }
 
-func GetProjUmls(projID uint64, status int) (umls []model.Uml, notFound bool) {
-	notFound = global.DB.Where("proj_id = ? and status = ?", projID, status).Find(&umls).RecordNotFound()
-	return umls, notFound
+func GetProjUmls(projID uint64, status int) (umls []model.Uml) {
+	global.DB.Where("proj_id = ? and status = ?", projID, status).Find(&umls).RecordNotFound()
+	return umls
 }
 
-func GetProjDocuments(projID uint64, status int) (documents []model.Document, notFound bool) {
-	notFound = global.DB.Where("proj_id = ? and status = ?", projID, status).Find(&documents).RecordNotFound()
-	return documents, notFound
+func GetProjDocuments(projID uint64, status int) (documents []model.Document) {
+	global.DB.Where("proj_id = ? and status = ?", projID, status).Find(&documents).RecordNotFound()
+	return documents
 }
 
-func GetUserProjs(userID uint64, status int, op int) (projs []model.Proj, notFound bool) {
+func GetUserProjs(userID uint64, status int, op int) (projs []model.Proj) {
 	// 查找该用户在所有团队中的项目
 	// op = 1 时查找"我创建的", op = 2 时查找"我参与的", op = 3 时查找"全部项目"
 	if op == 1 {
-		notFound = global.DB.Where("user_id = ? and status = ?", userID, status).Find(&projs).RecordNotFound()
+		global.DB.Where("user_id = ? and status = ?", userID, status).Find(&projs).RecordNotFound()
 	} else if op == 2 {
-		notFound = global.DB.Raw("SELECT * FROM projs, identities "+
+		global.DB.Raw("SELECT * FROM projs, identities "+
 			"WHERE projs.group_id = identities.group_id "+
 			"AND identities.user_id = ? AND projs.user_id != ? "+
 			"AND projs.status = ?;", userID, userID, status).Find(&projs).RecordNotFound()
 	} else {
-		notFound = global.DB.Raw("SELECT * FROM projs, identities "+
+		global.DB.Raw("SELECT * FROM projs, identities "+
 			"WHERE projs.group_id = identities.group_id "+
 			"AND identities.user_id = ? AND projs.status = ?;", userID, status).Find(&projs).RecordNotFound()
 	}
-	return projs, notFound
+	return projs
 }
 
-func GetUserProjsInGroup(userID uint64, groupID uint64, status int, op int) (projs []model.Proj, notFound bool) {
+func GetUserProjsInGroup(userID uint64, groupID uint64, status int, op int) (projs []model.Proj) {
 	// 查找该用户在某个团队中的项目
 	// op = 1 时查找"我创建的", op = 2 时查找"我参与的", op = 3 时查找"全部项目"
 	if op == 1 {
-		notFound = global.DB.Where("user_id = ? and group_id = ? and status = ?",
+		global.DB.Where("user_id = ? and group_id = ? and status = ?",
 			userID, groupID, status).Find(&projs).RecordNotFound()
 	} else if op == 2 {
-		notFound = global.DB.Raw("SELECT * FROM projs, identities "+
+		global.DB.Raw("SELECT * FROM projs, identities "+
 			"WHERE identities.user_id = ? AND projs.user_id != ? "+
 			"AND projs.group_id = ? AND identities.group_id = ? "+
 			"AND projs.status = ?;", userID, userID, groupID, groupID, status).Find(&projs).RecordNotFound()
 	} else {
-		notFound = global.DB.Raw("SELECT * FROM projs, identities "+
+		global.DB.Raw("SELECT * FROM projs, identities "+
 			"WHERE identities.user_id = ? "+
 			"AND projs.group_id = ? AND identities.group_id = ? "+
 			"AND projs.status = ?;", userID, groupID, groupID, status).Find(&projs).RecordNotFound()
 	}
-	return projs, notFound
+	return projs
 }
