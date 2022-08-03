@@ -129,6 +129,8 @@ definitions:
     type: object
   response.GetUserInfoA:
     properties:
+      code:
+        type: integer
       message:
         type: string
       poster:
@@ -145,6 +147,8 @@ definitions:
     type: object
   response.LoginA:
     properties:
+      code:
+        type: integer
       message:
         type: string
       success:
@@ -173,6 +177,8 @@ definitions:
     type: object
   response.RegisterA:
     properties:
+      code:
+        type: integer
       message:
         type: string
       success:
@@ -184,6 +190,22 @@ definitions:
         type: string
       username:
         type: string
+    type: object
+  response.RemoveMemberA:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.RemoveMemberQ:
+    properties:
+      group_id:
+        type: integer
+      user_id:
+        type: integer
     type: object
   response.UpdateProjA:
     properties:
@@ -354,6 +376,26 @@ paths:
       summary: 我参与的
       tags:
       - Proj1
+  /group/remove_member:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 用户id，团队id
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.RemoveMemberQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.RemoveMemberA'
+      tags:
+      - Group
   /info:
     post:
       consumes:
