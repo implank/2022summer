@@ -27,6 +27,11 @@ func SetupRouter(r *gin.Engine) {
 	}
 
 	userGroup.POST("/info", middleware.AuthRequired(), v1.GetUserInfo)
+
+	groupGroup := userGroup.Group("/group", middleware.AuthRequired())
+	{
+		groupGroup.POST("/remove_member", v1.RemoveMember)
+	}
 }
 
 func testGin(c *gin.Context) {
