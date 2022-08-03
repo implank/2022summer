@@ -133,7 +133,7 @@ func GetProjDocuments(c *gin.Context) {
 // @Tags 项目管理的第二页
 // @Accept json
 // @Produce json
-// @Param data body response.CreatePrototypeQ true "这个接口还没测"
+// @Param data body response.CreatePrototypeQ true "设计原型名称，设计原型所属项目ID"
 // @Success 200 {object} response.CreatePrototypeA
 // @Router /file/create_prototype [post]
 func CreatePrototype(c *gin.Context) {
@@ -154,7 +154,6 @@ func CreatePrototype(c *gin.Context) {
 	file, err := os.Create(filePath)
 	defer utils.CloseFile(file)
 	if err != nil {
-		panic(err)
 		c.JSON(http.StatusOK, response.CreatePrototypeA{Message: "创建设计原型失败", Success: false})
 		return
 	}
@@ -174,7 +173,7 @@ func CreatePrototype(c *gin.Context) {
 // @Tags 项目管理的第二页
 // @Accept json
 // @Produce json
-// @Param data body response.CreateUmlQ true "这个接口还没测"
+// @Param data body response.CreateUmlQ true "Uml名称，Uml所属项目ID"
 // @Success 200 {object} response.CreateUmlA
 // @Router /file/create_uml [post]
 func CreateUml(c *gin.Context) {
@@ -210,7 +209,7 @@ func CreateUml(c *gin.Context) {
 // @Tags 项目管理的第二页
 // @Accept json
 // @Produce json
-// @Param data body response.CreateDocumentQ true "这个接口还没测"
+// @Param data body response.CreateDocumentQ true "文档名称，文档所属项目ID"
 // @Success 200 {object} response.CreateDocumentA
 // @Router /file/create_document [post]
 func CreateDocument(c *gin.Context) {
@@ -246,7 +245,7 @@ func CreateDocument(c *gin.Context) {
 // @Tags 项目管理的第二页
 // @Accept json
 // @Produce json
-// @Param data body response.UpdatePrototypeQ true "这个接口还没测"
+// @Param data body response.UpdatePrototypeQ true "设计原型ID，设计原型的新名字（必填，可以填原名，不能和其他项目同名）"
 // @Success 200 {object} response.UpdatePrototypeA
 // @Router /file/update_prototype [post]
 func UpdatePrototype(c *gin.Context) {
@@ -279,7 +278,7 @@ func UpdatePrototype(c *gin.Context) {
 // @Tags 项目管理的第二页
 // @Accept json
 // @Produce json
-// @Param data body response.UpdateUmlQ true "这个接口还没测"
+// @Param data body response.UpdateUmlQ true "Uml ID，Uml的新名字（必填，可以填原名，不能和其他项目同名）"
 // @Success 200 {object} response.UpdateUmlA
 // @Router /file/update_uml [post]
 func UpdateUml(c *gin.Context) {
@@ -312,7 +311,7 @@ func UpdateUml(c *gin.Context) {
 // @Tags 项目管理的第二页
 // @Accept json
 // @Produce json
-// @Param data body response.UpdateDocumentQ true "这个接口还没测"
+// @Param data body response.UpdateDocumentQ true "文档ID，文档的新名字（必填，可以填原名，不能和其他项目同名）"
 // @Success 200 {object} response.UpdateDocumentA
 // @Router /file/update_document [post]
 func UpdateDocument(c *gin.Context) {
@@ -345,7 +344,7 @@ func UpdateDocument(c *gin.Context) {
 // @Tags 项目管理的第二页
 // @Accept json
 // @Produce json
-// @Param data body response.MovePrototypeToBinQ true "这个接口还没测"
+// @Param data body response.MovePrototypeToBinQ true "设计原型ID"
 // @Success 200 {object} response.MovePrototypeToBinA
 // @Router /file/move_prototype_to_bin [post]
 func MovePrototypeToBin(c *gin.Context) {
@@ -373,7 +372,7 @@ func MovePrototypeToBin(c *gin.Context) {
 // @Tags 项目管理的第二页
 // @Accept json
 // @Produce json
-// @Param data body response.MoveUmlToBinQ true "这个接口还没测"
+// @Param data body response.MoveUmlToBinQ true "Uml ID"
 // @Success 200 {object} response.MoveUmlToBinA
 // @Router /file/move_uml_to_bin [post]
 func MoveUmlToBin(c *gin.Context) {
@@ -401,7 +400,7 @@ func MoveUmlToBin(c *gin.Context) {
 // @Tags 项目管理的第二页
 // @Accept json
 // @Produce json
-// @Param data body response.MoveDocumentToBinQ true "这个接口还没测"
+// @Param data body response.MoveDocumentToBinQ true "文档 ID"
 // @Success 200 {object} response.MoveDocumentToBinA
 // @Router /file/move_document_to_bin [post]
 func MoveDocumentToBin(c *gin.Context) {
@@ -429,7 +428,7 @@ func MoveDocumentToBin(c *gin.Context) {
 // @Tags 项目管理的第二页
 // @Accept json
 // @Produce json
-// @Param data body response.GetFilesByNameQ true "这个接口还没测"
+// @Param data body response.GetFilesByNameQ true "文件名称（不一定是全名，子串搜索，为空时返回数据库中全部不在回收站的文件，包括设计原型、Uml、文档）"
 // @Success 200 {object} response.GetFilesByNameA
 // @Router /file/get_files_by_name [post]
 func GetFilesByName(c *gin.Context) {

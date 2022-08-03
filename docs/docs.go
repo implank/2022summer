@@ -63,7 +63,7 @@ const docTemplate = `{
                 "summary": "创建文档",
                 "parameters": [
                     {
-                        "description": "这个接口还没测",
+                        "description": "文档名称，文档所属项目ID",
                         "name": "data",
                         "in": "body",
                         "required": true,
@@ -96,7 +96,7 @@ const docTemplate = `{
                 "summary": "创建设计原型",
                 "parameters": [
                     {
-                        "description": "这个接口还没测",
+                        "description": "设计原型名称，设计原型所属项目ID",
                         "name": "data",
                         "in": "body",
                         "required": true,
@@ -129,7 +129,7 @@ const docTemplate = `{
                 "summary": "创建 Uml",
                 "parameters": [
                     {
-                        "description": "这个接口还没测",
+                        "description": "Uml名称，Uml所属项目ID",
                         "name": "data",
                         "in": "body",
                         "required": true,
@@ -162,7 +162,7 @@ const docTemplate = `{
                 "summary": "搜索框",
                 "parameters": [
                     {
-                        "description": "这个接口还没测",
+                        "description": "文件名称（不一定是全名，子串搜索，为空时返回数据库中全部不在回收站的文件，包括设计原型、Uml、文档）",
                         "name": "data",
                         "in": "body",
                         "required": true,
@@ -195,7 +195,7 @@ const docTemplate = `{
                 "summary": "获取项目信息",
                 "parameters": [
                     {
-                        "description": "这个接口还没测",
+                        "description": "项目ID",
                         "name": "data",
                         "in": "body",
                         "required": true,
@@ -228,7 +228,7 @@ const docTemplate = `{
                 "summary": "获取项目的文档",
                 "parameters": [
                     {
-                        "description": "这个接口还没测",
+                        "description": "项目ID",
                         "name": "data",
                         "in": "body",
                         "required": true,
@@ -261,7 +261,7 @@ const docTemplate = `{
                 "summary": "获取项目的设计原型",
                 "parameters": [
                     {
-                        "description": "这个接口还没测",
+                        "description": "项目ID",
                         "name": "data",
                         "in": "body",
                         "required": true,
@@ -294,7 +294,7 @@ const docTemplate = `{
                 "summary": "获取项目的 Uml 图",
                 "parameters": [
                     {
-                        "description": "这个接口还没测",
+                        "description": "项目ID",
                         "name": "data",
                         "in": "body",
                         "required": true,
@@ -327,7 +327,7 @@ const docTemplate = `{
                 "summary": "文档移入回收站",
                 "parameters": [
                     {
-                        "description": "这个接口还没测",
+                        "description": "文档 ID",
                         "name": "data",
                         "in": "body",
                         "required": true,
@@ -360,7 +360,7 @@ const docTemplate = `{
                 "summary": "设计原型移入回收站",
                 "parameters": [
                     {
-                        "description": "这个接口还没测",
+                        "description": "设计原型ID",
                         "name": "data",
                         "in": "body",
                         "required": true,
@@ -393,7 +393,7 @@ const docTemplate = `{
                 "summary": "Uml 移入回收站",
                 "parameters": [
                     {
-                        "description": "这个接口还没测",
+                        "description": "Uml ID",
                         "name": "data",
                         "in": "body",
                         "required": true,
@@ -426,7 +426,7 @@ const docTemplate = `{
                 "summary": "修改文档名称",
                 "parameters": [
                     {
-                        "description": "这个接口还没测",
+                        "description": "文档ID，文档的新名字（必填，可以填原名，不能和其他项目同名）",
                         "name": "data",
                         "in": "body",
                         "required": true,
@@ -459,7 +459,7 @@ const docTemplate = `{
                 "summary": "修改设计原型名称",
                 "parameters": [
                     {
-                        "description": "这个接口还没测",
+                        "description": "设计原型ID，设计原型的新名字（必填，可以填原名，不能和其他项目同名）",
                         "name": "data",
                         "in": "body",
                         "required": true,
@@ -492,7 +492,7 @@ const docTemplate = `{
                 "summary": "修改 Uml 名称",
                 "parameters": [
                     {
-                        "description": "这个接口还没测",
+                        "description": "Uml ID，Uml的新名字（必填，可以填原名，不能和其他项目同名）",
                         "name": "data",
                         "in": "body",
                         "required": true,
@@ -1176,6 +1176,9 @@ const docTemplate = `{
         },
         "response.CreateDocumentQ": {
             "type": "object",
+            "required": [
+                "document_name"
+            ],
             "properties": {
                 "document_name": {
                     "type": "string"
@@ -1227,6 +1230,9 @@ const docTemplate = `{
         },
         "response.CreatePrototypeQ": {
             "type": "object",
+            "required": [
+                "prototype_name"
+            ],
             "properties": {
                 "proj_id": {
                     "type": "integer"
@@ -1249,6 +1255,9 @@ const docTemplate = `{
         },
         "response.CreateUmlQ": {
             "type": "object",
+            "required": [
+                "uml_name"
+            ],
             "properties": {
                 "proj_id": {
                     "type": "integer"
@@ -1418,6 +1427,9 @@ const docTemplate = `{
         },
         "response.GetProjByIDQ": {
             "type": "object",
+            "required": [
+                "proj_id"
+            ],
             "properties": {
                 "proj_id": {
                     "type": "integer"
@@ -1497,6 +1509,9 @@ const docTemplate = `{
         },
         "response.GetProjDocumentsQ": {
             "type": "object",
+            "required": [
+                "proj_id"
+            ],
             "properties": {
                 "proj_id": {
                     "type": "integer"
@@ -1548,6 +1563,9 @@ const docTemplate = `{
         },
         "response.GetProjPrototypesQ": {
             "type": "object",
+            "required": [
+                "proj_id"
+            ],
             "properties": {
                 "proj_id": {
                     "type": "integer"
@@ -1576,6 +1594,9 @@ const docTemplate = `{
         },
         "response.GetProjUmlsQ": {
             "type": "object",
+            "required": [
+                "proj_id"
+            ],
             "properties": {
                 "proj_id": {
                     "type": "integer"
@@ -1651,6 +1672,9 @@ const docTemplate = `{
         },
         "response.MoveDocumentToBinQ": {
             "type": "object",
+            "required": [
+                "document_id"
+            ],
             "properties": {
                 "document_id": {
                     "type": "integer"
@@ -1692,6 +1716,9 @@ const docTemplate = `{
         },
         "response.MovePrototypeToBinQ": {
             "type": "object",
+            "required": [
+                "prototype_id"
+            ],
             "properties": {
                 "prototype_id": {
                     "type": "integer"
@@ -1711,6 +1738,9 @@ const docTemplate = `{
         },
         "response.MoveUmlToBinQ": {
             "type": "object",
+            "required": [
+                "uml_id"
+            ],
             "properties": {
                 "uml_id": {
                     "type": "integer"
@@ -1808,6 +1838,10 @@ const docTemplate = `{
         },
         "response.UpdateDocumentQ": {
             "type": "object",
+            "required": [
+                "document_id",
+                "document_name"
+            ],
             "properties": {
                 "document_id": {
                     "type": "integer"
@@ -1859,6 +1893,10 @@ const docTemplate = `{
         },
         "response.UpdatePrototypeQ": {
             "type": "object",
+            "required": [
+                "prototype_id",
+                "prototype_name"
+            ],
             "properties": {
                 "prototype_id": {
                     "type": "integer"
@@ -1881,6 +1919,10 @@ const docTemplate = `{
         },
         "response.UpdateUmlQ": {
             "type": "object",
+            "required": [
+                "uml_id",
+                "uml_name"
+            ],
             "properties": {
                 "uml_id": {
                     "type": "integer"
