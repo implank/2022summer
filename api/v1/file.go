@@ -18,7 +18,7 @@ import (
 // @Tags 项目管理的第二页
 // @Accept json
 // @Produce json
-// @Param data body response.GetProjByIDQ true "这个接口还没测"
+// @Param data body response.GetProjByIDQ true "项目ID"
 // @Success 200 {object} response.GetProjByIDA
 // @Router /file/get_proj_by_id [post]
 func GetProjByID(c *gin.Context) {
@@ -40,7 +40,7 @@ func GetProjByID(c *gin.Context) {
 // @Tags 项目管理的第二页
 // @Accept json
 // @Produce json
-// @Param data body response.GetProjPrototypesQ true "这个接口还没测"
+// @Param data body response.GetProjPrototypesQ true "项目ID"
 // @Success 200 {object} response.GetProjPrototypesA
 // @Router /file/get_proj_prototypes [post]
 func GetProjPrototypes(c *gin.Context) {
@@ -71,7 +71,7 @@ func GetProjPrototypes(c *gin.Context) {
 // @Tags 项目管理的第二页
 // @Accept json
 // @Produce json
-// @Param data body response.GetProjUmlsQ true "这个接口还没测"
+// @Param data body response.GetProjUmlsQ true "项目ID"
 // @Success 200 {object} response.GetProjUmlsA
 // @Router /file/get_proj_umls [post]
 func GetProjUmls(c *gin.Context) {
@@ -91,7 +91,7 @@ func GetProjUmls(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, response.GetProjUmlsA{
-		Message: "成功搜索到以下设计原型",
+		Message: "成功搜索到以下Uml",
 		Success: true,
 		Count:   uint64(x),
 		Umls:    umls})
@@ -102,7 +102,7 @@ func GetProjUmls(c *gin.Context) {
 // @Tags 项目管理的第二页
 // @Accept json
 // @Produce json
-// @Param data body response.GetProjDocumentsQ true "这个接口还没测"
+// @Param data body response.GetProjDocumentsQ true "项目ID"
 // @Success 200 {object} response.GetProjDocumentsA
 // @Router /file/get_proj_documents [post]
 func GetProjDocuments(c *gin.Context) {
@@ -122,7 +122,7 @@ func GetProjDocuments(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, response.GetProjDocumentsA{
-		Message:   "成功搜索到以下设计原型",
+		Message:   "成功搜索到以下文档",
 		Success:   true,
 		Count:     uint64(x),
 		Documents: documents})
@@ -154,6 +154,7 @@ func CreatePrototype(c *gin.Context) {
 	file, err := os.Create(filePath)
 	defer utils.CloseFile(file)
 	if err != nil {
+		panic(err)
 		c.JSON(http.StatusOK, response.CreatePrototypeA{Message: "创建设计原型失败", Success: false})
 		return
 	}
