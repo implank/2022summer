@@ -1,4 +1,17 @@
 definitions:
+  model.GroupMember:
+    properties:
+      email:
+        type: string
+      realName:
+        type: string
+      status:
+        type: string
+      userID:
+        type: integer
+      username:
+        type: string
+    type: object
   model.Proj:
     properties:
       group_id:
@@ -36,6 +49,22 @@ definitions:
       username:
         type: string
     type: object
+  response.AddMemberA:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.AddMemberQ:
+    properties:
+      group_id:
+        type: integer
+      user_id:
+        type: integer
+    type: object
   response.CreateProjA:
     properties:
       message:
@@ -62,6 +91,40 @@ definitions:
   response.DeleteProjQ:
     properties:
       proj_id:
+        type: integer
+    type: object
+  response.GetIdentityA:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      status:
+        type: integer
+      success:
+        type: boolean
+    type: object
+  response.GetIdentityQ:
+    properties:
+      group_id:
+        type: integer
+    type: object
+  response.GetMembersA:
+    properties:
+      code:
+        type: integer
+      members:
+        items:
+          $ref: '#/definitions/model.GroupMember'
+        type: array
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.GetMembersQ:
+    properties:
+      group_id:
         type: integer
     type: object
   response.GetProjAllA:
@@ -203,6 +266,24 @@ definitions:
   response.RemoveMemberQ:
     properties:
       group_id:
+        type: integer
+      user_id:
+        type: integer
+    type: object
+  response.SetMemberStatusA:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.SetMemberStatusQ:
+    properties:
+      group_id:
+        type: integer
+      status:
         type: integer
       user_id:
         type: integer
@@ -376,6 +457,66 @@ paths:
       summary: 我参与的
       tags:
       - Proj1
+  /group/add_member:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 用户id，团队id
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.AddMemberQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.AddMemberA'
+      tags:
+      - Group
+  /group/get_group_members:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 团队id
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.GetMembersQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.GetMembersA'
+      tags:
+      - Group
+  /group/get_identity:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 团队id
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.GetIdentityQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.GetIdentityA'
+      tags:
+      - Group
   /group/remove_member:
     post:
       consumes:
@@ -394,6 +535,26 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.RemoveMemberA'
+      tags:
+      - Group
+  /group/set_member_status:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 用户id，团队id，状态
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.SetMemberStatusQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SetMemberStatusA'
       tags:
       - Group
   /info:

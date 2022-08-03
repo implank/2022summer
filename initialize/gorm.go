@@ -37,9 +37,12 @@ func InitMySQL() {
 
 	// 迁移
 	global.DB.AutoMigrate(
+		//base
 		&model.User{},
+		//group
 		&model.Identity{},
 		&model.Group{},
+		//project
 		&model.Proj{},
 		&model.Prototype{},
 		&model.Uml{},
