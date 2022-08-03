@@ -16,7 +16,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/create_proj": {
+        "/bin/delete_proj": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -25,46 +25,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Proj1"
-                ],
-                "summary": "创建项目",
-                "parameters": [
-                    {
-                        "description": "项目名称，项目详情（可选），所属团队ID",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/response.CreateProjQ"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.CreateProjA"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.CreateProjA"
-                        }
-                    }
-                }
-            }
-        },
-        "/delete_proj": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Proj1"
+                    "回收站"
                 ],
                 "summary": "删除项目",
                 "parameters": [
@@ -84,17 +45,11 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/response.DeleteProjA"
                         }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.DeleteProjA"
-                        }
                     }
                 }
             }
         },
-        "/get_proj_all": {
+        "/file/create_document": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -102,18 +57,15 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
-                "tags": [
-                    "Proj1"
-                ],
-                "summary": "全部项目",
+                "summary": "创建文档",
                 "parameters": [
                     {
-                        "description": "无",
+                        "description": "这个接口还没测",
                         "name": "data",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/response.GetProjAllQ"
+                            "$ref": "#/definitions/response.CreateDocumentQ"
                         }
                     }
                 ],
@@ -121,19 +73,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.GetProjAllA"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.GetProjAllA"
+                            "$ref": "#/definitions/response.CreateDocumentA"
                         }
                     }
                 }
             }
         },
-        "/get_proj_by_name": {
+        "/file/create_prototype": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -141,18 +87,75 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
-                "tags": [
-                    "Proj1"
+                "summary": "创建设计原型",
+                "parameters": [
+                    {
+                        "description": "这个接口还没测",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.CreatePrototypeQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.CreatePrototypeA"
+                        }
+                    }
+                }
+            }
+        },
+        "/file/create_uml": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "创建 Uml",
+                "parameters": [
+                    {
+                        "description": "这个接口还没测",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.CreateUmlQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.CreateUmlA"
+                        }
+                    }
+                }
+            }
+        },
+        "/file/get_files_by_name": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
                 ],
                 "summary": "搜索框",
                 "parameters": [
                     {
-                        "description": "项目名称（不一定是全名，子串搜索）",
+                        "description": "这个接口还没测",
                         "name": "data",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/response.GetProjByNameQ"
+                            "$ref": "#/definitions/response.GetFilesByNameQ"
                         }
                     }
                 ],
@@ -160,19 +163,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.GetProjByNameA"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.GetProjByNameA"
+                            "$ref": "#/definitions/response.GetFilesByNameA"
                         }
                     }
                 }
             }
         },
-        "/get_proj_create": {
+        "/file/get_proj_by_id": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -180,18 +177,15 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
-                "tags": [
-                    "Proj1"
-                ],
-                "summary": "我创建的",
+                "summary": "获取项目信息",
                 "parameters": [
                     {
-                        "description": "无",
+                        "description": "这个接口还没测",
                         "name": "data",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/response.GetProjCreateQ"
+                            "$ref": "#/definitions/response.GetProjByIDQ"
                         }
                     }
                 ],
@@ -199,19 +193,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.GetProjCreateA"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.GetProjCreateA"
+                            "$ref": "#/definitions/response.GetProjByIDA"
                         }
                     }
                 }
             }
         },
-        "/get_proj_join": {
+        "/file/get_proj_documents": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -219,18 +207,15 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
-                "tags": [
-                    "Proj1"
-                ],
-                "summary": "我参与的",
+                "summary": "获取项目的文档",
                 "parameters": [
                     {
-                        "description": "无",
+                        "description": "这个接口还没测",
                         "name": "data",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/response.GetProjJoinQ"
+                            "$ref": "#/definitions/response.GetProjDocumentsQ"
                         }
                     }
                 ],
@@ -238,13 +223,247 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.GetProjJoinA"
+                            "$ref": "#/definitions/response.GetProjDocumentsA"
                         }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
+                    }
+                }
+            }
+        },
+        "/file/get_proj_prototypes": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "获取项目的设计原型",
+                "parameters": [
+                    {
+                        "description": "这个接口还没测",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
                         "schema": {
-                            "$ref": "#/definitions/response.GetProjJoinA"
+                            "$ref": "#/definitions/response.GetProjPrototypesQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.GetProjPrototypesA"
+                        }
+                    }
+                }
+            }
+        },
+        "/file/get_proj_umls": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "获取项目的 Uml 图",
+                "parameters": [
+                    {
+                        "description": "这个接口还没测",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.GetProjUmlsQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.GetProjUmlsA"
+                        }
+                    }
+                }
+            }
+        },
+        "/file/move_document_to_bin": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "文档移入回收站",
+                "parameters": [
+                    {
+                        "description": "这个接口还没测",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.MoveDocumentToBinQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.MoveDocumentToBinA"
+                        }
+                    }
+                }
+            }
+        },
+        "/file/move_prototype_to_bin": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "设计原型移入回收站",
+                "parameters": [
+                    {
+                        "description": "这个接口还没测",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.MovePrototypeToBinQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.MovePrototypeToBinA"
+                        }
+                    }
+                }
+            }
+        },
+        "/file/move_uml_to_bin": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Uml 移入回收站",
+                "parameters": [
+                    {
+                        "description": "这个接口还没测",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.MoveUmlToBinQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.MoveUmlToBinA"
+                        }
+                    }
+                }
+            }
+        },
+        "/file/update_document": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "修改文档名称",
+                "parameters": [
+                    {
+                        "description": "这个接口还没测",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.UpdateDocumentQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.UpdateDocumentA"
+                        }
+                    }
+                }
+            }
+        },
+        "/file/update_prototype": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "修改设计原型名称",
+                "parameters": [
+                    {
+                        "description": "这个接口还没测",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.UpdatePrototypeQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.UpdatePrototypeA"
+                        }
+                    }
+                }
+            }
+        },
+        "/file/update_uml": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "修改 Uml 名称",
+                "parameters": [
+                    {
+                        "description": "这个接口还没测",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.UpdateUmlQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.UpdateUmlA"
                         }
                     }
                 }
@@ -314,7 +533,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/move_proj_to_bin": {
+        "/proj/create_proj": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -323,7 +542,172 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Proj1"
+                    "项目管理的第一页"
+                ],
+                "summary": "创建项目",
+                "parameters": [
+                    {
+                        "description": "项目名称，项目详情（可选），所属团队ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.CreateProjQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.CreateProjA"
+                        }
+                    }
+                }
+            }
+        },
+        "/proj/get_proj_all": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "项目管理的第一页"
+                ],
+                "summary": "全部项目",
+                "parameters": [
+                    {
+                        "description": "无",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.GetProjAllQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.GetProjAllA"
+                        }
+                    }
+                }
+            }
+        },
+        "/proj/get_proj_by_name": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "项目管理的第一页"
+                ],
+                "summary": "搜索框",
+                "parameters": [
+                    {
+                        "description": "项目名称（不一定是全名，子串搜索，为空时返回数据库中全部不在回收站的项目）",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.GetProjByNameQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.GetProjByNameA"
+                        }
+                    }
+                }
+            }
+        },
+        "/proj/get_proj_create": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "项目管理的第一页"
+                ],
+                "summary": "我创建的",
+                "parameters": [
+                    {
+                        "description": "无",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.GetProjCreateQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.GetProjCreateA"
+                        }
+                    }
+                }
+            }
+        },
+        "/proj/get_proj_join": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "项目管理的第一页"
+                ],
+                "summary": "我参与的",
+                "parameters": [
+                    {
+                        "description": "无",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.GetProjJoinQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.GetProjJoinA"
+                        }
+                    }
+                }
+            }
+        },
+        "/proj/move_proj_to_bin": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "项目管理的第一页"
                 ],
                 "summary": "移入或移出回收站",
                 "parameters": [
@@ -343,11 +727,38 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/response.MoveProjBinA"
                         }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
+                    }
+                }
+            }
+        },
+        "/proj/update_proj": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "项目管理的第一页"
+                ],
+                "summary": "修改项目名称、项目描述",
+                "parameters": [
+                    {
+                        "description": "项目ID，项目名称（必填，可以填原名，不能和其他项目同名），项目详情（可选）",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
                         "schema": {
-                            "$ref": "#/definitions/response.MoveProjBinA"
+                            "$ref": "#/definitions/response.UpdateProjQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.UpdateProjA"
                         }
                     }
                 }
@@ -384,48 +795,30 @@ const docTemplate = `{
                     }
                 }
             }
-        },
-        "/update_proj": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Proj1"
-                ],
-                "summary": "修改项目名称、项目描述",
-                "parameters": [
-                    {
-                        "description": "项目ID，项目名称（必填，可以填原名，不能和其他项目同名），项目详情（可选）",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/response.UpdateProjQ"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.UpdateProjA"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.UpdateProjA"
-                        }
-                    }
-                }
-            }
         }
     },
     "definitions": {
+        "model.Document": {
+            "type": "object",
+            "properties": {
+                "document_id": {
+                    "type": "integer"
+                },
+                "document_name": {
+                    "type": "string"
+                },
+                "document_url": {
+                    "type": "string"
+                },
+                "proj_id": {
+                    "type": "integer"
+                },
+                "status": {
+                    "description": "1 正常、2 回收站",
+                    "type": "integer"
+                }
+            }
+        },
         "model.Proj": {
             "type": "object",
             "properties": {
@@ -449,6 +842,48 @@ const docTemplate = `{
                 "user_id": {
                     "description": "项目创建者",
                     "type": "integer"
+                }
+            }
+        },
+        "model.Prototype": {
+            "type": "object",
+            "properties": {
+                "proj_id": {
+                    "type": "integer"
+                },
+                "prototype_id": {
+                    "type": "integer"
+                },
+                "prototype_name": {
+                    "type": "string"
+                },
+                "prototype_url": {
+                    "type": "string"
+                },
+                "status": {
+                    "description": "1 正常、2 回收站",
+                    "type": "integer"
+                }
+            }
+        },
+        "model.Uml": {
+            "type": "object",
+            "properties": {
+                "proj_id": {
+                    "type": "integer"
+                },
+                "status": {
+                    "description": "1 正常、2 回收站",
+                    "type": "integer"
+                },
+                "uml_id": {
+                    "type": "integer"
+                },
+                "uml_name": {
+                    "type": "string"
+                },
+                "uml_url": {
+                    "type": "string"
                 }
             }
         },
@@ -481,6 +916,28 @@ const docTemplate = `{
                 }
             }
         },
+        "response.CreateDocumentA": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.CreateDocumentQ": {
+            "type": "object",
+            "properties": {
+                "document_name": {
+                    "type": "string"
+                },
+                "proj_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "response.CreateProjA": {
             "type": "object",
             "properties": {
@@ -494,6 +951,10 @@ const docTemplate = `{
         },
         "response.CreateProjQ": {
             "type": "object",
+            "required": [
+                "group_id",
+                "proj_name"
+            ],
             "properties": {
                 "group_id": {
                     "type": "integer"
@@ -502,6 +963,50 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "proj_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.CreatePrototypeA": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.CreatePrototypeQ": {
+            "type": "object",
+            "properties": {
+                "proj_id": {
+                    "type": "integer"
+                },
+                "prototype_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.CreateUmlA": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.CreateUmlQ": {
+            "type": "object",
+            "properties": {
+                "proj_id": {
+                    "type": "integer"
+                },
+                "uml_name": {
                     "type": "string"
                 }
             }
@@ -519,9 +1024,58 @@ const docTemplate = `{
         },
         "response.DeleteProjQ": {
             "type": "object",
+            "required": [
+                "proj_id"
+            ],
             "properties": {
                 "proj_id": {
                     "type": "integer"
+                }
+            }
+        },
+        "response.GetFilesByNameA": {
+            "type": "object",
+            "properties": {
+                "count_documents": {
+                    "type": "integer"
+                },
+                "count_prototypes": {
+                    "type": "integer"
+                },
+                "count_umls": {
+                    "type": "integer"
+                },
+                "documents": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Document"
+                    }
+                },
+                "message": {
+                    "type": "string"
+                },
+                "prototypes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Prototype"
+                    }
+                },
+                "success": {
+                    "type": "boolean"
+                },
+                "umls": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Uml"
+                    }
+                }
+            }
+        },
+        "response.GetFilesByNameQ": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
                 }
             }
         },
@@ -547,6 +1101,28 @@ const docTemplate = `{
         },
         "response.GetProjAllQ": {
             "type": "object"
+        },
+        "response.GetProjByIDA": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "proj": {
+                    "$ref": "#/definitions/model.Proj"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.GetProjByIDQ": {
+            "type": "object",
+            "properties": {
+                "proj_id": {
+                    "type": "integer"
+                }
+            }
         },
         "response.GetProjByNameA": {
             "type": "object",
@@ -599,6 +1175,34 @@ const docTemplate = `{
         "response.GetProjCreateQ": {
             "type": "object"
         },
+        "response.GetProjDocumentsA": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "documents": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Document"
+                    }
+                },
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.GetProjDocumentsQ": {
+            "type": "object",
+            "properties": {
+                "proj_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "response.GetProjJoinA": {
             "type": "object",
             "properties": {
@@ -621,6 +1225,62 @@ const docTemplate = `{
         },
         "response.GetProjJoinQ": {
             "type": "object"
+        },
+        "response.GetProjPrototypesA": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "prototypes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Prototype"
+                    }
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.GetProjPrototypesQ": {
+            "type": "object",
+            "properties": {
+                "proj_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "response.GetProjUmlsA": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                },
+                "umls": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Uml"
+                    }
+                }
+            }
+        },
+        "response.GetProjUmlsQ": {
+            "type": "object",
+            "properties": {
+                "proj_id": {
+                    "type": "integer"
+                }
+            }
         },
         "response.GetUserInfoA": {
             "type": "object",
@@ -672,6 +1332,25 @@ const docTemplate = `{
                 }
             }
         },
+        "response.MoveDocumentToBinA": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.MoveDocumentToBinQ": {
+            "type": "object",
+            "properties": {
+                "document_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "response.MoveProjBinA": {
             "type": "object",
             "properties": {
@@ -685,8 +1364,49 @@ const docTemplate = `{
         },
         "response.MoveProjBinQ": {
             "type": "object",
+            "required": [
+                "proj_id"
+            ],
             "properties": {
                 "proj_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "response.MovePrototypeToBinA": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.MovePrototypeToBinQ": {
+            "type": "object",
+            "properties": {
+                "prototype_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "response.MoveUmlToBinA": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.MoveUmlToBinQ": {
+            "type": "object",
+            "properties": {
+                "uml_id": {
                     "type": "integer"
                 }
             }
@@ -713,6 +1433,28 @@ const docTemplate = `{
                 }
             }
         },
+        "response.UpdateDocumentA": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.UpdateDocumentQ": {
+            "type": "object",
+            "properties": {
+                "document_id": {
+                    "type": "integer"
+                },
+                "document_name": {
+                    "type": "string"
+                }
+            }
+        },
         "response.UpdateProjA": {
             "type": "object",
             "properties": {
@@ -726,6 +1468,10 @@ const docTemplate = `{
         },
         "response.UpdateProjQ": {
             "type": "object",
+            "required": [
+                "proj_id",
+                "proj_name"
+            ],
             "properties": {
                 "proj_id": {
                     "type": "integer"
@@ -734,6 +1480,50 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "proj_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.UpdatePrototypeA": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.UpdatePrototypeQ": {
+            "type": "object",
+            "properties": {
+                "prototype_id": {
+                    "type": "integer"
+                },
+                "prototype_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.UpdateUmlA": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.UpdateUmlQ": {
+            "type": "object",
+            "properties": {
+                "uml_id": {
+                    "type": "integer"
+                },
+                "uml_name": {
                     "type": "string"
                 }
             }
