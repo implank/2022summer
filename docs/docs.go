@@ -1000,26 +1000,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "model.GroupMember": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "realName": {
-                    "type": "string"
-                },
-                "status": {
-                    "type": "string"
-                },
-                "userID": {
-                    "type": "integer"
-                },
-                "username": {
-                    "type": "string"
-                }
-            }
-        },
         "model.Document": {
             "type": "object",
             "properties": {
@@ -1038,6 +1018,26 @@ const docTemplate = `{
                 "status": {
                     "description": "1 正常、2 回收站",
                     "type": "integer"
+                }
+            }
+        },
+        "model.GroupMember": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "realName": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "userID": {
+                    "type": "integer"
+                },
+                "username": {
+                    "type": "string"
                 }
             }
         },

@@ -1126,28 +1126,6 @@
                 }
             }
         },
-        "response.CreateDocumentA": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "response.CreateDocumentQ": {
-            "type": "object",
-            "properties": {
-                "document_name": {
-                    "type": "string"
-                },
-                "proj_id": {
-                    "type": "integer"
-                }
-            }
-        },
         "response.AddMemberA": {
             "type": "object",
             "properties": {
@@ -1169,6 +1147,28 @@
                     "type": "integer"
                 },
                 "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "response.CreateDocumentA": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.CreateDocumentQ": {
+            "type": "object",
+            "properties": {
+                "document_name": {
+                    "type": "string"
+                },
+                "proj_id": {
                     "type": "integer"
                 }
             }
