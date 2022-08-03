@@ -5,8 +5,12 @@ import (
 	"2022summer/model/response"
 	"2022summer/service"
 	"2022summer/utils"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"os"
+	"path"
+	"time"
 )
 
 // CreateProj
@@ -305,21 +309,142 @@ func GetProjDocuments(c *gin.Context) { // 获取项目的文档
 }
 
 func CreatePrototype(c *gin.Context) { // 创建设计原型
+	data := utils.BindJsonAndValid(c, &response.CreatePrototypeQ{}).(*response.CreatePrototypeQ)
+	if _, notFound := service.QueryPrototypeByPrototypeName(data.PrototypeName, data.ProjID); !notFound {
+		c.JSON(http.StatusOK, response.CreatePrototypeA{Message: "设计原型名已存在", Success: false})
+		return
+	}
+	raw := fmt.Sprintf("%d", data.ProjID) + time.Now().String() + data.PrototypeName
+	md5 := utils.GetMd5(raw)
+	dir := "./media/prototypes"
+	name := md5 + ".meow" // TODO 随便起的后缀名
+	filePath := path.Join(dir, name)
+	file, err := os.Create(filePath)
+	defer utils.CloseFile(file)
+	if err != nil {
+		c.JSON(http.StatusOK, response.CreatePrototypeA{Message: "创建设计原型失败", Success: false})
+		return
+	}
+	err = service.CreatePrototype(&model.Prototype{
+		PrototypeName: data.PrototypeName,
+		PrototypeURL:  "http://43.138.77.133:81/media/prototypes/" + name,
+		ProjID:        data.ProjID})
+	if err != nil {
+		c.JSON(http.StatusOK, response.CreatePrototypeA{Message: "创建设计原型失败", Success: false})
+		return
+	}
+	c.JSON(http.StatusOK, response.CreatePrototypeA{Message: "创建设计原型成功", Success: true})
 }
 
 func CreateUml(c *gin.Context) { // 创建 Uml
+	data := utils.BindJsonAndValid(c, &response.CreateUmlQ{}).(*response.CreateUmlQ)
+	if _, notFound := service.QueryUmlByUmlName(data.UmlName, data.ProjID); !notFound {
+		c.JSON(http.StatusOK, response.CreateUmlA{Message: "Uml名已存在", Success: false})
+		return
+	}
+	raw := fmt.Sprintf("%d", data.ProjID) + time.Now().String() + data.UmlName
+	md5 := utils.GetMd5(raw)
+	dir := "./media/umls"
+	name := md5 + ".meow" // TODO 随便起的后缀名
+	filePath := path.Join(dir, name)
+	file, err := os.Create(filePath)
+	defer utils.CloseFile(file)
+	err = service.CreateUml(&model.Uml{
+		UmlName: data.UmlName,
+		UmlURL:  "http://43.138.77.133:81/media/umls/" + name,
+		ProjID:  data.ProjID})
+	if err != nil {
+		c.JSON(http.StatusOK, response.CreateUmlA{Message: "创建Uml失败", Success: false})
+		return
+	}
+	c.JSON(http.StatusOK, response.CreateUmlA{Message: "创建Uml成功", Success: true})
 }
 
 func CreateDocument(c *gin.Context) { // 创建文档
+	data := utils.BindJsonAndValid(c, &response.CreateDocumentQ{}).(*response.CreateDocumentQ)
+	if _, notFound := service.QueryDocumentByDocumentName(data.DocumentName, data.ProjID); !notFound {
+		c.JSON(http.StatusOK, response.CreateDocumentA{Message: "文档名已存在", Success: false})
+		return
+	}
+	raw := fmt.Sprintf("%d", data.ProjID) + time.Now().String() + data.DocumentName
+	md5 := utils.GetMd5(raw)
+	dir := "./media/documents"
+	name := md5 + ".md"
+	filePath := path.Join(dir, name)
+	file, err := os.Create(filePath)
+	defer utils.CloseFile(file)
+	err = service.CreateDocument(&model.Document{
+		DocumentName: data.DocumentName,
+		DocumentURL:  "http://43.138.77.133:81/media/documents/" + name,
+		ProjID:       data.ProjID})
+	if err != nil {
+		c.JSON(http.StatusOK, response.CreateDocumentA{Message: "创建文档失败", Success: false})
+		return
+	}
+	c.JSON(http.StatusOK, response.CreateDocumentA{Message: "创建文档成功", Success: true})
 }
 
 func UpdatePrototype(c *gin.Context) { // 修改设计原型名称
+	data := utils.BindJsonAndValid(c, &response.UpdatePrototypeQ{}).(*response.UpdatePrototypeQ)
+	prototype, notFound := service.QueryPrototypeByPrototypeID(data.PrototypeID)
+	if notFound {
+		c.JSON(http.StatusOK, response.UpdatePrototypeA{Message: "设计原型不存在", Success: false})
+		return
+	}
+	prototypeTmp, notFound := service.QueryPrototypeByPrototypeName(data.PrototypeName, prototype.ProjID)
+	if !notFound && prototype.PrototypeID != prototypeTmp.PrototypeID {
+		c.JSON(http.StatusOK, response.UpdatePrototypeA{Message: "设计原型名已存在，同一项目中不能有同名设计原型", Success: false})
+		return
+	}
+	prototype.PrototypeName = data.PrototypeName
+	err := service.UpdatePrototype(&prototype)
+	if err != nil {
+		c.JSON(http.StatusOK, response.UpdatePrototypeA{Message: "修改设计原型失败", Success: false})
+		return
+	}
+	c.JSON(http.StatusOK, response.UpdatePrototypeA{Message: "修改设计原型成功", Success: true})
 }
 
 func UpdateUml(c *gin.Context) { // 修改 Uml 名称
+	data := utils.BindJsonAndValid(c, &response.UpdateUmlQ{}).(*response.UpdateUmlQ)
+	uml, notFound := service.QueryUmlByUmlID(data.UmlID)
+	if notFound {
+		c.JSON(http.StatusOK, response.UpdateUmlA{Message: "Unl不存在", Success: false})
+		return
+	}
+	umlTmp, notFound := service.QueryUmlByUmlName(data.UmlName, uml.ProjID)
+	if !notFound && uml.UmlID != umlTmp.UmlID {
+		c.JSON(http.StatusOK, response.UpdateUmlA{Message: "Uml名已存在，同一项目中不能有同名Uml", Success: false})
+		return
+	}
+	uml.UmlName = data.UmlName
+	err := service.UpdateUml(&uml)
+	if err != nil {
+		c.JSON(http.StatusOK, response.UpdateUmlA{Message: "修改Uml失败", Success: false})
+		return
+	}
+	c.JSON(http.StatusOK, response.UpdateUmlA{Message: "修改Uml成功", Success: true})
 }
 
 func UpdateDocument(c *gin.Context) { // 修改文档名称
+	data := utils.BindJsonAndValid(c, &response.UpdateDocumentQ{}).(*response.UpdateDocumentQ)
+	document, notFound := service.QueryDocumentByDocumentID(data.DocumentID)
+	if notFound {
+		c.JSON(http.StatusOK, response.UpdateDocumentA{Message: "文档不存在", Success: false})
+		return
+	}
+	documentTmp, notFound := service.QueryDocumentByDocumentName(data.DocumentName, document.ProjID)
+	if !notFound && document.DocumentID != documentTmp.DocumentID {
+		c.JSON(http.StatusOK, response.UpdateDocumentA{Message: "文档已存在，同一项目中不能有同名文档", Success: false})
+		return
+	}
+	document.DocumentName = data.DocumentName
+	err := service.UpdateDocument(&document)
+	if err != nil {
+		c.JSON(http.StatusOK, response.UpdateDocumentA{Message: "修改文档失败", Success: false})
+		return
+	}
+	c.JSON(http.StatusOK, response.UpdateDocumentA{Message: "修改文档成功", Success: true})
 }
 
 func MovePrototypeToBin(c *gin.Context) { // 设计原型移入回收站
@@ -342,7 +467,7 @@ func MoveUmlToBin(c *gin.Context) { // Uml 移入回收站
 	data := utils.BindJsonAndValid(c, &response.MoveUmlToBinQ{}).(*response.MoveUmlToBinQ)
 	uml, notFound := service.QueryUmlByUmlID(data.UmlID)
 	if notFound {
-		c.JSON(http.StatusOK, response.MoveUmlToBinA{Message: "Uml 不存在", Success: false})
+		c.JSON(http.StatusOK, response.MoveUmlToBinA{Message: "Uml不存在", Success: false})
 		return
 	}
 	uml.Status = 2
@@ -415,10 +540,10 @@ func DeleteDocument(c *gin.Context) { // 删除文档
 	c.JSON(http.StatusOK, response.DeleteDocumentA{Message: "删除文档成功", Success: true})
 }
 
-func GetSthByName(c *gin.Context) { // 搜索框
-	data := utils.BindJsonAndValid(c, &response.GetSthByNameQ{}).(*response.GetSthByNameQ)
-	prototypes, umls, documents := service.GetSthByNameBur(data.Name)
-	c.JSON(http.StatusOK, response.GetSthByNameA{
+func GetFilesByName(c *gin.Context) { // 搜索框
+	data := utils.BindJsonAndValid(c, &response.GetFilesByNameQ{}).(*response.GetFilesByNameQ)
+	prototypes, umls, documents := service.GetFilesByNameBur(data.Name)
+	c.JSON(http.StatusOK, response.GetFilesByNameA{
 		Message:         "成功搜索到以下项目",
 		Success:         true,
 		CountPrototypes: uint64(len(prototypes)),
@@ -432,10 +557,64 @@ func GetSthByName(c *gin.Context) { // 搜索框
 /* * * * * * * * * * * */
 
 func MovePrototypeFromBin(c *gin.Context) { // 设计原型移出回收站
+	data := utils.BindJsonAndValid(c, &response.MovePrototypeFromBinQ{}).(*response.MovePrototypeFromBinQ)
+	prototype, notFound := service.QueryPrototypeByPrototypeID(data.PrototypeID)
+	if notFound {
+		c.JSON(http.StatusOK, response.MovePrototypeToBinA{Message: "设计原型不存在", Success: false})
+		return
+	}
+	proj, _ := service.QueryProjByProjID(prototype.ProjID)
+	if proj.Status == 2 {
+		c.JSON(http.StatusOK, response.MovePrototypeToBinA{Message: "请先将该设计原型所属项目移出回收站", Success: false})
+		return
+	}
+	prototype.Status = 1
+	err := service.UpdatePrototype(&prototype)
+	if err != nil {
+		c.JSON(http.StatusOK, response.MovePrototypeToBinA{Message: "移出回收站失败", Success: false})
+		return
+	}
+	c.JSON(http.StatusOK, response.MovePrototypeToBinA{Message: "移出回收站成功", Success: true})
 }
 
 func MoveUmlFromBin(c *gin.Context) { // Uml 移出回收站
+	data := utils.BindJsonAndValid(c, &response.MoveUmlToBinQ{}).(*response.MoveUmlToBinQ)
+	uml, notFound := service.QueryUmlByUmlID(data.UmlID)
+	if notFound {
+		c.JSON(http.StatusOK, response.MoveUmlToBinA{Message: "Uml不存在", Success: false})
+		return
+	}
+	proj, _ := service.QueryProjByProjID(uml.ProjID)
+	if proj.Status == 2 {
+		c.JSON(http.StatusOK, response.MovePrototypeToBinA{Message: "请先将该Uml所属项目移出回收站", Success: false})
+		return
+	}
+	uml.Status = 1
+	err := service.UpdateUml(&uml)
+	if err != nil {
+		c.JSON(http.StatusOK, response.MoveUmlToBinA{Message: "移出回收站失败", Success: false})
+		return
+	}
+	c.JSON(http.StatusOK, response.MoveUmlToBinA{Message: "移出回收站成功", Success: true})
 }
 
 func MoveDocumentFromBin(c *gin.Context) { // 文档移出回收站
+	data := utils.BindJsonAndValid(c, &response.MoveDocumentToBinQ{}).(*response.MoveDocumentToBinQ)
+	document, notFound := service.QueryDocumentByDocumentID(data.DocumentID)
+	if notFound {
+		c.JSON(http.StatusOK, response.MoveDocumentToBinA{Message: "文档不存在", Success: false})
+		return
+	}
+	proj, _ := service.QueryProjByProjID(document.ProjID)
+	if proj.Status == 2 {
+		c.JSON(http.StatusOK, response.MovePrototypeToBinA{Message: "请先将该文档所属项目移出回收站", Success: false})
+		return
+	}
+	document.Status = 1
+	err := service.UpdateDocument(&document)
+	if err != nil {
+		c.JSON(http.StatusOK, response.MoveDocumentToBinA{Message: "移出回收站失败", Success: false})
+		return
+	}
+	c.JSON(http.StatusOK, response.MoveDocumentToBinA{Message: "移出回收站成功", Success: true})
 }

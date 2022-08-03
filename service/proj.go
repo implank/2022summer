@@ -138,7 +138,7 @@ func DeleteDocument(document *model.Document) (err error) {
 	return err
 }
 
-func GetSthByNameBur(Name string) (prototypes []model.Prototype, umls []model.Uml, documents []model.Document) {
+func GetFilesByNameBur(Name string) (prototypes []model.Prototype, umls []model.Uml, documents []model.Document) {
 	// 模糊搜索设计原型、Uml 和文档
 	global.DB.Where("prototype_name like '%" + Name + "%'").Find(&prototypes).RecordNotFound()
 	global.DB.Where("uml_name like '%" + Name + "%'").Find(&umls).RecordNotFound()

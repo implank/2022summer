@@ -134,39 +134,63 @@ type GetProjDocumentsA struct {
 }
 
 type CreatePrototypeQ struct {
+	PrototypeName string `json:"prototype_name"`
+	ProjID        uint64 `json:"proj_id"`
 }
 
 type CreatePrototypeA struct {
+	Message string `json:"message"`
+	Success bool   `json:"success"`
 }
 
 type CreateUmlQ struct {
+	UmlName string `json:"uml_name"`
+	ProjID  uint64 `json:"proj_id"`
 }
 
 type CreateUmlA struct {
+	Message string `json:"message"`
+	Success bool   `json:"success"`
 }
 
 type CreateDocumentQ struct {
+	DocumentName string `json:"document_name"`
+	ProjID       uint64 `json:"proj_id"`
 }
 
 type CreateDocumentA struct {
+	Message string `json:"message"`
+	Success bool   `json:"success"`
 }
 
 type UpdatePrototypeQ struct {
+	PrototypeID   uint64 `json:"prototype_id"`
+	PrototypeName string `json:"prototype_name"`
 }
 
 type UpdatePrototypeA struct {
+	Message string `json:"message"`
+	Success bool   `json:"success"`
 }
 
 type UpdateUmlQ struct {
+	UmlID   uint64 `json:"uml_id"`
+	UmlName string `json:"uml_name"`
 }
 
 type UpdateUmlA struct {
+	Message string `json:"message"`
+	Success bool   `json:"success"`
 }
 
 type UpdateDocumentQ struct {
+	DocumentID   uint64 `json:"document_id"`
+	DocumentName string `json:"document_name"`
 }
 
 type UpdateDocumentA struct {
+	Message string `json:"message"`
+	Success bool   `json:"success"`
 }
 
 type MovePrototypeToBinQ struct {
@@ -223,11 +247,11 @@ type DeleteDocumentA struct {
 	Success bool   `json:"success"`
 }
 
-type GetSthByNameQ struct {
+type GetFilesByNameQ struct {
 	Name string `json:"name"`
 }
 
-type GetSthByNameA struct {
+type GetFilesByNameA struct {
 	Message         string            `json:"message"`
 	Success         bool              `json:"success"`
 	CountPrototypes uint64            `json:"count_prototypes"`
@@ -241,19 +265,28 @@ type GetSthByNameA struct {
 /* * * * * * * * * * * */
 
 type MovePrototypeFromBinQ struct {
+	PrototypeID uint64 `json:"prototype_id"`
 }
 
 type MovePrototypeFromBinA struct {
+	Message string `json:"message"`
+	Success bool   `json:"success"`
 }
 
 type MoveUmlFromBinQ struct {
+	UmlID uint64 `json:"uml_id"`
 }
 
 type MoveUmlFromBinA struct {
+	Message string `json:"message"`
+	Success bool   `json:"success"`
 }
 
 type MoveDocumentFromBinQ struct {
+	DocumentID int64 `json:"document_id"`
 }
 
 type MoveDocumentFromBinA struct {
+	Message string `json:"message"`
+	Success bool   `json:"success"`
 }
