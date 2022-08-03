@@ -238,33 +238,204 @@ func GetProjByName(c *gin.Context) {
 /* * * * * * * * * * * */
 
 func GetProjByID(c *gin.Context) { // 获取项目信息
-
+	data := utils.BindJsonAndValid(c, &response.GetProjByIDQ{}).(*response.GetProjByIDQ)
+	proj, notFound := service.QueryProjByProjID(data.ProjID)
+	if notFound {
+		c.JSON(http.StatusOK, response.GetProjByIDA{Message: "项目不存在", Success: false, Proj: proj})
+		return
+	}
+	c.JSON(http.StatusOK, response.GetProjByIDA{Message: "成功获取项目信息", Success: true, Proj: proj})
 }
 
 func GetProjPrototypes(c *gin.Context) { // 获取项目的设计原型
-
+	data := utils.BindJsonAndValid(c, &response.GetProjPrototypesQ{}).(*response.GetProjPrototypesQ)
+	prototypes := service.GetProjPrototypes(data.ProjID, 1)
+	x := len(prototypes)
+	if x == 0 {
+		c.JSON(http.StatusOK, response.GetProjPrototypesA{
+			Message:    "没有找到捏",
+			Success:    false,
+			Count:      uint64(x),
+			Prototypes: prototypes})
+		return
+	}
+	c.JSON(http.StatusOK, response.GetProjPrototypesA{
+		Message:    "成功搜索到以下设计原型",
+		Success:    true,
+		Count:      uint64(x),
+		Prototypes: prototypes})
 }
 
 func GetProjUmls(c *gin.Context) { // 获取项目的 Uml 图
-
+	data := utils.BindJsonAndValid(c, &response.GetProjUmlsQ{}).(*response.GetProjUmlsQ)
+	umls := service.GetProjUmls(data.ProjID, 1)
+	x := len(umls)
+	if x == 0 {
+		c.JSON(http.StatusOK, response.GetProjUmlsA{
+			Message: "没有找到捏",
+			Success: false,
+			Count:   uint64(x),
+			Umls:    umls})
+		return
+	}
+	c.JSON(http.StatusOK, response.GetProjUmlsA{
+		Message: "成功搜索到以下设计原型",
+		Success: true,
+		Count:   uint64(x),
+		Umls:    umls})
 }
 
 func GetProjDocuments(c *gin.Context) { // 获取项目的文档
-
+	data := utils.BindJsonAndValid(c, &response.GetProjDocumentsQ{}).(*response.GetProjDocumentsQ)
+	documents := service.GetProjDocuments(data.ProjID, 1)
+	x := len(documents)
+	if x == 0 {
+		c.JSON(http.StatusOK, response.GetProjDocumentsA{
+			Message:   "没有找到捏",
+			Success:   false,
+			Count:     uint64(x),
+			Documents: documents})
+		return
+	}
+	c.JSON(http.StatusOK, response.GetProjDocumentsA{
+		Message:   "成功搜索到以下设计原型",
+		Success:   true,
+		Count:     uint64(x),
+		Documents: documents})
 }
 
 func CreatePrototype(c *gin.Context) { // 创建设计原型
-
 }
 
 func CreateUml(c *gin.Context) { // 创建 Uml
-
 }
 
 func CreateDocument(c *gin.Context) { // 创建文档
+}
 
+func UpdatePrototype(c *gin.Context) { // 修改设计原型名称
+}
+
+func UpdateUml(c *gin.Context) { // 修改 Uml 名称
+}
+
+func UpdateDocument(c *gin.Context) { // 修改文档名称
+}
+
+func MovePrototypeToBin(c *gin.Context) { // 设计原型移入回收站
+	data := utils.BindJsonAndValid(c, &response.MovePrototypeToBinQ{}).(*response.MovePrototypeToBinQ)
+	prototype, notFound := service.QueryPrototypeByPrototypeID(data.PrototypeID)
+	if notFound {
+		c.JSON(http.StatusOK, response.MovePrototypeToBinA{Message: "设计原型不存在", Success: false})
+		return
+	}
+	prototype.Status = 2
+	err := service.UpdatePrototype(&prototype)
+	if err != nil {
+		c.JSON(http.StatusOK, response.MovePrototypeToBinA{Message: "移入回收站失败", Success: false})
+		return
+	}
+	c.JSON(http.StatusOK, response.MovePrototypeToBinA{Message: "移入回收站成功", Success: true})
+}
+
+func MoveUmlToBin(c *gin.Context) { // Uml 移入回收站
+	data := utils.BindJsonAndValid(c, &response.MoveUmlToBinQ{}).(*response.MoveUmlToBinQ)
+	uml, notFound := service.QueryUmlByUmlID(data.UmlID)
+	if notFound {
+		c.JSON(http.StatusOK, response.MoveUmlToBinA{Message: "Uml 不存在", Success: false})
+		return
+	}
+	uml.Status = 2
+	err := service.UpdateUml(&uml)
+	if err != nil {
+		c.JSON(http.StatusOK, response.MoveUmlToBinA{Message: "移入回收站失败", Success: false})
+		return
+	}
+	c.JSON(http.StatusOK, response.MoveUmlToBinA{Message: "移入回收站成功", Success: true})
+}
+
+func MoveDocumentToBin(c *gin.Context) { // 文档移入回收站
+	data := utils.BindJsonAndValid(c, &response.MoveDocumentToBinQ{}).(*response.MoveDocumentToBinQ)
+	document, notFound := service.QueryDocumentByDocumentID(data.DocumentID)
+	if notFound {
+		c.JSON(http.StatusOK, response.MoveDocumentToBinA{Message: "文档不存在", Success: false})
+		return
+	}
+	document.Status = 2
+	err := service.UpdateDocument(&document)
+	if err != nil {
+		c.JSON(http.StatusOK, response.MoveDocumentToBinA{Message: "移入回收站失败", Success: false})
+		return
+	}
+	c.JSON(http.StatusOK, response.MoveDocumentToBinA{Message: "移入回收站成功", Success: true})
+}
+
+func DeletePrototype(c *gin.Context) { // 删除设计原型
+	data := utils.BindJsonAndValid(c, &response.DeletePrototypeQ{}).(*response.DeletePrototypeQ)
+	prototype, notFound := service.QueryPrototypeByPrototypeID(data.PrototypeID)
+	if notFound {
+		c.JSON(http.StatusOK, response.DeletePrototypeA{Message: "设计原型不存在", Success: false})
+		return
+	}
+	err := service.DeletePrototype(&prototype)
+	if err != nil {
+		c.JSON(http.StatusOK, response.DeletePrototypeA{Message: "删除设计原型失败", Success: false})
+		return
+	}
+	c.JSON(http.StatusOK, response.DeletePrototypeA{Message: "删除设计原型成功", Success: true})
+}
+
+func DeleteUml(c *gin.Context) { // 删除 Uml
+	data := utils.BindJsonAndValid(c, &response.DeleteUmlQ{}).(*response.DeleteUmlQ)
+	uml, notFound := service.QueryUmlByUmlID(data.UmlID)
+	if notFound {
+		c.JSON(http.StatusOK, response.DeleteUmlA{Message: "Uml不存在", Success: false})
+		return
+	}
+	err := service.DeleteUml(&uml)
+	if err != nil {
+		c.JSON(http.StatusOK, response.DeleteUmlA{Message: "删除Uml失败", Success: false})
+		return
+	}
+	c.JSON(http.StatusOK, response.DeleteUmlA{Message: "删除Uml成功", Success: true})
+}
+
+func DeleteDocument(c *gin.Context) { // 删除文档
+	data := utils.BindJsonAndValid(c, &response.DeleteDocumentQ{}).(*response.DeleteDocumentQ)
+	document, notFound := service.QueryDocumentByDocumentID(data.DocumentID)
+	if notFound {
+		c.JSON(http.StatusOK, response.DeleteDocumentA{Message: "文档不存在", Success: false})
+		return
+	}
+	err := service.DeleteDocument(&document)
+	if err != nil {
+		c.JSON(http.StatusOK, response.DeleteDocumentA{Message: "删除文档失败", Success: false})
+		return
+	}
+	c.JSON(http.StatusOK, response.DeleteDocumentA{Message: "删除文档成功", Success: true})
 }
 
 func GetSthByName(c *gin.Context) { // 搜索框
+	data := utils.BindJsonAndValid(c, &response.GetSthByNameQ{}).(*response.GetSthByNameQ)
+	prototypes, umls, documents := service.GetSthByNameBur(data.Name)
+	c.JSON(http.StatusOK, response.GetSthByNameA{
+		Message:         "成功搜索到以下项目",
+		Success:         true,
+		CountPrototypes: uint64(len(prototypes)),
+		Prototypes:      prototypes,
+		CountUmls:       uint64(len(umls)),
+		Umls:            umls,
+		CountDocuments:  uint64(len(documents)),
+		Documents:       documents})
+}
 
+/* * * * * * * * * * * */
+
+func MovePrototypeFromBin(c *gin.Context) { // 设计原型移出回收站
+}
+
+func MoveUmlFromBin(c *gin.Context) { // Uml 移出回收站
+}
+
+func MoveDocumentFromBin(c *gin.Context) { // 文档移出回收站
 }

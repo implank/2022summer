@@ -138,6 +138,14 @@ func DeleteDocument(document *model.Document) (err error) {
 	return err
 }
 
+func GetSthByNameBur(Name string) (prototypes []model.Prototype, umls []model.Uml, documents []model.Document) {
+	// 模糊搜索设计原型、Uml 和文档
+	global.DB.Where("prototype_name like '%" + Name + "%'").Find(&prototypes).RecordNotFound()
+	global.DB.Where("uml_name like '%" + Name + "%'").Find(&umls).RecordNotFound()
+	global.DB.Where("document_name like '%" + Name + "%'").Find(&documents).RecordNotFound()
+	return prototypes, umls, documents
+}
+
 func GetProjPrototypes(projID uint64, status int) (prototypes []model.Prototype) {
 	// status = 2 时, 查找回收站的项目, 后同
 	global.DB.Where("proj_id = ? and status = ?", projID, status).Find(&prototypes).RecordNotFound()

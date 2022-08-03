@@ -1,19 +1,19 @@
 definitions:
   model.Proj:
     properties:
-      groupID:
+      group_id:
         description: 项目所属团队
         type: integer
-      projID:
+      proj_id:
         type: integer
-      projInfo:
+      proj_info:
         type: string
-      projName:
+      proj_name:
         type: string
       status:
         description: 1 正常、2 回收站
         type: integer
-      userID:
+      user_id:
         description: 项目创建者
         type: integer
     type: object
