@@ -30,7 +30,12 @@ func SetupRouter(r *gin.Engine) {
 
 	groupGroup := userGroup.Group("/group", middleware.AuthRequired())
 	{
+		//groupGroup.POST("/create", v1.CreateGroup)
+		groupGroup.POST("/get_identity", v1.GetIdentity)
+		groupGroup.POST("/get_group_members", v1.GetMembers)
+		groupGroup.POST("/add_member", v1.AddMember)
 		groupGroup.POST("/remove_member", v1.RemoveMember)
+		groupGroup.POST("/set_member_status", v1.SetMemberStatus)
 	}
 
 	projGroup := r.Group("/api/v1/proj", middleware.AuthRequired())
