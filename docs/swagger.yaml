@@ -1,4 +1,18 @@
 definitions:
+  model.Document:
+    properties:
+      document_id:
+        type: integer
+      document_name:
+        type: string
+      document_url:
+        type: string
+      proj_id:
+        type: integer
+      status:
+        description: 1 正常、2 回收站
+        type: integer
+    type: object
   model.Proj:
     properties:
       group_id:
@@ -16,6 +30,34 @@ definitions:
       user_id:
         description: 项目创建者
         type: integer
+    type: object
+  model.Prototype:
+    properties:
+      proj_id:
+        type: integer
+      prototype_id:
+        type: integer
+      prototype_name:
+        type: string
+      prototype_url:
+        type: string
+      status:
+        description: 1 正常、2 回收站
+        type: integer
+    type: object
+  model.Uml:
+    properties:
+      proj_id:
+        type: integer
+      status:
+        description: 1 正常、2 回收站
+        type: integer
+      uml_id:
+        type: integer
+      uml_name:
+        type: string
+      uml_url:
+        type: string
     type: object
   model.User:
     properties:
@@ -36,6 +78,20 @@ definitions:
       username:
         type: string
     type: object
+  response.CreateDocumentA:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.CreateDocumentQ:
+    properties:
+      document_name:
+        type: string
+      proj_id:
+        type: integer
+    type: object
   response.CreateProjA:
     properties:
       message:
@@ -51,6 +107,37 @@ definitions:
         type: string
       proj_name:
         type: string
+    required:
+    - group_id
+    - proj_name
+    type: object
+  response.CreatePrototypeA:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.CreatePrototypeQ:
+    properties:
+      proj_id:
+        type: integer
+      prototype_name:
+        type: string
+    type: object
+  response.CreateUmlA:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.CreateUmlQ:
+    properties:
+      proj_id:
+        type: integer
+      uml_name:
+        type: string
     type: object
   response.DeleteProjA:
     properties:
@@ -63,6 +150,38 @@ definitions:
     properties:
       proj_id:
         type: integer
+    required:
+    - proj_id
+    type: object
+  response.GetFilesByNameA:
+    properties:
+      count_documents:
+        type: integer
+      count_prototypes:
+        type: integer
+      count_umls:
+        type: integer
+      documents:
+        items:
+          $ref: '#/definitions/model.Document'
+        type: array
+      message:
+        type: string
+      prototypes:
+        items:
+          $ref: '#/definitions/model.Prototype'
+        type: array
+      success:
+        type: boolean
+      umls:
+        items:
+          $ref: '#/definitions/model.Uml'
+        type: array
+    type: object
+  response.GetFilesByNameQ:
+    properties:
+      name:
+        type: string
     type: object
   response.GetProjAllA:
     properties:
@@ -78,6 +197,20 @@ definitions:
         type: boolean
     type: object
   response.GetProjAllQ:
+    type: object
+  response.GetProjByIDA:
+    properties:
+      message:
+        type: string
+      proj:
+        $ref: '#/definitions/model.Proj'
+      success:
+        type: boolean
+    type: object
+  response.GetProjByIDQ:
+    properties:
+      proj_id:
+        type: integer
     type: object
   response.GetProjByNameA:
     properties:
@@ -112,6 +245,24 @@ definitions:
     type: object
   response.GetProjCreateQ:
     type: object
+  response.GetProjDocumentsA:
+    properties:
+      count:
+        type: integer
+      documents:
+        items:
+          $ref: '#/definitions/model.Document'
+        type: array
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.GetProjDocumentsQ:
+    properties:
+      proj_id:
+        type: integer
+    type: object
   response.GetProjJoinA:
     properties:
       count:
@@ -126,6 +277,42 @@ definitions:
         type: boolean
     type: object
   response.GetProjJoinQ:
+    type: object
+  response.GetProjPrototypesA:
+    properties:
+      count:
+        type: integer
+      message:
+        type: string
+      prototypes:
+        items:
+          $ref: '#/definitions/model.Prototype'
+        type: array
+      success:
+        type: boolean
+    type: object
+  response.GetProjPrototypesQ:
+    properties:
+      proj_id:
+        type: integer
+    type: object
+  response.GetProjUmlsA:
+    properties:
+      count:
+        type: integer
+      message:
+        type: string
+      success:
+        type: boolean
+      umls:
+        items:
+          $ref: '#/definitions/model.Uml'
+        type: array
+    type: object
+  response.GetProjUmlsQ:
+    properties:
+      proj_id:
+        type: integer
     type: object
   response.GetUserInfoA:
     properties:
@@ -163,6 +350,18 @@ definitions:
       username:
         type: string
     type: object
+  response.MoveDocumentToBinA:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.MoveDocumentToBinQ:
+    properties:
+      document_id:
+        type: integer
+    type: object
   response.MoveProjBinA:
     properties:
       message:
@@ -173,6 +372,32 @@ definitions:
   response.MoveProjBinQ:
     properties:
       proj_id:
+        type: integer
+    required:
+    - proj_id
+    type: object
+  response.MovePrototypeToBinA:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.MovePrototypeToBinQ:
+    properties:
+      prototype_id:
+        type: integer
+    type: object
+  response.MoveUmlToBinA:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.MoveUmlToBinQ:
+    properties:
+      uml_id:
         type: integer
     type: object
   response.RegisterA:
@@ -207,6 +432,20 @@ definitions:
       user_id:
         type: integer
     type: object
+  response.UpdateDocumentA:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.UpdateDocumentQ:
+    properties:
+      document_id:
+        type: integer
+      document_name:
+        type: string
+    type: object
   response.UpdateProjA:
     properties:
       message:
@@ -222,36 +461,42 @@ definitions:
         type: string
       proj_name:
         type: string
+    required:
+    - proj_id
+    - proj_name
+    type: object
+  response.UpdatePrototypeA:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.UpdatePrototypeQ:
+    properties:
+      prototype_id:
+        type: integer
+      prototype_name:
+        type: string
+    type: object
+  response.UpdateUmlA:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.UpdateUmlQ:
+    properties:
+      uml_id:
+        type: integer
+      uml_name:
+        type: string
     type: object
 info:
   contact: {}
 paths:
-  /create_proj:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 项目名称，项目详情（可选），所属团队ID
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/response.CreateProjQ'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.CreateProjA'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.CreateProjA'
-      summary: 创建项目
-      tags:
-      - Proj1
-  /delete_proj:
+  /bin/delete_proj:
     post:
       consumes:
       - application/json
@@ -269,113 +514,303 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.DeleteProjA'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.DeleteProjA'
       summary: 删除项目
       tags:
-      - Proj1
-  /get_proj_all:
+      - 回收站
+  /file/create_document:
     post:
       consumes:
       - application/json
       parameters:
-      - description: 无
+      - description: 这个接口还没测
         in: body
         name: data
         required: true
         schema:
-          $ref: '#/definitions/response.GetProjAllQ'
+          $ref: '#/definitions/response.CreateDocumentQ'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.GetProjAllA'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.GetProjAllA'
-      summary: 全部项目
+            $ref: '#/definitions/response.CreateDocumentA'
+      summary: 创建文档
       tags:
-      - Proj1
-  /get_proj_by_name:
+      - 项目管理的第二页
+  /file/create_prototype:
     post:
       consumes:
       - application/json
       parameters:
-      - description: 项目名称（不一定是全名，子串搜索）
+      - description: 这个接口还没测
         in: body
         name: data
         required: true
         schema:
-          $ref: '#/definitions/response.GetProjByNameQ'
+          $ref: '#/definitions/response.CreatePrototypeQ'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.GetProjByNameA'
-        "500":
-          description: Internal Server Error
+            $ref: '#/definitions/response.CreatePrototypeA'
+      summary: 创建设计原型
+      tags:
+      - 项目管理的第二页
+  /file/create_uml:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 这个接口还没测
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.CreateUmlQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
           schema:
-            $ref: '#/definitions/response.GetProjByNameA'
+            $ref: '#/definitions/response.CreateUmlA'
+      summary: 创建 Uml
+      tags:
+      - 项目管理的第二页
+  /file/get_files_by_name:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 这个接口还没测
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.GetFilesByNameQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.GetFilesByNameA'
       summary: 搜索框
       tags:
-      - Proj1
-  /get_proj_create:
+      - 项目管理的第二页
+  /file/get_proj_by_id:
     post:
       consumes:
       - application/json
       parameters:
-      - description: 无
+      - description: 这个接口还没测
         in: body
         name: data
         required: true
         schema:
-          $ref: '#/definitions/response.GetProjCreateQ'
+          $ref: '#/definitions/response.GetProjByIDQ'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.GetProjCreateA'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.GetProjCreateA'
-      summary: 我创建的
+            $ref: '#/definitions/response.GetProjByIDA'
+      summary: 获取项目信息
       tags:
-      - Proj1
-  /get_proj_join:
+      - 项目管理的第二页
+  /file/get_proj_documents:
     post:
       consumes:
       - application/json
       parameters:
-      - description: 无
+      - description: 这个接口还没测
         in: body
         name: data
         required: true
         schema:
-          $ref: '#/definitions/response.GetProjJoinQ'
+          $ref: '#/definitions/response.GetProjDocumentsQ'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.GetProjJoinA'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.GetProjJoinA'
-      summary: 我参与的
+            $ref: '#/definitions/response.GetProjDocumentsA'
+      summary: 获取项目的文档
       tags:
-      - Proj1
+      - 项目管理的第二页
+  /file/get_proj_prototypes:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 这个接口还没测
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.GetProjPrototypesQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.GetProjPrototypesA'
+      summary: 获取项目的设计原型
+      tags:
+      - 项目管理的第二页
+  /file/get_proj_umls:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 这个接口还没测
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.GetProjUmlsQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.GetProjUmlsA'
+      summary: 获取项目的 Uml 图
+      tags:
+      - 项目管理的第二页
+  /file/move_document_to_bin:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 这个接口还没测
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.MoveDocumentToBinQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.MoveDocumentToBinA'
+      summary: 文档移入回收站
+      tags:
+      - 项目管理的第二页
+  /file/move_prototype_to_bin:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 这个接口还没测
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.MovePrototypeToBinQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.MovePrototypeToBinA'
+      summary: 设计原型移入回收站
+      tags:
+      - 项目管理的第二页
+  /file/move_uml_to_bin:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 这个接口还没测
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.MoveUmlToBinQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.MoveUmlToBinA'
+      summary: Uml 移入回收站
+      tags:
+      - 项目管理的第二页
+  /file/update_document:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 这个接口还没测
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.UpdateDocumentQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.UpdateDocumentA'
+      summary: 修改文档名称
+      tags:
+      - 项目管理的第二页
+  /file/update_prototype:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 这个接口还没测
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.UpdatePrototypeQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.UpdatePrototypeA'
+      summary: 修改设计原型名称
+      tags:
+      - 项目管理的第二页
+  /file/update_uml:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 这个接口还没测
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.UpdateUmlQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.UpdateUmlA'
+      summary: 修改 Uml 名称
+      tags:
+      - 项目管理的第二页
   /group/remove_member:
     post:
       consumes:
@@ -436,7 +871,112 @@ paths:
             $ref: '#/definitions/response.LoginA'
       tags:
       - User
-  /move_proj_to_bin:
+  /proj/create_proj:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 项目名称，项目详情（可选），所属团队ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.CreateProjQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.CreateProjA'
+      summary: 创建项目
+      tags:
+      - 项目管理的第一页
+  /proj/get_proj_all:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 无
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.GetProjAllQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.GetProjAllA'
+      summary: 全部项目
+      tags:
+      - 项目管理的第一页
+  /proj/get_proj_by_name:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 项目名称（不一定是全名，子串搜索，为空时返回数据库中全部不在回收站的项目）
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.GetProjByNameQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.GetProjByNameA'
+      summary: 搜索框
+      tags:
+      - 项目管理的第一页
+  /proj/get_proj_create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 无
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.GetProjCreateQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.GetProjCreateA'
+      summary: 我创建的
+      tags:
+      - 项目管理的第一页
+  /proj/get_proj_join:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 无
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.GetProjJoinQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.GetProjJoinA'
+      summary: 我参与的
+      tags:
+      - 项目管理的第一页
+  /proj/move_proj_to_bin:
     post:
       consumes:
       - application/json
@@ -454,13 +994,30 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.MoveProjBinA'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.MoveProjBinA'
       summary: 移入或移出回收站
       tags:
-      - Proj1
+      - 项目管理的第一页
+  /proj/update_proj:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 项目ID，项目名称（必填，可以填原名，不能和其他项目同名），项目详情（可选）
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.UpdateProjQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.UpdateProjA'
+      summary: 修改项目名称、项目描述
+      tags:
+      - 项目管理的第一页
   /register:
     post:
       consumes:
@@ -481,29 +1038,4 @@ paths:
             $ref: '#/definitions/response.RegisterA'
       tags:
       - User
-  /update_proj:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 项目ID，项目名称（必填，可以填原名，不能和其他项目同名），项目详情（可选）
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/response.UpdateProjQ'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.UpdateProjA'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.UpdateProjA'
-      summary: 修改项目名称、项目描述
-      tags:
-      - Proj1
 swagger: "2.0"

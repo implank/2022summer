@@ -5,9 +5,9 @@ import (
 )
 
 type CreateProjQ struct {
-	ProjName string `json:"proj_name"`
+	ProjName string `json:"proj_name" binding:"required"`
 	ProjInfo string `json:"proj_info" binding:"omitempty"`
-	GroupID  uint64 `json:"group_id"`
+	GroupID  uint64 `json:"group_id" binding:"required"`
 }
 
 type CreateProjA struct {
@@ -16,8 +16,8 @@ type CreateProjA struct {
 }
 
 type UpdateProjQ struct {
-	ProjID   uint64 `json:"proj_id"`
-	ProjName string `json:"proj_name"`
+	ProjID   uint64 `json:"proj_id" binding:"required"`
+	ProjName string `json:"proj_name" binding:"required"`
 	ProjInfo string `json:"proj_info" binding:"omitempty"`
 }
 
@@ -27,19 +27,10 @@ type UpdateProjA struct {
 }
 
 type MoveProjBinQ struct {
-	ProjID uint64 `json:"proj_id"`
+	ProjID uint64 `json:"proj_id" binding:"required"`
 }
 
 type MoveProjBinA struct {
-	Message string `json:"message"`
-	Success bool   `json:"success"`
-}
-
-type DeleteProjQ struct {
-	ProjID uint64 `json:"proj_id"`
-}
-
-type DeleteProjA struct {
 	Message string `json:"message"`
 	Success bool   `json:"success"`
 }
@@ -78,7 +69,7 @@ type GetProjJoinA struct {
 }
 
 type GetProjByNameQ struct {
-	ProjName string `json:"proj_name"`
+	ProjName string `json:"proj_name" binding:"omitempty"`
 }
 
 type GetProjByNameA struct {
@@ -220,33 +211,6 @@ type MoveDocumentToBinA struct {
 	Success bool   `json:"success"`
 }
 
-type DeletePrototypeQ struct {
-	PrototypeID uint64 `json:"prototype_id"`
-}
-
-type DeletePrototypeA struct {
-	Message string `json:"message"`
-	Success bool   `json:"success"`
-}
-
-type DeleteUmlQ struct {
-	UmlID uint64 `json:"uml_id"`
-}
-
-type DeleteUmlA struct {
-	Message string `json:"message"`
-	Success bool   `json:"success"`
-}
-
-type DeleteDocumentQ struct {
-	DocumentID uint64 `json:"document_id"`
-}
-
-type DeleteDocumentA struct {
-	Message string `json:"message"`
-	Success bool   `json:"success"`
-}
-
 type GetFilesByNameQ struct {
 	Name string `json:"name"`
 }
@@ -263,6 +227,15 @@ type GetFilesByNameA struct {
 }
 
 /* * * * * * * * * * * */
+
+type DeleteProjQ struct {
+	ProjID uint64 `json:"proj_id" binding:"required"`
+}
+
+type DeleteProjA struct {
+	Message string `json:"message"`
+	Success bool   `json:"success"`
+}
 
 type MovePrototypeFromBinQ struct {
 	PrototypeID uint64 `json:"prototype_id"`
@@ -287,6 +260,33 @@ type MoveDocumentFromBinQ struct {
 }
 
 type MoveDocumentFromBinA struct {
+	Message string `json:"message"`
+	Success bool   `json:"success"`
+}
+
+type DeletePrototypeQ struct {
+	PrototypeID uint64 `json:"prototype_id"`
+}
+
+type DeletePrototypeA struct {
+	Message string `json:"message"`
+	Success bool   `json:"success"`
+}
+
+type DeleteUmlQ struct {
+	UmlID uint64 `json:"uml_id"`
+}
+
+type DeleteUmlA struct {
+	Message string `json:"message"`
+	Success bool   `json:"success"`
+}
+
+type DeleteDocumentQ struct {
+	DocumentID uint64 `json:"document_id"`
+}
+
+type DeleteDocumentA struct {
 	Message string `json:"message"`
 	Success bool   `json:"success"`
 }

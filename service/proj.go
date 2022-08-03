@@ -11,7 +11,7 @@ func QueryProjByProjName(projName string) (proj model.Proj, notFound bool) {
 }
 
 func GetProjsByProjNameBur(projName string) (projs []model.Proj) { // 模糊搜索
-	global.DB.Where("proj_name like '%" + projName + "%'").Find(&projs).RecordNotFound()
+	global.DB.Where("proj_name like '%" + projName + "%' and status = 1").Find(&projs).RecordNotFound()
 	return projs
 }
 
