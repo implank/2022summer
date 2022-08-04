@@ -14,8 +14,11 @@ func SetupRouter(r *gin.Engine) {
 	r.Use(middleware.Cors())         // 跨域
 	r.Use(middleware.LoggerToFile()) // 日志
 
+	docs.SwaggerInfo.Title = "lnk_book"
+	docs.SwaggerInfo.Version = "v1"
 	docs.SwaggerInfo.BasePath = "/api/v1"
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
+
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	r.GET("/test", testGin)
@@ -33,7 +36,7 @@ func SetupRouter(r *gin.Engine) {
 		userGroup.POST("/modify_info", v1.ModifyInfo)
 	}
 
-	groupGroup := userGroup.Group("/group", middleware.AuthRequired())
+	groupGroup := baseGroup.Group("/group", middleware.AuthRequired())
 	{
 		groupGroup.POST("/create_group", v1.CreateGroup)
 		groupGroup.POST("/get_identity", v1.GetIdentity)

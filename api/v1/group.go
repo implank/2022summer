@@ -73,10 +73,16 @@ func GetIdentity(c *gin.Context) {
 // @Success 200 {object} response.GetMembersA
 // @Router /group/get_group_members [post]
 func GetMembers(c *gin.Context) {
-	data := utils.BindJsonAndValid(c, &response.GetMembersQ{}).(*response.GetMembersQ)
+	var data response.GetMembersQ
+	if err := utils.ShouldBindAndValid(c, &data); err != nil {
+		c.JSON(http.StatusOK, response.PARAMERROR)
+		return
+	}
 	poster, _ := c.Get("user")
+	print(data.GroupID)
 	if _, notFound := service.QueryIdentity(poster.(model.User).UserID, data.GroupID); notFound {
 		c.JSON(http.StatusOK, response.GetMembersA{CommonA: response.NOMENBER})
+		return
 	}
 	members := service.GetGroupMembers(data.GroupID)
 	c.JSON(http.StatusOK, response.GetMembersA{
