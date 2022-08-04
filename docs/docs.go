@@ -607,6 +607,27 @@ const docTemplate = `{
                 }
             }
         },
+        "/group/get_groups": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Group"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.GetGroupsA"
+                        }
+                    }
+                }
+            }
+        },
         "/group/get_identity": {
             "post": {
                 "consumes": [
@@ -1467,8 +1488,8 @@ const docTemplate = `{
                 "group_id": {
                     "type": "integer"
                 },
-                "user_id": {
-                    "type": "integer"
+                "username": {
+                    "type": "string"
                 }
             }
         },
@@ -1723,6 +1744,29 @@ const docTemplate = `{
             "properties": {
                 "name": {
                     "type": "string"
+                }
+            }
+        },
+        "response.GetGroupsA": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "count": {
+                    "type": "integer"
+                },
+                "groups": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/database.Group"
+                    }
+                },
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
                 }
             }
         },

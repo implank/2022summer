@@ -136,8 +136,8 @@ definitions:
     properties:
       group_id:
         type: integer
-      user_id:
-        type: integer
+      username:
+        type: string
     type: object
   response.CreateDocumentA:
     properties:
@@ -302,6 +302,21 @@ definitions:
     properties:
       name:
         type: string
+    type: object
+  response.GetGroupsA:
+    properties:
+      code:
+        type: integer
+      count:
+        type: integer
+      groups:
+        items:
+          $ref: '#/definitions/database.Group'
+        type: array
+      message:
+        type: string
+      success:
+        type: boolean
     type: object
   response.GetIdentityA:
     properties:
@@ -1157,6 +1172,19 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.GetMembersA'
+      tags:
+      - Group
+  /group/get_groups:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.GetGroupsA'
       tags:
       - Group
   /group/get_identity:

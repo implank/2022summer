@@ -109,8 +109,27 @@ func AddMember(c *gin.Context) {
 		c.JSON(http.StatusOK, response.AddMemberA{CommonA: response.NOAUTH})
 		return
 	}
+	user, notFound := service.QueryUserByUsername(data.Username)
+	if notFound {
+		c.JSON(http.StatusOK, response.AddMemberA{
+			CommonA: response.CommonA{
+				Message: "用户不存在",
+				Success: false,
+			},
+		})
+		return
+	}
+	if _, notFound = service.QueryIdentity(user.UserID, data.GroupID); !notFound {
+		c.JSON(http.StatusOK, response.AddMemberA{
+			CommonA: response.CommonA{
+				Message: "用户已在团队中",
+				Success: false,
+			},
+		})
+		return
+	}
 	identity = database.Identity{
-		UserID:  data.UserID,
+		UserID:  user.UserID,
 		GroupID: data.GroupID,
 		Status:  1,
 	}
@@ -227,4 +246,34 @@ func SetMemberStatus(c *gin.Context) {
 			c.JSON(http.StatusOK, response.SetMemberStatusA{CommonA: response.NOAUTH})
 		}
 	}
+}
+
+// GetGroups
+// @Tags Group
+// @Accept json
+// @Produce json
+// @Success 200 {object} response.GetGroupsA
+// @Router /group/get_groups [post]
+func GetGroups(c *gin.Context) {
+	poster := c.MustGet("user").(database.User)
+	groups := service.GetUserHasGroups(poster.UserID)
+	count := len(groups)
+	if count == 0 {
+		c.JSON(http.StatusOK, response.GetGroupsA{
+			CommonA: response.CommonA{
+				Message: "没有团队",
+				Success: true,
+			},
+			Count: 0,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, response.GetGroupsA{
+		CommonA: response.CommonA{
+			Message: "获取成功",
+			Success: true,
+		},
+		Count:  count,
+		Groups: groups,
+	})
 }
