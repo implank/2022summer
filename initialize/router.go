@@ -70,6 +70,7 @@ func SetupRouter(r *gin.Engine) {
 		fileGroup.POST("/update_prototype", v1.UpdatePrototype)         // 修改设计原型名称
 		fileGroup.POST("/update_uml", v1.UpdateUml)                     // 修改 Uml 名称
 		fileGroup.POST("/update_document", v1.UpdateDocument)           // 修改文档名称
+		fileGroup.POST("/upload_document", v1.UploadDocument)           // 移入或移出设计原型回收站
 		fileGroup.POST("/move_prototype_to_bin", v1.MovePrototypeToBin) // 设计原型移入回收站
 		fileGroup.POST("/move_uml_to_bin", v1.MoveUmlToBin)             // Uml 移入回收站
 		fileGroup.POST("/move_document_to_bin", v1.MoveDocumentToBin)   // 文档移入回收站

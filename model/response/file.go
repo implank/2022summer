@@ -77,6 +77,18 @@ type CreateDocumentA struct {
 	Success bool   `json:"success"`
 }
 
+type UploadDocumentQ struct {
+	DocumentName string `json:"document_name"`
+	DocumentID   uint64 `json:"document_id"`
+	ProjID       uint64 `json:"proj_id"`
+}
+
+type UploadDocumentA struct {
+	CommonA
+	Document database.Document
+	Rank     uint64 `json:"count"`
+}
+
 type UpdatePrototypeQ struct {
 	PrototypeID   uint64 `json:"prototype_id" binding:"required"`
 	PrototypeName string `json:"prototype_name" binding:"required"`

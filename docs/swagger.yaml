@@ -56,6 +56,8 @@ definitions:
     properties:
       ppage_id:
         type: integer
+      ppage_name:
+        type: string
     type: object
   database.Proj:
     properties:
@@ -798,6 +800,28 @@ definitions:
     - uml_id
     - uml_name
     type: object
+  response.UploadDocumentA:
+    properties:
+      code:
+        type: integer
+      count:
+        type: integer
+      document:
+        $ref: '#/definitions/database.Document'
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.UploadDocumentQ:
+    properties:
+      document_id:
+        type: integer
+      document_name:
+        type: string
+      proj_id:
+        type: integer
+    type: object
 info:
   contact: {}
 paths:
@@ -1114,6 +1138,27 @@ paths:
           schema:
             $ref: '#/definitions/response.UpdateUmlA'
       summary: 修改 Uml 名称
+      tags:
+      - 项目管理的第二页
+  /file/upload_document:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: （文档名称，文档所属项目ID）或文档ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.UploadDocumentQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.UploadDocumentA'
+      summary: 上传文档
       tags:
       - 项目管理的第二页
   /group/add_member:

@@ -511,6 +511,39 @@ const docTemplate = `{
                 }
             }
         },
+        "/file/upload_document": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "项目管理的第二页"
+                ],
+                "summary": "上传文档",
+                "parameters": [
+                    {
+                        "description": "（文档名称，文档所属项目ID）或文档ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.UploadDocumentQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.UploadDocumentA"
+                        }
+                    }
+                }
+            }
+        },
         "/group/add_member": {
             "post": {
                 "consumes": [
@@ -1367,6 +1400,9 @@ const docTemplate = `{
             "properties": {
                 "ppage_id": {
                     "type": "integer"
+                },
+                "ppage_name": {
+                    "type": "string"
                 }
             }
         },
@@ -2511,6 +2547,40 @@ const docTemplate = `{
                 },
                 "uml_name": {
                     "type": "string"
+                }
+            }
+        },
+        "response.UploadDocumentA": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "count": {
+                    "type": "integer"
+                },
+                "document": {
+                    "$ref": "#/definitions/database.Document"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.UploadDocumentQ": {
+            "type": "object",
+            "properties": {
+                "document_id": {
+                    "type": "integer"
+                },
+                "document_name": {
+                    "type": "string"
+                },
+                "proj_id": {
+                    "type": "integer"
                 }
             }
         }
