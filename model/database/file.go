@@ -3,8 +3,8 @@ package database
 type Prototype struct {
 	PrototypeID   uint64 `gorm:"primary_key;not null;" json:"prototype_id"`
 	PrototypeName string `gorm:"size:255;not null;" json:"prototype_name"`
-	PrototypeURL  string `gorm:"size:255;not null;" json:"prototype_url"`
-	Status        int    `gorm:"default:1;not null" json:"status"` // 1 正常、2 回收站
+	PrototypeURL  string `gorm:"size:255;not null;" json:"prototype_url"` // 先留着
+	Status        int    `gorm:"default:1;not null" json:"status"`        // 1 正常、2 回收站
 	ProjID        uint64 `gorm:"not null;" json:"proj_id"`
 }
 

@@ -146,20 +146,9 @@ func CreatePrototype(c *gin.Context) {
 		c.JSON(http.StatusOK, response.CreatePrototypeA{Message: "设计原型名已存在", Success: false})
 		return
 	}
-	raw := fmt.Sprintf("%d", data.ProjID) + time.Now().String() + data.PrototypeName
-	md5 := utils.GetMd5(raw)
-	dir := "./media/prototypes"
-	name := md5 + ".meow" // TODO 随便起的后缀名
-	filePath := path.Join(dir, name)
-	file, err := os.Create(filePath)
-	defer utils.CloseFile(file)
-	if err != nil {
-		c.JSON(http.StatusOK, response.CreatePrototypeA{Message: "创建设计原型失败", Success: false})
-		return
-	}
-	err = service.CreatePrototype(&database.Prototype{
+	err := service.CreatePrototype(&database.Prototype{
 		PrototypeName: data.PrototypeName,
-		PrototypeURL:  "http://43.138.77.133:81/media/prototypes/" + name,
+		PrototypeURL:  "",
 		ProjID:        data.ProjID})
 	if err != nil {
 		c.JSON(http.StatusOK, response.CreatePrototypeA{Message: "创建设计原型失败", Success: false})
