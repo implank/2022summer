@@ -2,6 +2,14 @@ package response
 
 import "2022summer/model"
 
+type CreateGroupQ struct {
+	GroupName string `json:"group_name" binding:"required"`
+	GroupInfo string `json:"group_info"`
+}
+type CreateGroupA struct {
+	CommonA
+	Group model.Group `json:"group"`
+}
 type GetIdentityQ struct {
 	GroupID uint64 `json:"group_id"`
 }
@@ -33,7 +41,7 @@ type RemoveMemberA struct {
 type SetMemberStatusQ struct {
 	UserID  uint64 `json:"user_id"`
 	GroupID uint64 `json:"group_id"`
-	Status  int    `json:"status"`
+	Status  int    `json:"status" binding:"oneof=1 2"`
 }
 type SetMemberStatusA struct {
 	CommonA

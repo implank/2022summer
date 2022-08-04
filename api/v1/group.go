@@ -9,8 +9,36 @@ import (
 	"net/http"
 )
 
+// CreateGroup
+// @Tags Group
+// @Accept json
+// @Produce json
+// @Param data body response.CreateGroupQ true "团队名称，团队介绍"
+// @Success 200 {object} response.CreateGroupA
+// @Router /group/create_group [post]
 func CreateGroup(c *gin.Context) {
-
+	var data response.CreateGroupQ
+	if err := utils.ShouldBindAndValid(c, &data); err != nil {
+		c.JSON(http.StatusOK, response.PARAMERROR)
+		return
+	}
+	poster := c.MustGet("user").(model.User)
+	group := model.Group{
+		GroupName: data.GroupName,
+		GroupInfo: data.GroupInfo,
+		UserID:    poster.UserID,
+	}
+	if err := service.CreateGroup(&group); err != nil {
+		c.JSON(http.StatusOK, response.DBERROR)
+		return
+	}
+	c.JSON(http.StatusOK, response.CreateGroupA{
+		CommonA: response.CommonA{
+			Message: "创建成功",
+			Success: true,
+		},
+		Group: group,
+	})
 }
 
 // GetIdentity
@@ -135,7 +163,11 @@ func RemoveMember(c *gin.Context) {
 // @Success 200 {object} response.SetMemberStatusA
 // @Router /group/set_member_status [post]
 func SetMemberStatus(c *gin.Context) {
-	data := utils.BindJsonAndValid(c, &response.SetMemberStatusQ{}).(*response.SetMemberStatusQ)
+	var data response.SetMemberStatusQ
+	if err := c.ShouldBindJSON(&data); err != nil {
+		c.JSON(http.StatusOK, response.PARAMERROR)
+		return
+	}
 	poster, _ := c.Get("user")
 	identity1, notFound := service.QueryIdentity(poster.(model.User).UserID, data.GroupID)
 	if notFound || identity1.Status == 1 {
@@ -188,12 +220,5 @@ func SetMemberStatus(c *gin.Context) {
 		} else {
 			c.JSON(http.StatusOK, response.SetMemberStatusA{CommonA: response.NOAUTH})
 		}
-	default:
-		c.JSON(http.StatusOK, response.SetMemberStatusA{
-			CommonA: response.CommonA{
-				Message: "非法操作",
-				Success: false,
-			},
-		})
 	}
 }

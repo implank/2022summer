@@ -11,7 +11,7 @@ import (
 )
 
 // Register
-// @Tags User
+// @Tags 基本模块
 // @Accept json
 // @Produce json
 // @Param data body response.RegisterQ true "用户名，密码"
@@ -49,7 +49,7 @@ func Register(c *gin.Context) {
 }
 
 // Login
-// @Tags User
+// @Tags 基本模块
 // @Accept json
 // @Produce json
 // @Param data body response.LoginQ true "用户名，密码"
@@ -87,12 +87,12 @@ func Login(c *gin.Context) {
 }
 
 // GetUserInfo
-// @Tags User
+// @Tags 用户模块
 // @Accept json
 // @Produce json
 // @Param data body response.GetUserInfoQ true "用户名，密码"
 // @Success 200 {object} response.GetUserInfoA
-// @Router /info [post]
+// @Router /user/info [post]
 func GetUserInfo(c *gin.Context) {
 	poster, _ := c.Get("user")
 	data := utils.BindJsonAndValid(c, &response.GetUserInfoQ{}).(*response.GetUserInfoQ)
@@ -118,4 +118,77 @@ func GetUserInfo(c *gin.Context) {
 		Poster: poster.(model.User),
 		User:   user,
 	})
+}
+
+// ModifyPassword
+// @Tags 用户模块
+// @Accept json
+// @Produce json
+// @Param data body response.ModifyPasswordQ true "新密码"
+// @Success 200 {object} response.ModifyPasswordA
+// @Router /user/modify_password [post]
+func ModifyPassword(c *gin.Context) {
+	var data response.ModifyPasswordQ
+	if err := utils.ShouldBindAndValid(c, &data); err != nil {
+		c.JSON(http.StatusOK, response.PARAMERROR)
+		return
+	}
+	poster := c.MustGet("user").(model.User)
+	poster.Password = data.Password
+	if err := service.UpdateUser(&poster); err != nil {
+		c.JSON(http.StatusOK, response.DBERROR)
+		return
+	}
+	c.JSON(http.StatusOK, response.ModifyPasswordA{
+		CommonA: response.CommonA{
+			Message: "修改成功",
+			Success: true,
+		},
+	})
+}
+
+// ModifyInfo
+// @Tags 用户模块
+// @Accept json
+// @Produce json
+// @Param data body response.ModifyInfoQ true "用户信息"
+// @Success 200 {object} response.ModifyInfoA
+// @Router /user/modify_info [post]
+func ModifyInfo(c *gin.Context) {
+	var data response.ModifyInfoQ
+	if err := utils.ShouldBindAndValid(c, &data); err != nil {
+		c.JSON(http.StatusOK, response.PARAMERROR)
+		return
+	}
+	poster := c.MustGet("user").(model.User)
+	if _, notFound := service.QueryUserByUsername(data.Username); !notFound {
+		c.JSON(http.StatusOK, response.ModifyInfoA{
+			CommonA: response.CommonA{
+				Message: "用户名已存在",
+				Success: false,
+			},
+		})
+		return
+	}
+	if _, notFound := service.QueryUserByEmail(data.Email); !notFound {
+		c.JSON(http.StatusOK, response.ModifyInfoA{
+			CommonA: response.CommonA{
+				Message: "邮箱已存在",
+				Success: false,
+			},
+		})
+		return
+	}
+	poster.Username = data.Username
+	poster.Email = data.Email
+	poster.Age = data.Age
+	poster.Sex = data.Sex
+	if err := service.UpdateUser(&poster); err != nil {
+		c.JSON(http.StatusOK, response.ModifyInfoA{
+			response.CommonA{
+				Message: "修改成功",
+				Success: true,
+			},
+		})
+	}
 }

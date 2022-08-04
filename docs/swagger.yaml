@@ -13,6 +13,18 @@ definitions:
         description: 1 正常、2 回收站
         type: integer
     type: object
+  model.Group:
+    properties:
+      groupID:
+        type: integer
+      groupInfo:
+        type: string
+      groupName:
+        type: string
+      userID:
+        description: 团队创建者
+        type: integer
+    type: object
   model.GroupMember:
     properties:
       email:
@@ -122,6 +134,26 @@ definitions:
         type: integer
     required:
     - document_name
+    type: object
+  response.CreateGroupA:
+    properties:
+      code:
+        type: integer
+      group:
+        $ref: '#/definitions/model.Group'
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.CreateGroupQ:
+    properties:
+      group_info:
+        type: string
+      group_name:
+        type: string
+    required:
+    - group_name
     type: object
   response.CreateProjA:
     properties:
@@ -427,6 +459,42 @@ definitions:
       username:
         type: string
     type: object
+  response.ModifyInfoA:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.ModifyInfoQ:
+    properties:
+      age:
+        type: integer
+      email:
+        type: string
+      sex:
+        type: string
+      username:
+        type: string
+    type: object
+  response.ModifyPasswordA:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.ModifyPasswordQ:
+    properties:
+      password:
+        type: string
+    required:
+    - password
+    type: object
   response.MoveDocumentToBinA:
     properties:
       message:
@@ -529,6 +597,9 @@ definitions:
       group_id:
         type: integer
       status:
+        enum:
+        - 1
+        - 2
         type: integer
       user_id:
         type: integer
@@ -941,6 +1012,26 @@ paths:
             $ref: '#/definitions/response.AddMemberA'
       tags:
       - Group
+  /group/create_group:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 团队名称，团队介绍
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.CreateGroupQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.CreateGroupA'
+      tags:
+      - Group
   /group/get_group_members:
     post:
       consumes:
@@ -1021,26 +1112,6 @@ paths:
             $ref: '#/definitions/response.SetMemberStatusA'
       tags:
       - Group
-  /info:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 用户名，密码
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/response.GetUserInfoQ'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.GetUserInfoA'
-      tags:
-      - User
   /login:
     post:
       consumes:
@@ -1060,7 +1131,7 @@ paths:
           schema:
             $ref: '#/definitions/response.LoginA'
       tags:
-      - User
+      - 基本模块
   /proj/create_proj:
     post:
       consumes:
@@ -1227,5 +1298,65 @@ paths:
           schema:
             $ref: '#/definitions/response.RegisterA'
       tags:
-      - User
+      - 基本模块
+  /user/info:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 用户名，密码
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.GetUserInfoQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.GetUserInfoA'
+      tags:
+      - 用户模块
+  /user/modify_info:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 用户信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.ModifyInfoQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ModifyInfoA'
+      tags:
+      - 用户模块
+  /user/modify_password:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 新密码
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.ModifyPasswordQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ModifyPasswordA'
+      tags:
+      - 用户模块
 swagger: "2.0"

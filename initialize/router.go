@@ -20,17 +20,22 @@ func SetupRouter(r *gin.Engine) {
 
 	r.GET("/test", testGin)
 
-	userGroup := r.Group("/api/v1")
+	baseGroup := r.Group("/api/v1")
 	{
-		userGroup.POST("/register", v1.Register)
-		userGroup.POST("/login", v1.Login)
+		baseGroup.POST("/register", v1.Register)
+		baseGroup.POST("/login", v1.Login)
 	}
 
-	userGroup.POST("/info", middleware.AuthRequired(), v1.GetUserInfo)
+	userGroup := baseGroup.Group("/user", middleware.AuthRequired())
+	{
+		userGroup.POST("/info", v1.GetUserInfo)
+		userGroup.POST("/modify_password", v1.ModifyPassword)
+		userGroup.POST("/modify_info", v1.ModifyInfo)
+	}
 
 	groupGroup := userGroup.Group("/group", middleware.AuthRequired())
 	{
-		//groupGroup.POST("/create", v1.CreateGroup)
+		groupGroup.POST("/create_group", v1.CreateGroup)
 		groupGroup.POST("/get_identity", v1.GetIdentity)
 		groupGroup.POST("/get_group_members", v1.GetMembers)
 		groupGroup.POST("/add_member", v1.AddMember)
