@@ -543,6 +543,38 @@ const docTemplate = `{
                 }
             }
         },
+        "/group/create_group": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Group"
+                ],
+                "parameters": [
+                    {
+                        "description": "团队名称，团队介绍",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.CreateGroupQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.CreateGroupA"
+                        }
+                    }
+                }
+            }
+        },
         "/group/get_group_members": {
             "post": {
                 "consumes": [
@@ -671,38 +703,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/info": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "parameters": [
-                    {
-                        "description": "用户名，密码",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/response.GetUserInfoQ"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.GetUserInfoA"
-                        }
-                    }
-                }
-            }
-        },
         "/login": {
             "post": {
                 "consumes": [
@@ -712,7 +712,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "User"
+                    "基本模块"
                 ],
                 "parameters": [
                     {
@@ -975,7 +975,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "User"
+                    "基本模块"
                 ],
                 "parameters": [
                     {
@@ -993,6 +993,102 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/response.RegisterA"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/info": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户模块"
+                ],
+                "parameters": [
+                    {
+                        "description": "用户名，密码",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.GetUserInfoQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.GetUserInfoA"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/modify_info": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户模块"
+                ],
+                "parameters": [
+                    {
+                        "description": "用户信息",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.ModifyInfoQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.ModifyInfoA"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/modify_password": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户模块"
+                ],
+                "parameters": [
+                    {
+                        "description": "新密码",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.ModifyPasswordQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.ModifyPasswordA"
                         }
                     }
                 }
@@ -1017,6 +1113,24 @@ const docTemplate = `{
                 },
                 "status": {
                     "description": "1 正常、2 回收站",
+                    "type": "integer"
+                }
+            }
+        },
+        "model.Group": {
+            "type": "object",
+            "properties": {
+                "groupID": {
+                    "type": "integer"
+                },
+                "groupInfo": {
+                    "type": "string"
+                },
+                "groupName": {
+                    "type": "string"
+                },
+                "userID": {
+                    "description": "团队创建者",
                     "type": "integer"
                 }
             }
@@ -1182,6 +1296,37 @@ const docTemplate = `{
                 },
                 "proj_id": {
                     "type": "integer"
+                }
+            }
+        },
+        "response.CreateGroupA": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "group": {
+                    "$ref": "#/definitions/model.Group"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.CreateGroupQ": {
+            "type": "object",
+            "required": [
+                "group_name"
+            ],
+            "properties": {
+                "group_info": {
+                    "type": "string"
+                },
+                "group_name": {
+                    "type": "string"
                 }
             }
         },
@@ -1638,6 +1783,62 @@ const docTemplate = `{
                 }
             }
         },
+        "response.ModifyInfoA": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.ModifyInfoQ": {
+            "type": "object",
+            "properties": {
+                "age": {
+                    "type": "integer"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "sex": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.ModifyPasswordA": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.ModifyPasswordQ": {
+            "type": "object",
+            "required": [
+                "password"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
         "response.MoveDocumentToBinA": {
             "type": "object",
             "properties": {
@@ -1788,7 +1989,11 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "status": {
-                    "type": "integer"
+                    "type": "integer",
+                    "enum": [
+                        1,
+                        2
+                    ]
                 },
                 "user_id": {
                     "type": "integer"
