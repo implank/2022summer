@@ -1,4 +1,4 @@
-package model
+package database
 
 type User struct {
 	UserID   uint64 `gorm:"primary_key;not null;"`

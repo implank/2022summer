@@ -1,7 +1,7 @@
 package v1
 
 import (
-	"2022summer/model"
+	"2022summer/model/database"
 	"2022summer/model/response"
 	"2022summer/service"
 	"2022summer/utils"
@@ -29,11 +29,11 @@ func CreateProj(c *gin.Context) {
 		c.JSON(http.StatusOK, response.CreateProjA{Message: "项目名已存在", Success: false})
 		return
 	}
-	err := service.CreateProj(&model.Proj{
+	err := service.CreateProj(&database.Proj{
 		ProjName: data.ProjName,
 		ProjInfo: data.ProjInfo,
 		GroupID:  data.GroupID,
-		UserID:   poster.(model.User).UserID})
+		UserID:   poster.(database.User).UserID})
 	if err != nil {
 		c.JSON(http.StatusOK, response.CreateProjA{Message: "创建项目失败", Success: false})
 		return
@@ -123,8 +123,8 @@ func GetProjAll(c *gin.Context) {
 		return
 	}
 	projs := service.GetUserProjsInGroup(poster.(model.User).UserID, data.GroupID, 1, 3)*/
-	fmt.Println(poster.(model.User).UserID)
-	projs := service.GetUserProjs(poster.(model.User).UserID, 1, 3)
+	fmt.Println(poster.(database.User).UserID)
+	projs := service.GetUserProjs(poster.(database.User).UserID, 1, 3)
 	x := len(projs)
 	if x == 0 {
 		c.JSON(http.StatusOK, response.GetProjAllA{
@@ -151,7 +151,7 @@ func GetProjAll(c *gin.Context) {
 // @Router /proj/get_proj_create [post]
 func GetProjCreate(c *gin.Context) {
 	poster, _ := c.Get("user")
-	projs := service.GetUserProjs(poster.(model.User).UserID, 1, 1)
+	projs := service.GetUserProjs(poster.(database.User).UserID, 1, 1)
 	x := len(projs)
 	if x == 0 {
 		c.JSON(http.StatusOK, response.GetProjCreateA{
@@ -178,7 +178,7 @@ func GetProjCreate(c *gin.Context) {
 // @Router /proj/get_proj_join [post]
 func GetProjJoin(c *gin.Context) {
 	poster, _ := c.Get("user")
-	projs := service.GetUserProjs(poster.(model.User).UserID, 1, 2)
+	projs := service.GetUserProjs(poster.(database.User).UserID, 1, 2)
 	x := len(projs)
 	if x == 0 {
 		c.JSON(http.StatusOK, response.GetProjJoinA{

@@ -72,6 +72,15 @@ func SetupRouter(r *gin.Engine) {
 		fileGroup.POST("/get_files_by_name", v1.GetFilesByName)         // 搜索框
 	}
 
+	pPageGroup := r.Group("/api/v1/ppage", middleware.AuthRequired())
+	{
+		pPageGroup.POST("/get_ppages", v1.GetPPages)         // 获取某个设计原型的所有页面
+		pPageGroup.POST("/get_ppage_by_id", v1.GetPPageByID) // 获取设计原型的某个页面
+		pPageGroup.POST("/create_ppage", v1.CreatePPage)     // 创建设计原型的一个页面
+		pPageGroup.POST("/update_ppage", v1.UpdatePPage)     // 修改设计原型的某个页面的名称或数据
+		pPageGroup.POST("/delete_ppage", v1.DeletePPage)     // 删除设计原型的某个页面
+	}
+
 	binGroup := r.Group("/api/v1/bin", middleware.AuthRequired())
 	{
 		binGroup.POST("/delete_proj", v1.DeleteProj)                       // 删除项目
