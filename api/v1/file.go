@@ -1,7 +1,7 @@
 package v1
 
 import (
-	"2022summer/model"
+	"2022summer/model/database"
 	"2022summer/model/response"
 	"2022summer/service"
 	"2022summer/utils"
@@ -157,7 +157,7 @@ func CreatePrototype(c *gin.Context) {
 		c.JSON(http.StatusOK, response.CreatePrototypeA{Message: "创建设计原型失败", Success: false})
 		return
 	}
-	err = service.CreatePrototype(&model.Prototype{
+	err = service.CreatePrototype(&database.Prototype{
 		PrototypeName: data.PrototypeName,
 		PrototypeURL:  "http://43.138.77.133:81/media/prototypes/" + name,
 		ProjID:        data.ProjID})
@@ -193,7 +193,7 @@ func CreateUml(c *gin.Context) {
 	filePath := path.Join(dir, name)
 	file, err := os.Create(filePath)
 	defer utils.CloseFile(file)
-	err = service.CreateUml(&model.Uml{
+	err = service.CreateUml(&database.Uml{
 		UmlName: data.UmlName,
 		UmlURL:  "http://43.138.77.133:81/media/umls/" + name,
 		ProjID:  data.ProjID})
@@ -229,7 +229,7 @@ func CreateDocument(c *gin.Context) {
 	filePath := path.Join(dir, name)
 	file, err := os.Create(filePath)
 	defer utils.CloseFile(file)
-	err = service.CreateDocument(&model.Document{
+	err = service.CreateDocument(&database.Document{
 		DocumentName: data.DocumentName,
 		DocumentURL:  "http://43.138.77.133:81/media/documents/" + name,
 		ProjID:       data.ProjID})

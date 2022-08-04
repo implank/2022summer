@@ -1,6 +1,8 @@
 package response
 
-import "2022summer/model"
+import (
+	"2022summer/model/database"
+)
 
 type RegisterQ struct {
 	Username string `json:"username"`
@@ -27,6 +29,6 @@ type GetUserInfoQ struct {
 
 type GetUserInfoA struct {
 	CommonA
-	User   model.User `json:"user"`
-	Poster model.User `json:"poster"`
+	User   database.User `json:"user"`
+	Poster database.User `json:"poster"`
 }

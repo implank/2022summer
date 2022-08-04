@@ -1,6 +1,8 @@
 package response
 
-import "2022summer/model"
+import (
+	"2022summer/model/database"
+)
 
 type GetIdentityQ struct {
 	GroupID uint64 `json:"group_id"`
@@ -14,7 +16,7 @@ type GetMembersQ struct {
 }
 type GetMembersA struct {
 	CommonA
-	Members []model.GroupMember `json:"members"`
+	Members []database.GroupMember `json:"members"`
 }
 type AddMemberQ struct {
 	GroupID uint64 `json:"group_id"`

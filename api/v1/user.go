@@ -1,7 +1,7 @@
 package v1
 
 import (
-	"2022summer/model"
+	"2022summer/model/database"
 	"2022summer/model/response"
 	"2022summer/service"
 	"2022summer/utils"
@@ -29,7 +29,7 @@ func Register(c *gin.Context) {
 		return
 	}
 	HashedPassword, _ := bcrypt.GenerateFromPassword([]byte(data.Password), bcrypt.DefaultCost)
-	if err := service.CreateUser(&model.User{
+	if err := service.CreateUser(&database.User{
 		Username: data.Username,
 		Password: string(HashedPassword)}); err != nil {
 		c.JSON(http.StatusOK, response.RegisterA{
@@ -105,7 +105,7 @@ func GetUserInfo(c *gin.Context) {
 				Success: false,
 				Code:    200,
 			},
-			Poster: poster.(model.User),
+			Poster: poster.(database.User),
 		})
 		return
 	}
@@ -115,7 +115,7 @@ func GetUserInfo(c *gin.Context) {
 			Success: true,
 			Code:    200,
 		},
-		Poster: poster.(model.User),
+		Poster: poster.(database.User),
 		User:   user,
 	})
 }
