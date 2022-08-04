@@ -6,10 +6,15 @@ import (
 )
 
 func GetPPages(prototypeID uint64) (ppages []database.PPageID) {
-	global.DB.Table("p_pages").Select("p_page_id").
+	global.DB.Table("p_pages").Select("p_page_id, p_page_name").
 		Where("prototype_id = ?", prototypeID).Find(&ppages).RecordNotFound()
 	return ppages
 }
+
+/*func GetPPages(prototypeID uint64) (ppages []database.PPage) { // 如果需要把 data 一起传回去
+	global.DB.Where("prototype_id = ?", prototypeID).Find(&ppages).RecordNotFound()
+	return ppages
+}*/
 
 func QueryPPageByPPageName(pPageName string, prototypeID uint64) (ppage database.PPage, notFound bool) {
 	notFound = global.DB.Where("p_page_name = ? and prototype_id = ?", pPageName, prototypeID).First(&ppage).RecordNotFound()
