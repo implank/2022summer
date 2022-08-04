@@ -29,12 +29,27 @@ func Register(c *gin.Context) {
 		return
 	}
 	HashedPassword, _ := bcrypt.GenerateFromPassword([]byte(data.Password), bcrypt.DefaultCost)
-	if err := service.CreateUser(&database.User{
+	user := database.User{
 		Username: data.Username,
-		Password: string(HashedPassword)}); err != nil {
+		Password: string(HashedPassword),
+	}
+	if err := service.CreateUser(&user); err != nil {
 		c.JSON(http.StatusOK, response.RegisterA{
 			CommonA: response.CommonA{
 				Message: "注册失败",
+				Success: false,
+			},
+		})
+		return
+	}
+	group := database.Group{
+		GroupName: data.Username + "的团队",
+		UserID:    user.UserID,
+	}
+	if err := service.CreateGroup(&group); err != nil {
+		c.JSON(http.StatusOK, response.RegisterA{
+			CommonA: response.CommonA{
+				Message: "创建团队失败",
 				Success: false,
 			},
 		})
@@ -186,7 +201,7 @@ func ModifyInfo(c *gin.Context) {
 	poster.Sex = data.Sex
 	if err := service.UpdateUser(&poster); err != nil {
 		c.JSON(http.StatusOK, response.ModifyInfoA{
-			response.CommonA{
+			CommonA: response.CommonA{
 				Message: "修改成功",
 				Success: true,
 			},

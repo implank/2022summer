@@ -27,8 +27,8 @@ type GetMembersA struct {
 	Members []database.GroupMember `json:"members"`
 }
 type AddMemberQ struct {
-	GroupID uint64 `json:"group_id"`
-	UserID  uint64 `json:"user_id"`
+	GroupID  uint64 `json:"group_id"`
+	Username string `json:"username"`
 }
 type AddMemberA struct {
 	CommonA
@@ -47,6 +47,13 @@ type SetMemberStatusQ struct {
 }
 type SetMemberStatusA struct {
 	CommonA
+}
+type GetGroupsQ struct {
+}
+type GetGroupsA struct {
+	CommonA
+	Count  int              `json:"count"`
+	Groups []database.Group `json:"groups"`
 }
 
 var (
