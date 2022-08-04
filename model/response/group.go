@@ -10,7 +10,7 @@ type CreateGroupQ struct {
 }
 type CreateGroupA struct {
 	CommonA
-	Group model.Group `json:"group"`
+	Group database.Group `json:"group"`
 }
 type GetIdentityQ struct {
 	GroupID uint64 `json:"group_id"`

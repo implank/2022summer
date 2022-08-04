@@ -735,6 +735,171 @@ const docTemplate = `{
                 }
             }
         },
+        "/ppage/create_ppage": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "设计原型的页面"
+                ],
+                "summary": "创建设计原型的一个页面",
+                "parameters": [
+                    {
+                        "description": "页面名称，页面数据（可选），页面所属设计原型ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.CreatePPageQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.CreatePPageA"
+                        }
+                    }
+                }
+            }
+        },
+        "/ppage/delete_ppage": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "设计原型的页面"
+                ],
+                "summary": "删除设计原型的某个页面",
+                "parameters": [
+                    {
+                        "description": "页面ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.DeletePPageQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.DeletePPageA"
+                        }
+                    }
+                }
+            }
+        },
+        "/ppage/get_ppage_by_id": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "设计原型的页面"
+                ],
+                "summary": "获取设计原型的某个页面",
+                "parameters": [
+                    {
+                        "description": "页面ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.GetPPageByIDQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.GetPPageByIDA"
+                        }
+                    }
+                }
+            }
+        },
+        "/ppage/get_ppages": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "设计原型的页面"
+                ],
+                "summary": "获取某个设计原型的所有页面的ID",
+                "parameters": [
+                    {
+                        "description": "设计原型ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.GetPPagesQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.GetPPagesA"
+                        }
+                    }
+                }
+            }
+        },
+        "/ppage/update_ppage": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "设计原型的页面"
+                ],
+                "summary": "修改设计原型的某个页面的名称或数据",
+                "parameters": [
+                    {
+                        "description": "页面ID，页面名称（可选，如果没填或者为空字符串，则不修改），页面数据（可选，如果没填或者为空字符串，则不修改）",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.UpdatePPageQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.UpdatePPageA"
+                        }
+                    }
+                }
+            }
+        },
         "/proj/create_proj": {
             "post": {
                 "consumes": [
@@ -1096,7 +1261,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "model.Document": {
+        "database.Document": {
             "type": "object",
             "properties": {
                 "document_id": {
@@ -1117,7 +1282,7 @@ const docTemplate = `{
                 }
             }
         },
-        "model.Group": {
+        "database.Group": {
             "type": "object",
             "properties": {
                 "groupID": {
@@ -1135,7 +1300,7 @@ const docTemplate = `{
                 }
             }
         },
-        "model.GroupMember": {
+        "database.GroupMember": {
             "type": "object",
             "properties": {
                 "email": {
@@ -1155,7 +1320,36 @@ const docTemplate = `{
                 }
             }
         },
-        "model.Proj": {
+        "database.PPage": {
+            "type": "object",
+            "properties": {
+                "ppage_data": {
+                    "type": "string"
+                },
+                "ppage_id": {
+                    "type": "integer"
+                },
+                "ppage_name": {
+                    "type": "string"
+                },
+                "ppage_url": {
+                    "description": "先写上",
+                    "type": "string"
+                },
+                "prototype_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "database.PPageID": {
+            "type": "object",
+            "properties": {
+                "ppage_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "database.Proj": {
             "type": "object",
             "properties": {
                 "group_id": {
@@ -1181,7 +1375,7 @@ const docTemplate = `{
                 }
             }
         },
-        "model.Prototype": {
+        "database.Prototype": {
             "type": "object",
             "properties": {
                 "proj_id": {
@@ -1194,6 +1388,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "prototype_url": {
+                    "description": "先留着",
                     "type": "string"
                 },
                 "status": {
@@ -1202,7 +1397,7 @@ const docTemplate = `{
                 }
             }
         },
-        "model.Uml": {
+        "database.Uml": {
             "type": "object",
             "properties": {
                 "proj_id": {
@@ -1223,7 +1418,7 @@ const docTemplate = `{
                 }
             }
         },
-        "model.User": {
+        "database.User": {
             "type": "object",
             "properties": {
                 "age": {
@@ -1309,7 +1504,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "group": {
-                    "$ref": "#/definitions/model.Group"
+                    "$ref": "#/definitions/database.Group"
                 },
                 "message": {
                     "type": "string"
@@ -1330,6 +1525,35 @@ const docTemplate = `{
                 },
                 "group_name": {
                     "type": "string"
+                }
+            }
+        },
+        "response.CreatePPageA": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.CreatePPageQ": {
+            "type": "object",
+            "required": [
+                "ppage_name",
+                "prototype_id"
+            ],
+            "properties": {
+                "ppage_data": {
+                    "type": "string"
+                },
+                "ppage_name": {
+                    "type": "string"
+                },
+                "prototype_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -1412,6 +1636,28 @@ const docTemplate = `{
                 }
             }
         },
+        "response.DeletePPageA": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.DeletePPageQ": {
+            "type": "object",
+            "required": [
+                "ppage_id"
+            ],
+            "properties": {
+                "ppage_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "response.DeleteProjA": {
             "type": "object",
             "properties": {
@@ -1449,7 +1695,7 @@ const docTemplate = `{
                 "documents": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.Document"
+                        "$ref": "#/definitions/database.Document"
                     }
                 },
                 "message": {
@@ -1458,7 +1704,7 @@ const docTemplate = `{
                 "prototypes": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.Prototype"
+                        "$ref": "#/definitions/database.Prototype"
                     }
                 },
                 "success": {
@@ -1467,7 +1713,7 @@ const docTemplate = `{
                 "umls": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.Uml"
+                        "$ref": "#/definitions/database.Uml"
                     }
                 }
             }
@@ -1514,7 +1760,7 @@ const docTemplate = `{
                 "members": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.GroupMember"
+                        "$ref": "#/definitions/database.GroupMember"
                     }
                 },
                 "message": {
@@ -1533,6 +1779,62 @@ const docTemplate = `{
                 }
             }
         },
+        "response.GetPPageByIDA": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "ppage": {
+                    "$ref": "#/definitions/database.PPage"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.GetPPageByIDQ": {
+            "type": "object",
+            "required": [
+                "ppage_id"
+            ],
+            "properties": {
+                "ppage_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "response.GetPPagesA": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "ppages": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/database.PPageID"
+                    }
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.GetPPagesQ": {
+            "type": "object",
+            "required": [
+                "prototype_id"
+            ],
+            "properties": {
+                "prototype_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "response.GetProjAllA": {
             "type": "object",
             "properties": {
@@ -1545,7 +1847,7 @@ const docTemplate = `{
                 "projs": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.Proj"
+                        "$ref": "#/definitions/database.Proj"
                     }
                 },
                 "success": {
@@ -1563,7 +1865,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "proj": {
-                    "$ref": "#/definitions/model.Proj"
+                    "$ref": "#/definitions/database.Proj"
                 },
                 "success": {
                     "type": "boolean"
@@ -1593,7 +1895,7 @@ const docTemplate = `{
                 "projs": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.Proj"
+                        "$ref": "#/definitions/database.Proj"
                     }
                 },
                 "success": {
@@ -1621,7 +1923,7 @@ const docTemplate = `{
                 "projs": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.Proj"
+                        "$ref": "#/definitions/database.Proj"
                     }
                 },
                 "success": {
@@ -1641,7 +1943,7 @@ const docTemplate = `{
                 "documents": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.Document"
+                        "$ref": "#/definitions/database.Document"
                     }
                 },
                 "message": {
@@ -1675,7 +1977,7 @@ const docTemplate = `{
                 "projs": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.Proj"
+                        "$ref": "#/definitions/database.Proj"
                     }
                 },
                 "success": {
@@ -1698,7 +2000,7 @@ const docTemplate = `{
                 "prototypes": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.Prototype"
+                        "$ref": "#/definitions/database.Prototype"
                     }
                 },
                 "success": {
@@ -1732,7 +2034,7 @@ const docTemplate = `{
                 "umls": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.Uml"
+                        "$ref": "#/definitions/database.Uml"
                     }
                 }
             }
@@ -1758,13 +2060,13 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "poster": {
-                    "$ref": "#/definitions/model.User"
+                    "$ref": "#/definitions/database.User"
                 },
                 "success": {
                     "type": "boolean"
                 },
                 "user": {
-                    "$ref": "#/definitions/model.User"
+                    "$ref": "#/definitions/database.User"
                 }
             }
         },
@@ -2052,6 +2354,34 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "document_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.UpdatePPageA": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.UpdatePPageQ": {
+            "type": "object",
+            "required": [
+                "ppage_id"
+            ],
+            "properties": {
+                "ppage_data": {
+                    "type": "string"
+                },
+                "ppage_id": {
+                    "type": "integer"
+                },
+                "ppage_name": {
                     "type": "string"
                 }
             }

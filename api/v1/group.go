@@ -22,8 +22,8 @@ func CreateGroup(c *gin.Context) {
 		c.JSON(http.StatusOK, response.PARAMERROR)
 		return
 	}
-	poster := c.MustGet("user").(model.User)
-	group := model.Group{
+	poster := c.MustGet("user").(database.User)
+	group := database.Group{
 		GroupName: data.GroupName,
 		GroupInfo: data.GroupInfo,
 		UserID:    poster.UserID,

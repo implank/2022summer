@@ -10,7 +10,7 @@ import (
 )
 
 // GetPPages
-// @Summary 获取某个设计原型的所有页面
+// @Summary 获取某个设计原型的所有页面的ID
 // @Tags 设计原型的页面
 // @Accept json
 // @Produce json

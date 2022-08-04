@@ -133,7 +133,7 @@ func ModifyPassword(c *gin.Context) {
 		c.JSON(http.StatusOK, response.PARAMERROR)
 		return
 	}
-	poster := c.MustGet("user").(model.User)
+	poster := c.MustGet("user").(database.User)
 	poster.Password = data.Password
 	if err := service.UpdateUser(&poster); err != nil {
 		c.JSON(http.StatusOK, response.DBERROR)
@@ -160,7 +160,7 @@ func ModifyInfo(c *gin.Context) {
 		c.JSON(http.StatusOK, response.PARAMERROR)
 		return
 	}
-	poster := c.MustGet("user").(model.User)
+	poster := c.MustGet("user").(database.User)
 	if _, notFound := service.QueryUserByUsername(data.Username); !notFound {
 		c.JSON(http.StatusOK, response.ModifyInfoA{
 			CommonA: response.CommonA{
