@@ -2,7 +2,7 @@ package initialize
 
 import (
 	"2022summer/global"
-	"2022summer/model"
+	"2022summer/model/database"
 	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -38,15 +38,16 @@ func InitMySQL() {
 	// 迁移
 	global.DB.AutoMigrate(
 		//base
-		&model.User{},
+		&database.User{},
 		//group
-		&model.Identity{},
-		&model.Group{},
+		&database.Identity{},
+		&database.Group{},
 		//project
-		&model.Proj{},
-		&model.Prototype{},
-		&model.Uml{},
-		&model.Document{},
+		&database.Proj{},
+		&database.Prototype{},
+		&database.Uml{},
+		&database.Document{},
+		&database.PPage{},
 	)
 
 	// 检查数据库连接是否存在, 好像没啥用

@@ -1,7 +1,7 @@
 package v1
 
 import (
-	"2022summer/model"
+	"2022summer/model/database"
 	"2022summer/model/response"
 	"2022summer/service"
 	"2022summer/utils"
@@ -22,8 +22,8 @@ func CreateGroup(c *gin.Context) {
 		c.JSON(http.StatusOK, response.PARAMERROR)
 		return
 	}
-	poster := c.MustGet("user").(model.User)
-	group := model.Group{
+	poster := c.MustGet("user").(database.User)
+	group := database.Group{
 		GroupName: data.GroupName,
 		GroupInfo: data.GroupInfo,
 		UserID:    poster.UserID,
@@ -51,7 +51,7 @@ func CreateGroup(c *gin.Context) {
 func GetIdentity(c *gin.Context) {
 	data := utils.BindJsonAndValid(c, &response.GetIdentityQ{}).(*response.GetIdentityQ)
 	poster, _ := c.Get("user")
-	identity, notFound := service.QueryIdentity(poster.(model.User).UserID, data.GroupID)
+	identity, notFound := service.QueryIdentity(poster.(database.User).UserID, data.GroupID)
 	if notFound {
 		c.JSON(http.StatusOK, response.GetIdentityA{CommonA: response.NOMENBER})
 		return
@@ -80,7 +80,7 @@ func GetMembers(c *gin.Context) {
 	}
 	poster, _ := c.Get("user")
 	print(data.GroupID)
-	if _, notFound := service.QueryIdentity(poster.(model.User).UserID, data.GroupID); notFound {
+	if _, notFound := service.QueryIdentity(poster.(database.User).UserID, data.GroupID); notFound {
 		c.JSON(http.StatusOK, response.GetMembersA{CommonA: response.NOMENBER})
 		return
 	}
@@ -104,12 +104,12 @@ func GetMembers(c *gin.Context) {
 func AddMember(c *gin.Context) {
 	data := utils.BindJsonAndValid(c, &response.AddMemberQ{}).(*response.AddMemberQ)
 	poster, _ := c.Get("user")
-	identity, notFound := service.QueryIdentity(poster.(model.User).UserID, data.GroupID)
+	identity, notFound := service.QueryIdentity(poster.(database.User).UserID, data.GroupID)
 	if notFound || identity.Status == 1 {
 		c.JSON(http.StatusOK, response.AddMemberA{CommonA: response.NOAUTH})
 		return
 	}
-	identity = model.Identity{
+	identity = database.Identity{
 		UserID:  data.UserID,
 		GroupID: data.GroupID,
 		Status:  1,
@@ -135,7 +135,7 @@ func AddMember(c *gin.Context) {
 func RemoveMember(c *gin.Context) {
 	data := utils.BindJsonAndValid(c, &response.RemoveMemberQ{}).(*response.RemoveMemberQ)
 	poster, _ := c.Get("user")
-	identity, notFound := service.QueryIdentity(poster.(model.User).UserID, data.GroupID)
+	identity, notFound := service.QueryIdentity(poster.(database.User).UserID, data.GroupID)
 	if notFound || identity.Status == 1 {
 		c.JSON(http.StatusOK, response.RemoveMemberA{CommonA: response.NOAUTH})
 		return
@@ -175,7 +175,7 @@ func SetMemberStatus(c *gin.Context) {
 		return
 	}
 	poster, _ := c.Get("user")
-	identity1, notFound := service.QueryIdentity(poster.(model.User).UserID, data.GroupID)
+	identity1, notFound := service.QueryIdentity(poster.(database.User).UserID, data.GroupID)
 	if notFound || identity1.Status == 1 {
 		c.JSON(http.StatusOK, response.SetMemberStatusA{CommonA: response.NOAUTH})
 		return

@@ -1,4 +1,4 @@
-package model
+package database
 
 type Group struct {
 	GroupID   uint64 `gorm:"primary_key;not null;"`
