@@ -2092,6 +2092,9 @@ const docTemplate = `{
                 },
                 "token": {
                     "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/database.User"
                 }
             }
         },

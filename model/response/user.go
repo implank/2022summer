@@ -17,7 +17,8 @@ type LoginQ struct {
 }
 type LoginA struct {
 	CommonA
-	Token string `json:"token"`
+	Token string        `json:"token"`
+	User  database.User `json:"user"`
 }
 type GetUserInfoQ struct {
 	UserID uint64 `json:"user_id"`

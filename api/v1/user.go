@@ -83,6 +83,7 @@ func Login(c *gin.Context) {
 			Success: true,
 		},
 		Token: token,
+		User:  user,
 	})
 }
 

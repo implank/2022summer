@@ -540,6 +540,8 @@ definitions:
         type: boolean
       token:
         type: string
+      user:
+        $ref: '#/definitions/database.User'
     type: object
   response.LoginQ:
     properties:
