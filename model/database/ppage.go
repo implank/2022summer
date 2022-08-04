@@ -11,5 +11,6 @@ type PPage struct { // Prototype 简写为 P, 一个 Prototype 有多个 PPage
 /* * * * * * * * * * * */
 
 type PPageID struct {
-	PPageID uint64 `json:"ppage_id"`
+	PPageID   uint64 `json:"ppage_id"`
+	PPageName string `json:"ppage_name"`
 }
