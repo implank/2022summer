@@ -802,9 +802,9 @@ definitions:
     type: object
   response.UploadDocumentA:
     properties:
-      code:
+      Rank:
         type: integer
-      count:
+      code:
         type: integer
       document:
         $ref: '#/definitions/database.Document'

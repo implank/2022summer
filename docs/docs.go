@@ -2553,10 +2553,10 @@ const docTemplate = `{
         "response.UploadDocumentA": {
             "type": "object",
             "properties": {
-                "code": {
+                "Rank": {
                     "type": "integer"
                 },
-                "count": {
+                "code": {
                     "type": "integer"
                 },
                 "document": {

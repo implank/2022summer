@@ -86,7 +86,7 @@ type UploadDocumentQ struct {
 type UploadDocumentA struct {
 	CommonA
 	Document database.Document
-	Rank     uint64 `json:"count"`
+	Rank     uint64 `json:"Rank"`
 }
 
 type UpdatePrototypeQ struct {
