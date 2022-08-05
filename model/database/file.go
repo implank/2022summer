@@ -22,4 +22,5 @@ type Document struct {
 	DocumentURL  string `gorm:"size:255;not null;" json:"document_url"`
 	Status       int    `gorm:"default:1;not null" json:"status"` // 1 正常、2 回收站
 	ProjID       uint64 `gorm:"not null;" json:"proj_id"`
+	Count        uint64 `gorm:"default:0;not null" json:"count"`
 }

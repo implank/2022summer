@@ -47,6 +47,26 @@ type GetProjDocumentsA struct {
 	Documents []database.Document `json:"documents"`
 }
 
+type EnterDocumentQ struct {
+	DocumentID uint64 `json:"document_id" binding:"required"`
+}
+
+type EnterDocumentA struct {
+	CommonA
+	Document database.Document `json:"document"`
+	Rank     uint64            `json:"rank"`
+}
+
+type QuitDocumentQ struct {
+	DocumentID uint64 `json:"document_id" binding:"required"`
+}
+
+type QuitDocumentA struct {
+	CommonA
+	Document database.Document `json:"document"`
+	Rank     uint64            `json:"rank"`
+}
+
 type CreatePrototypeQ struct {
 	PrototypeName string `json:"prototype_name" binding:"required"`
 	ProjID        uint64 `json:"proj_id"`
@@ -77,16 +97,20 @@ type CreateDocumentA struct {
 	Success bool   `json:"success"`
 }
 
-type UploadDocumentQ struct {
-	DocumentName string `json:"document_name"`
-	DocumentID   uint64 `json:"document_id"`
-	ProjID       uint64 `json:"proj_id"`
-}
+//type UploadDocumentQ struct {
+//	DocumentName string `json:"document_name"`
+//	DocumentID   uint64 `json:"document_id"`
+//	ProjID       uint64 `json:"proj_id"`
+//}
+
+//type UploadDocumentA struct {
+//	CommonA
+//	Document database.Document
+//	Rank     uint64 `json:"count"`
+//}
 
 type UploadDocumentA struct {
 	CommonA
-	Document database.Document
-	Rank     uint64 `json:"count"`
 }
 
 type UpdatePrototypeQ struct {

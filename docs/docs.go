@@ -148,6 +148,39 @@ const docTemplate = `{
                 }
             }
         },
+        "/file/enter_document": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "项目管理的第二页"
+                ],
+                "summary": "进入文档",
+                "parameters": [
+                    {
+                        "description": "项目ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.EnterDocumentQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.EnterDocumentA"
+                        }
+                    }
+                }
+            }
+        },
         "/file/get_files_by_name": {
             "post": {
                 "consumes": [
@@ -412,6 +445,39 @@ const docTemplate = `{
                 }
             }
         },
+        "/file/quit_document": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "项目管理的第二页"
+                ],
+                "summary": "退出文档",
+                "parameters": [
+                    {
+                        "description": "项目ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.QuitDocumentQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.QuitDocumentA"
+                        }
+                    }
+                }
+            }
+        },
         "/file/update_document": {
             "post": {
                 "consumes": [
@@ -513,9 +579,6 @@ const docTemplate = `{
         },
         "/file/upload_document": {
             "post": {
-                "consumes": [
-                    "application/json"
-                ],
                 "produces": [
                     "application/json"
                 ],
@@ -525,13 +588,18 @@ const docTemplate = `{
                 "summary": "上传文档",
                 "parameters": [
                     {
-                        "description": "（文档名称，文档所属项目ID）或文档ID",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/response.UploadDocumentQ"
-                        }
+                        "type": "file",
+                        "description": "文档",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "文档ID",
+                        "name": "document_id",
+                        "in": "formData",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -1350,6 +1418,9 @@ const docTemplate = `{
         "database.Document": {
             "type": "object",
             "properties": {
+                "count": {
+                    "type": "integer"
+                },
                 "document_id": {
                     "type": "integer"
                 },
@@ -1765,6 +1836,37 @@ const docTemplate = `{
             ],
             "properties": {
                 "proj_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "response.EnterDocumentA": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "document": {
+                    "$ref": "#/definitions/database.Document"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "rank": {
+                    "type": "integer"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.EnterDocumentQ": {
+            "type": "object",
+            "required": [
+                "document_id"
+            ],
+            "properties": {
+                "document_id": {
                     "type": "integer"
                 }
             }
@@ -2399,6 +2501,37 @@ const docTemplate = `{
                 }
             }
         },
+        "response.QuitDocumentA": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "document": {
+                    "$ref": "#/definitions/database.Document"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "rank": {
+                    "type": "integer"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.QuitDocumentQ": {
+            "type": "object",
+            "required": [
+                "document_id"
+            ],
+            "properties": {
+                "document_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "response.RegisterA": {
             "type": "object",
             "properties": {
@@ -2622,31 +2755,11 @@ const docTemplate = `{
                 "code": {
                     "type": "integer"
                 },
-                "count": {
-                    "type": "integer"
-                },
-                "document": {
-                    "$ref": "#/definitions/database.Document"
-                },
                 "message": {
                     "type": "string"
                 },
                 "success": {
                     "type": "boolean"
-                }
-            }
-        },
-        "response.UploadDocumentQ": {
-            "type": "object",
-            "properties": {
-                "document_id": {
-                    "type": "integer"
-                },
-                "document_name": {
-                    "type": "string"
-                },
-                "proj_id": {
-                    "type": "integer"
                 }
             }
         }

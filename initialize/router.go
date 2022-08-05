@@ -61,10 +61,12 @@ func SetupRouter(r *gin.Engine) {
 
 	fileGroup := r.Group("/api/v1/file", middleware.AuthRequired())
 	{
-		fileGroup.POST("/get_proj_by_id", v1.GetProjByID)               // 获取项目信息
-		fileGroup.POST("/get_proj_prototypes", v1.GetProjPrototypes)    // 获取项目的设计原型
-		fileGroup.POST("/get_proj_umls", v1.GetProjUmls)                // 获取项目的 Uml 图
-		fileGroup.POST("/get_proj_documents", v1.GetProjDocuments)      // 获取项目的文档
+		fileGroup.POST("/get_proj_by_id", v1.GetProjByID)            // 获取项目信息
+		fileGroup.POST("/get_proj_prototypes", v1.GetProjPrototypes) // 获取项目的设计原型
+		fileGroup.POST("/get_proj_umls", v1.GetProjUmls)             // 获取项目的 Uml 图
+		fileGroup.POST("/get_proj_documents", v1.GetProjDocuments)   // 获取项目的文档
+		fileGroup.POST("/enter_document", v1.EnterDocument)
+		fileGroup.POST("/quit_document", v1.QuitDocument)
 		fileGroup.POST("/create_prototype", v1.CreatePrototype)         // 创建设计原型
 		fileGroup.POST("/create_uml", v1.CreateUml)                     // 创建 Uml
 		fileGroup.POST("/create_document", v1.CreateDocument)           // 创建文档
