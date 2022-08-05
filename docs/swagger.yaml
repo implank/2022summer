@@ -1,6 +1,8 @@
 definitions:
   database.Document:
     properties:
+      count:
+        type: integer
       document_id:
         type: integer
       document_name:
@@ -274,6 +276,26 @@ definitions:
         type: integer
     required:
     - proj_id
+    type: object
+  response.EnterDocumentA:
+    properties:
+      code:
+        type: integer
+      document:
+        $ref: '#/definitions/database.Document'
+      message:
+        type: string
+      rank:
+        type: integer
+      success:
+        type: boolean
+    type: object
+  response.EnterDocumentQ:
+    properties:
+      document_id:
+        type: integer
+    required:
+    - document_id
     type: object
   response.GetFilesByNameA:
     properties:
@@ -567,6 +589,28 @@ definitions:
       username:
         type: string
     type: object
+  response.ModifyGroupA:
+    properties:
+      code:
+        type: integer
+      group:
+        $ref: '#/definitions/database.Group'
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.ModifyGroupQ:
+    properties:
+      group_id:
+        type: integer
+      group_info:
+        type: string
+      group_name:
+        type: string
+    required:
+    - group_id
+    type: object
   response.ModifyInfoA:
     properties:
       code:
@@ -658,6 +702,26 @@ definitions:
         type: integer
     required:
     - uml_id
+    type: object
+  response.QuitDocumentA:
+    properties:
+      code:
+        type: integer
+      document:
+        $ref: '#/definitions/database.Document'
+      message:
+        type: string
+      rank:
+        type: integer
+      success:
+        type: boolean
+    type: object
+  response.QuitDocumentQ:
+    properties:
+      document_id:
+        type: integer
+    required:
+    - document_id
     type: object
   response.RegisterA:
     properties:
@@ -813,15 +877,6 @@ definitions:
       success:
         type: boolean
     type: object
-  response.UploadDocumentQ:
-    properties:
-      document_id:
-        type: integer
-      document_name:
-        type: string
-      proj_id:
-        type: integer
-    type: object
 info:
   contact: {}
 paths:
@@ -907,6 +962,27 @@ paths:
           schema:
             $ref: '#/definitions/response.CreateUmlA'
       summary: 创建 Uml
+      tags:
+      - 项目管理的第二页
+  /file/enter_document:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 文档ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.EnterDocumentQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.EnterDocumentA'
+      summary: 进入文档
       tags:
       - 项目管理的第二页
   /file/get_files_by_name:
@@ -1077,6 +1153,27 @@ paths:
       summary: Uml 移入回收站
       tags:
       - 项目管理的第二页
+  /file/quit_document:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 文档ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.QuitDocumentQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.QuitDocumentA'
+      summary: 退出文档
+      tags:
+      - 项目管理的第二页
   /file/update_document:
     post:
       consumes:
@@ -1142,15 +1239,17 @@ paths:
       - 项目管理的第二页
   /file/upload_document:
     post:
-      consumes:
-      - application/json
       parameters:
-      - description: （文档名称，文档所属项目ID）或文档ID
-        in: body
-        name: data
+      - description: 文档
+        in: formData
+        name: file
         required: true
-        schema:
-          $ref: '#/definitions/response.UploadDocumentQ'
+        type: file
+      - description: 文档ID
+        in: formData
+        name: document_id
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -1252,6 +1351,26 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.GetIdentityA'
+      tags:
+      - Group
+  /group/modify_group:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 团队id，团队名称，团队介绍
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.ModifyGroupQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ModifyGroupA'
       tags:
       - Group
   /group/remove_member:

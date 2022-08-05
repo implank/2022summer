@@ -135,7 +135,7 @@ func GetProjDocuments(c *gin.Context) {
 // @Tags 项目管理的第二页
 // @Accept json
 // @Produce json
-// @Param data body response.EnterDocumentQ true "项目ID"
+// @Param data body response.EnterDocumentQ true "文档ID"
 // @Success 200 {object} response.EnterDocumentA
 // @Router /file/enter_document [post]
 func EnterDocument(c *gin.Context) {
@@ -172,7 +172,7 @@ func EnterDocument(c *gin.Context) {
 // @Tags 项目管理的第二页
 // @Accept json
 // @Produce json
-// @Param data body response.QuitDocumentQ true "项目ID"
+// @Param data body response.QuitDocumentQ true "文档ID"
 // @Success 200 {object} response.QuitDocumentA
 // @Router /file/quit_document [post]
 func QuitDocument(c *gin.Context) {

@@ -162,7 +162,7 @@ const docTemplate = `{
                 "summary": "进入文档",
                 "parameters": [
                     {
-                        "description": "项目ID",
+                        "description": "文档ID",
                         "name": "data",
                         "in": "body",
                         "required": true,
@@ -459,7 +459,7 @@ const docTemplate = `{
                 "summary": "退出文档",
                 "parameters": [
                     {
-                        "description": "项目ID",
+                        "description": "文档ID",
                         "name": "data",
                         "in": "body",
                         "required": true,
