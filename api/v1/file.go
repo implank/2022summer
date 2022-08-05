@@ -10,7 +10,6 @@ import (
 	"net/http"
 	"os"
 	"path"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -308,24 +307,18 @@ func CreateDocument(c *gin.Context) {
 // UploadDocument
 // @Summary 上传文档
 // @Tags 项目管理的第二页
-// @Param file formData file true "文档"
-// @Param document_id formData string true "文档ID"
+// @Accept json
 // @Produce json
+// @Param data body response.UploadDocumentQ true "文档ID，文档内容"
 // @Success 200 {object} response.UploadDocumentA
 // @Router /file/upload_document [post]
 func UploadDocument(c *gin.Context) {
-	file, err := c.FormFile("file")
-	docid, _ := strconv.ParseUint(c.Request.FormValue("document_id"), 0, 64)
-	if err != nil {
-		c.JSON(http.StatusOK, response.UploadDocumentA{
-			CommonA: response.CommonA{
-				Message: "上传文件失败",
-				Success: false,
-			},
-		})
+	var data response.UploadDocumentQ
+	if err := utils.ShouldBindAndValid(c, &data); err != nil {
+		c.JSON(http.StatusOK, response.PARAMERROR)
 		return
 	}
-	document, notFound := service.QueryDocumentByDocumentID(docid)
+	document, notFound := service.QueryDocumentByDocumentID(data.DocumentID)
 	if notFound {
 		c.JSON(http.StatusOK, response.UploadDocumentA{
 			CommonA: response.CommonA{
@@ -338,12 +331,24 @@ func UploadDocument(c *gin.Context) {
 	filename := strings.Split(document.DocumentURL, "/")[len(strings.Split(document.DocumentURL, "/"))-1]
 	saveDir := "./media/documents/"
 	savePath := path.Join(saveDir, filename)
-	c.SaveUploadedFile(file, savePath)
+	file, err := os.OpenFile(savePath, os.O_WRONLY|os.O_CREATE, 0666)
+	if err != nil {
+		c.JSON(http.StatusOK, response.UploadDocumentA{
+			CommonA: response.CommonA{
+				Message: "文档不存在",
+				Success: false,
+			},
+		})
+		return
+	}
+	file.Write([]byte(data.Context))
+	file.Close()
 	c.JSON(http.StatusOK, response.UploadDocumentA{
 		CommonA: response.CommonA{
 			Message: "上传文件成功",
 			Success: true,
 		},
+		Document: document,
 	})
 }
 

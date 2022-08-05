@@ -579,6 +579,9 @@ const docTemplate = `{
         },
         "/file/upload_document": {
             "post": {
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -588,18 +591,13 @@ const docTemplate = `{
                 "summary": "上传文档",
                 "parameters": [
                     {
-                        "type": "file",
-                        "description": "文档",
-                        "name": "file",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "文档ID",
-                        "name": "document_id",
-                        "in": "formData",
-                        "required": true
+                        "description": "文档ID，文档内容",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.UploadDocumentQ"
+                        }
                     }
                 ],
                 "responses": {
@@ -2752,9 +2750,6 @@ const docTemplate = `{
         "response.UploadDocumentA": {
             "type": "object",
             "properties": {
-                "Rank": {
-                    "type": "integer"
-                },
                 "code": {
                     "type": "integer"
                 },
@@ -2766,6 +2761,23 @@ const docTemplate = `{
                 },
                 "success": {
                     "type": "boolean"
+                }
+            }
+        },
+        "response.UploadDocumentQ": {
+            "type": "object",
+            "properties": {
+                "context": {
+                    "type": "string"
+                },
+                "document_id": {
+                    "type": "integer"
+                },
+                "document_name": {
+                    "type": "string"
+                },
+                "proj_id": {
+                    "type": "integer"
                 }
             }
         }

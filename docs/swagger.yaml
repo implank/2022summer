@@ -866,8 +866,6 @@ definitions:
     type: object
   response.UploadDocumentA:
     properties:
-      Rank:
-        type: integer
       code:
         type: integer
       document:
@@ -876,6 +874,17 @@ definitions:
         type: string
       success:
         type: boolean
+    type: object
+  response.UploadDocumentQ:
+    properties:
+      context:
+        type: string
+      document_id:
+        type: integer
+      document_name:
+        type: string
+      proj_id:
+        type: integer
     type: object
 info:
   contact: {}
@@ -1239,17 +1248,15 @@ paths:
       - 项目管理的第二页
   /file/upload_document:
     post:
+      consumes:
+      - application/json
       parameters:
-      - description: 文档
-        in: formData
-        name: file
+      - description: 文档ID，文档内容
+        in: body
+        name: data
         required: true
-        type: file
-      - description: 文档ID
-        in: formData
-        name: document_id
-        required: true
-        type: string
+        schema:
+          $ref: '#/definitions/response.UploadDocumentQ'
       produces:
       - application/json
       responses:
