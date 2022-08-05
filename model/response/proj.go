@@ -36,7 +36,7 @@ type MoveProjBinA struct {
 }
 
 type GetProjAllQ struct {
-	// GroupID uint64 `json:"group_id"`
+	GroupID uint64 `json:"group_id"`
 }
 
 type GetProjAllA struct {
@@ -47,7 +47,7 @@ type GetProjAllA struct {
 }
 
 type GetProjCreateQ struct {
-	// GroupID uint64 `json:"group_id"`
+	GroupID uint64 `json:"group_id"`
 }
 
 type GetProjCreateA struct {
@@ -58,7 +58,7 @@ type GetProjCreateA struct {
 }
 
 type GetProjJoinQ struct {
-	// GroupID uint64 `json:"group_id"`
+	GroupID uint64 `json:"group_id"`
 }
 
 type GetProjJoinA struct {

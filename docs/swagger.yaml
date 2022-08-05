@@ -426,6 +426,9 @@ definitions:
         type: boolean
     type: object
   response.GetProjAllQ:
+    properties:
+      group_id:
+        type: integer
     type: object
   response.GetProjByIDA:
     properties:
@@ -475,6 +478,9 @@ definitions:
         type: boolean
     type: object
   response.GetProjCreateQ:
+    properties:
+      group_id:
+        type: integer
     type: object
   response.GetProjDocumentsA:
     properties:
@@ -510,6 +516,9 @@ definitions:
         type: boolean
     type: object
   response.GetProjJoinQ:
+    properties:
+      group_id:
+        type: integer
     type: object
   response.GetProjPrototypesA:
     properties:
@@ -1571,7 +1580,7 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: 无
+      - description: 团队ID
         in: body
         name: data
         required: true
@@ -1613,7 +1622,7 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: 无
+      - description: 团队ID
         in: body
         name: data
         required: true
@@ -1634,7 +1643,7 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: 无
+      - description: 团队ID
         in: body
         name: data
         required: true

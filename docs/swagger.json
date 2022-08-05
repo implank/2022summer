@@ -1087,7 +1087,7 @@
                 "summary": "全部项目",
                 "parameters": [
                     {
-                        "description": "无",
+                        "description": "团队ID",
                         "name": "data",
                         "in": "body",
                         "required": true,
@@ -1153,7 +1153,7 @@
                 "summary": "我创建的",
                 "parameters": [
                     {
-                        "description": "无",
+                        "description": "团队ID",
                         "name": "data",
                         "in": "body",
                         "required": true,
@@ -1186,7 +1186,7 @@
                 "summary": "我参与的",
                 "parameters": [
                     {
-                        "description": "无",
+                        "description": "团队ID",
                         "name": "data",
                         "in": "body",
                         "required": true,
@@ -2056,7 +2056,12 @@
             }
         },
         "response.GetProjAllQ": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "group_id": {
+                    "type": "integer"
+                }
+            }
         },
         "response.GetProjByIDA": {
             "type": "object",
@@ -2132,7 +2137,12 @@
             }
         },
         "response.GetProjCreateQ": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "group_id": {
+                    "type": "integer"
+                }
+            }
         },
         "response.GetProjDocumentsA": {
             "type": "object",
@@ -2186,7 +2196,12 @@
             }
         },
         "response.GetProjJoinQ": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "group_id": {
+                    "type": "integer"
+                }
+            }
         },
         "response.GetProjPrototypesA": {
             "type": "object",

@@ -1099,7 +1099,7 @@ const docTemplate = `{
                 "summary": "全部项目",
                 "parameters": [
                     {
-                        "description": "无",
+                        "description": "团队ID",
                         "name": "data",
                         "in": "body",
                         "required": true,
@@ -1165,7 +1165,7 @@ const docTemplate = `{
                 "summary": "我创建的",
                 "parameters": [
                     {
-                        "description": "无",
+                        "description": "团队ID",
                         "name": "data",
                         "in": "body",
                         "required": true,
@@ -1198,7 +1198,7 @@ const docTemplate = `{
                 "summary": "我参与的",
                 "parameters": [
                     {
-                        "description": "无",
+                        "description": "团队ID",
                         "name": "data",
                         "in": "body",
                         "required": true,
@@ -2068,7 +2068,12 @@ const docTemplate = `{
             }
         },
         "response.GetProjAllQ": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "group_id": {
+                    "type": "integer"
+                }
+            }
         },
         "response.GetProjByIDA": {
             "type": "object",
@@ -2144,7 +2149,12 @@ const docTemplate = `{
             }
         },
         "response.GetProjCreateQ": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "group_id": {
+                    "type": "integer"
+                }
+            }
         },
         "response.GetProjDocumentsA": {
             "type": "object",
@@ -2198,7 +2208,12 @@ const docTemplate = `{
             }
         },
         "response.GetProjJoinQ": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "group_id": {
+                    "type": "integer"
+                }
+            }
         },
         "response.GetProjPrototypesA": {
             "type": "object",
