@@ -41,6 +41,45 @@ func CreateGroup(c *gin.Context) {
 	})
 }
 
+// ModifyGroup
+// @Tags Group
+// @Accept json
+// @Produce json
+// @Param data body response.ModifyGroupQ true "团队id，团队名称，团队介绍"
+// @Success 200 {object} response.ModifyGroupA
+// @Router /group/modify_group [post]
+func ModifyGroup(c *gin.Context) {
+	var data response.ModifyGroupQ
+	if err := utils.ShouldBindAndValid(c, &data); err != nil {
+		c.JSON(http.StatusOK, response.PARAMERROR)
+		return
+	}
+	poster := c.MustGet("user").(database.User)
+	group, notFound := service.QueryGroupByGroupID(data.GroupID)
+	if notFound {
+		c.JSON(http.StatusOK, response.PARAMERROR)
+		return
+	}
+	identity, notFound := service.QueryIdentity(poster.UserID, group.GroupID)
+	if notFound || identity.Status != 3 {
+		c.JSON(http.StatusOK, response.NOAUTH)
+		return
+	}
+	group.GroupName = data.GroupName
+	group.GroupInfo = data.GroupInfo
+	if err := service.UpdateGroup(&group); err != nil {
+		c.JSON(http.StatusOK, response.DBERROR)
+		return
+	}
+	c.JSON(http.StatusOK, response.ModifyGroupA{
+		CommonA: response.CommonA{
+			Message: "修改成功",
+			Success: true,
+		},
+		Group: group,
+	})
+}
+
 // GetIdentity
 // @Tags Group
 // @Accept json

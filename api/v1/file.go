@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -129,6 +130,80 @@ func GetProjDocuments(c *gin.Context) {
 		Documents: documents})
 }
 
+// EnterDocument
+// @Summary 进入文档
+// @Tags 项目管理的第二页
+// @Accept json
+// @Produce json
+// @Param data body response.EnterDocumentQ true "项目ID"
+// @Success 200 {object} response.EnterDocumentA
+// @Router /file/enter_document [post]
+func EnterDocument(c *gin.Context) {
+	var data response.EnterDocumentQ
+	if err := utils.ShouldBindAndValid(c, &data); err != nil {
+		c.JSON(http.StatusOK, response.PARAMERROR)
+		return
+	}
+	// todo there should be an auth check here
+	doc, notFound := service.QueryDocumentByDocumentID(data.DocumentID)
+	if notFound {
+		c.JSON(http.StatusOK, response.EnterDocumentA{
+			CommonA: response.CommonA{
+				Message: "文档不存在",
+				Success: false,
+			},
+		})
+		return
+	}
+	doc.Count += 1
+	service.UpdateDocument(&doc)
+	c.JSON(http.StatusOK, response.EnterDocumentA{
+		CommonA: response.CommonA{
+			Message: "成功",
+			Success: true,
+		},
+		Document: doc,
+		Rank:     doc.Count,
+	})
+}
+
+// QuitDocument
+// @Summary 退出文档
+// @Tags 项目管理的第二页
+// @Accept json
+// @Produce json
+// @Param data body response.QuitDocumentQ true "项目ID"
+// @Success 200 {object} response.QuitDocumentA
+// @Router /file/quit_document [post]
+func QuitDocument(c *gin.Context) {
+	var data response.QuitDocumentQ
+	if err := utils.ShouldBindAndValid(c, &data); err != nil {
+		c.JSON(http.StatusOK, response.PARAMERROR)
+		return
+	}
+	// todo there should be an auth check here
+	doc, notFound := service.QueryDocumentByDocumentID(data.DocumentID)
+	if notFound {
+		c.JSON(http.StatusOK, response.QuitDocumentA{
+			CommonA: response.CommonA{
+				Message: "文档不存在",
+				Success: false,
+			},
+		})
+		return
+	}
+	doc.Count -= 1
+	service.UpdateDocument(&doc)
+	c.JSON(http.StatusOK, response.QuitDocumentA{
+		CommonA: response.CommonA{
+			Message: "成功",
+			Success: true,
+		},
+		Document: doc,
+		Rank:     doc.Count,
+	})
+}
+
 // CreatePrototype
 // @Summary 创建设计原型
 // @Tags 项目管理的第二页
@@ -233,13 +308,14 @@ func CreateDocument(c *gin.Context) {
 // UploadDocument
 // @Summary 上传文档
 // @Tags 项目管理的第二页
-// @Accept json
+// @Param file formData file true "文档"
+// @Param document_id formData string true "文档ID"
 // @Produce json
-// @Param data body response.UploadDocumentQ true "（文档名称，文档所属项目ID）或文档ID"
 // @Success 200 {object} response.UploadDocumentA
 // @Router /file/upload_document [post]
 func UploadDocument(c *gin.Context) {
 	file, err := c.FormFile("file")
+	docid, _ := strconv.ParseUint(c.Request.FormValue("document_id"), 0, 64)
 	if err != nil {
 		c.JSON(http.StatusOK, response.UploadDocumentA{
 			CommonA: response.CommonA{
@@ -249,20 +325,8 @@ func UploadDocument(c *gin.Context) {
 		})
 		return
 	}
-	var data response.UploadDocumentQ
-	if err = c.ShouldBind(&data); err != nil {
-		c.JSON(http.StatusOK, response.PARAMERROR)
-		return
-	}
-	var document database.Document
-	var notFound1, notFound2 bool = true, true
-	if data.DocumentID != 0 {
-		document, notFound1 = service.QueryDocumentByDocumentID(data.DocumentID)
-	}
-	if data.ProjID != 0 {
-		document, notFound2 = service.QueryDocumentByDocumentName(data.DocumentName, data.ProjID)
-	}
-	if notFound2 && notFound1 {
+	document, notFound := service.QueryDocumentByDocumentID(docid)
+	if notFound {
 		c.JSON(http.StatusOK, response.UploadDocumentA{
 			CommonA: response.CommonA{
 				Message: "文档不存在",
@@ -280,8 +344,6 @@ func UploadDocument(c *gin.Context) {
 			Message: "上传文件成功",
 			Success: true,
 		},
-		Document: document,
-		Rank:     0,
 	})
 }
 
