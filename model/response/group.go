@@ -12,6 +12,15 @@ type CreateGroupA struct {
 	CommonA
 	Group database.Group `json:"group"`
 }
+type ModifyGroupQ struct {
+	GroupID   uint64 `json:"group_id" binding:"required"`
+	GroupName string `json:"group_name"`
+	GroupInfo string `json:"group_info"`
+}
+type ModifyGroupA struct {
+	CommonA
+	Group database.Group `json:"group"`
+}
 type GetIdentityQ struct {
 	GroupID uint64 `json:"group_id"`
 }

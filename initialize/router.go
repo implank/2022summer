@@ -39,6 +39,7 @@ func SetupRouter(r *gin.Engine) {
 	groupGroup := baseGroup.Group("/group", middleware.AuthRequired())
 	{
 		groupGroup.POST("/create_group", v1.CreateGroup)
+		groupGroup.POST("/modify_group", v1.ModifyGroup)
 		groupGroup.POST("/get_identity", v1.GetIdentity)
 		groupGroup.POST("/get_group_members", v1.GetMembers)
 		groupGroup.POST("/add_member", v1.AddMember)

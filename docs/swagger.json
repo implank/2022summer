@@ -681,6 +681,38 @@
                 }
             }
         },
+        "/group/modify_group": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Group"
+                ],
+                "parameters": [
+                    {
+                        "description": "团队id，团队名称，团队介绍",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.ModifyGroupQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.ModifyGroupA"
+                        }
+                    }
+                }
+            }
+        },
         "/group/remove_member": {
             "post": {
                 "consumes": [
@@ -2173,6 +2205,40 @@
                     "type": "string"
                 },
                 "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.ModifyGroupA": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "group": {
+                    "$ref": "#/definitions/database.Group"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.ModifyGroupQ": {
+            "type": "object",
+            "required": [
+                "group_id"
+            ],
+            "properties": {
+                "group_id": {
+                    "type": "integer"
+                },
+                "group_info": {
+                    "type": "string"
+                },
+                "group_name": {
                     "type": "string"
                 }
             }

@@ -567,6 +567,28 @@ definitions:
       username:
         type: string
     type: object
+  response.ModifyGroupA:
+    properties:
+      code:
+        type: integer
+      group:
+        $ref: '#/definitions/database.Group'
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.ModifyGroupQ:
+    properties:
+      group_id:
+        type: integer
+      group_info:
+        type: string
+      group_name:
+        type: string
+    required:
+    - group_id
+    type: object
   response.ModifyInfoA:
     properties:
       code:
@@ -1252,6 +1274,26 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.GetIdentityA'
+      tags:
+      - Group
+  /group/modify_group:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 团队id，团队名称，团队介绍
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.ModifyGroupQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ModifyGroupA'
       tags:
       - Group
   /group/remove_member:
