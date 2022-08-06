@@ -249,6 +249,20 @@ definitions:
     required:
     - uml_name
     type: object
+  response.DeleteDocumentA:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.DeleteDocumentQ:
+    properties:
+      document_id:
+        type: integer
+    required:
+    - document_id
+    type: object
   response.DeletePPageA:
     properties:
       message:
@@ -276,6 +290,34 @@ definitions:
         type: integer
     required:
     - proj_id
+    type: object
+  response.DeletePrototypeA:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.DeletePrototypeQ:
+    properties:
+      prototype_id:
+        type: integer
+    required:
+    - prototype_id
+    type: object
+  response.DeleteUmlA:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.DeleteUmlQ:
+    properties:
+      uml_id:
+        type: integer
+    required:
+    - uml_id
     type: object
   response.EnterDocumentA:
     properties:
@@ -326,6 +368,38 @@ definitions:
     properties:
       name:
         type: string
+    type: object
+  response.GetFilesInBinA:
+    properties:
+      count_documents:
+        type: integer
+      count_prototypes:
+        type: integer
+      count_umls:
+        type: integer
+      documents:
+        items:
+          $ref: '#/definitions/database.Document'
+        type: array
+      message:
+        type: string
+      prototypes:
+        items:
+          $ref: '#/definitions/database.Prototype'
+        type: array
+      success:
+        type: boolean
+      umls:
+        items:
+          $ref: '#/definitions/database.Uml'
+        type: array
+    type: object
+  response.GetFilesInBinQ:
+    properties:
+      group_id:
+        type: integer
+    required:
+    - group_id
     type: object
   response.GetGroupsA:
     properties:
@@ -502,6 +576,26 @@ definitions:
     required:
     - proj_id
     type: object
+  response.GetProjInBinA:
+    properties:
+      count:
+        type: integer
+      message:
+        type: string
+      projs:
+        items:
+          $ref: '#/definitions/database.Proj'
+        type: array
+      success:
+        type: boolean
+    type: object
+  response.GetProjInBinQ:
+    properties:
+      group_id:
+        type: integer
+    required:
+    - group_id
+    type: object
   response.GetProjJoinA:
     properties:
       count:
@@ -656,6 +750,20 @@ definitions:
     required:
     - password
     type: object
+  response.MoveDocumentFromBinA:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.MoveDocumentFromBinQ:
+    properties:
+      document_id:
+        type: integer
+    required:
+    - document_id
+    type: object
   response.MoveDocumentToBinA:
     properties:
       message:
@@ -684,6 +792,20 @@ definitions:
     required:
     - proj_id
     type: object
+  response.MovePrototypeFromBinA:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.MovePrototypeFromBinQ:
+    properties:
+      prototype_id:
+        type: integer
+    required:
+    - prototype_id
+    type: object
   response.MovePrototypeToBinA:
     properties:
       message:
@@ -697,6 +819,20 @@ definitions:
         type: integer
     required:
     - prototype_id
+    type: object
+  response.MoveUmlFromBinA:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.MoveUmlFromBinQ:
+    properties:
+      uml_id:
+        type: integer
+    required:
+    - uml_id
     type: object
   response.MoveUmlToBinA:
     properties:
@@ -898,6 +1034,27 @@ definitions:
 info:
   contact: {}
 paths:
+  /bin/delete_document:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 文档ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.DeleteDocumentQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.DeleteDocumentA'
+      summary: 删除文档
+      tags:
+      - 回收站
   /bin/delete_proj:
     post:
       consumes:
@@ -917,6 +1074,153 @@ paths:
           schema:
             $ref: '#/definitions/response.DeleteProjA'
       summary: 删除项目
+      tags:
+      - 回收站
+  /bin/delete_prototype:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 设计原型ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.DeletePrototypeQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.DeletePrototypeA'
+      summary: 删除设计原型
+      tags:
+      - 回收站
+  /bin/delete_uml:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Uml ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.DeleteUmlQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.DeleteUmlA'
+      summary: 删除 Uml
+      tags:
+      - 回收站
+  /bin/get_files_in_bin:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 团队ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.GetFilesInBinQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.GetFilesInBinA'
+      summary: 回收站中的设计原型 / Uml / 文档，这些设计原型 / Uml / 文档所在的项目并没有被移到回收站
+      tags:
+      - 回收站
+  /bin/get_projs_in_bin:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 团队ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.GetProjInBinQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.GetProjInBinA'
+      summary: 回收站中的所有项目
+      tags:
+      - 回收站
+  /bin/move_document_from_bin:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 文档ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.MoveDocumentFromBinQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.MoveDocumentFromBinA'
+      summary: 文档移出回收站
+      tags:
+      - 回收站
+  /bin/move_prototype_from_bin:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 设计原型ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.MovePrototypeFromBinQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.MovePrototypeFromBinA'
+      summary: 设计原型移出回收站
+      tags:
+      - 回收站
+  /bin/move_uml_from_bin:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: UmlID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.MoveUmlFromBinQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.MoveUmlFromBinA'
+      summary: Uml 移出回收站
       tags:
       - 回收站
   /file/create_document:

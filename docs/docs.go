@@ -16,6 +16,39 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/bin/delete_document": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "回收站"
+                ],
+                "summary": "删除文档",
+                "parameters": [
+                    {
+                        "description": "文档ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.DeleteDocumentQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.DeleteDocumentA"
+                        }
+                    }
+                }
+            }
+        },
         "/bin/delete_proj": {
             "post": {
                 "consumes": [
@@ -44,6 +77,237 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/response.DeleteProjA"
+                        }
+                    }
+                }
+            }
+        },
+        "/bin/delete_prototype": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "回收站"
+                ],
+                "summary": "删除设计原型",
+                "parameters": [
+                    {
+                        "description": "设计原型ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.DeletePrototypeQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.DeletePrototypeA"
+                        }
+                    }
+                }
+            }
+        },
+        "/bin/delete_uml": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "回收站"
+                ],
+                "summary": "删除 Uml",
+                "parameters": [
+                    {
+                        "description": "Uml ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.DeleteUmlQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.DeleteUmlA"
+                        }
+                    }
+                }
+            }
+        },
+        "/bin/get_files_in_bin": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "回收站"
+                ],
+                "summary": "回收站中的设计原型 / Uml / 文档，这些设计原型 / Uml / 文档所在的项目并没有被移到回收站",
+                "parameters": [
+                    {
+                        "description": "团队ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.GetFilesInBinQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.GetFilesInBinA"
+                        }
+                    }
+                }
+            }
+        },
+        "/bin/get_projs_in_bin": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "回收站"
+                ],
+                "summary": "回收站中的所有项目",
+                "parameters": [
+                    {
+                        "description": "团队ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.GetProjInBinQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.GetProjInBinA"
+                        }
+                    }
+                }
+            }
+        },
+        "/bin/move_document_from_bin": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "回收站"
+                ],
+                "summary": "文档移出回收站",
+                "parameters": [
+                    {
+                        "description": "文档ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.MoveDocumentFromBinQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.MoveDocumentFromBinA"
+                        }
+                    }
+                }
+            }
+        },
+        "/bin/move_prototype_from_bin": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "回收站"
+                ],
+                "summary": "设计原型移出回收站",
+                "parameters": [
+                    {
+                        "description": "设计原型ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.MovePrototypeFromBinQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.MovePrototypeFromBinA"
+                        }
+                    }
+                }
+            }
+        },
+        "/bin/move_uml_from_bin": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "回收站"
+                ],
+                "summary": "Uml 移出回收站",
+                "parameters": [
+                    {
+                        "description": "UmlID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.MoveUmlFromBinQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.MoveUmlFromBinA"
                         }
                     }
                 }
@@ -1794,6 +2058,28 @@ const docTemplate = `{
                 }
             }
         },
+        "response.DeleteDocumentA": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.DeleteDocumentQ": {
+            "type": "object",
+            "required": [
+                "document_id"
+            ],
+            "properties": {
+                "document_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "response.DeletePPageA": {
             "type": "object",
             "properties": {
@@ -1834,6 +2120,50 @@ const docTemplate = `{
             ],
             "properties": {
                 "proj_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "response.DeletePrototypeA": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.DeletePrototypeQ": {
+            "type": "object",
+            "required": [
+                "prototype_id"
+            ],
+            "properties": {
+                "prototype_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "response.DeleteUmlA": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.DeleteUmlQ": {
+            "type": "object",
+            "required": [
+                "uml_id"
+            ],
+            "properties": {
+                "uml_id": {
                     "type": "integer"
                 }
             }
@@ -1912,6 +2242,55 @@ const docTemplate = `{
             "properties": {
                 "name": {
                     "type": "string"
+                }
+            }
+        },
+        "response.GetFilesInBinA": {
+            "type": "object",
+            "properties": {
+                "count_documents": {
+                    "type": "integer"
+                },
+                "count_prototypes": {
+                    "type": "integer"
+                },
+                "count_umls": {
+                    "type": "integer"
+                },
+                "documents": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/database.Document"
+                    }
+                },
+                "message": {
+                    "type": "string"
+                },
+                "prototypes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/database.Prototype"
+                    }
+                },
+                "success": {
+                    "type": "boolean"
+                },
+                "umls": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/database.Uml"
+                    }
+                }
+            }
+        },
+        "response.GetFilesInBinQ": {
+            "type": "object",
+            "required": [
+                "group_id"
+            ],
+            "properties": {
+                "group_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -2187,6 +2566,37 @@ const docTemplate = `{
                 }
             }
         },
+        "response.GetProjInBinA": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "projs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/database.Proj"
+                    }
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.GetProjInBinQ": {
+            "type": "object",
+            "required": [
+                "group_id"
+            ],
+            "properties": {
+                "group_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "response.GetProjJoinA": {
             "type": "object",
             "properties": {
@@ -2426,6 +2836,28 @@ const docTemplate = `{
                 }
             }
         },
+        "response.MoveDocumentFromBinA": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.MoveDocumentFromBinQ": {
+            "type": "object",
+            "required": [
+                "document_id"
+            ],
+            "properties": {
+                "document_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "response.MoveDocumentToBinA": {
             "type": "object",
             "properties": {
@@ -2470,6 +2902,28 @@ const docTemplate = `{
                 }
             }
         },
+        "response.MovePrototypeFromBinA": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.MovePrototypeFromBinQ": {
+            "type": "object",
+            "required": [
+                "prototype_id"
+            ],
+            "properties": {
+                "prototype_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "response.MovePrototypeToBinA": {
             "type": "object",
             "properties": {
@@ -2488,6 +2942,28 @@ const docTemplate = `{
             ],
             "properties": {
                 "prototype_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "response.MoveUmlFromBinA": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.MoveUmlFromBinQ": {
+            "type": "object",
+            "required": [
+                "uml_id"
+            ],
+            "properties": {
+                "uml_id": {
                     "type": "integer"
                 }
             }
