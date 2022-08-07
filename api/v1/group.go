@@ -86,13 +86,13 @@ func ModifyGroup(c *gin.Context) {
 // @Produce json
 // @Param data body response.GetIdentityQ true "团队id"
 // @Success 200 {object} response.GetIdentityA
-// @Router /group/get_identity [post]
+// @Router /group/get_my_identity [post]
 func GetIdentity(c *gin.Context) {
 	data := utils.BindJsonAndValid(c, &response.GetIdentityQ{}).(*response.GetIdentityQ)
 	poster, _ := c.Get("user")
 	identity, notFound := service.QueryIdentity(poster.(database.User).UserID, data.GroupID)
 	if notFound {
-		c.JSON(http.StatusOK, response.GetIdentityA{CommonA: response.NOMENBER})
+		c.JSON(http.StatusOK, response.GetIdentityA{CommonA: response.USERNOTINGROUP})
 		return
 	}
 	c.JSON(http.StatusOK, response.GetIdentityA{
@@ -120,7 +120,7 @@ func GetMembers(c *gin.Context) {
 	poster, _ := c.Get("user")
 	print(data.GroupID)
 	if _, notFound := service.QueryIdentity(poster.(database.User).UserID, data.GroupID); notFound {
-		c.JSON(http.StatusOK, response.GetMembersA{CommonA: response.NOMENBER})
+		c.JSON(http.StatusOK, response.GetMembersA{CommonA: response.NOAUTH})
 		return
 	}
 	members := service.GetGroupMembers(data.GroupID)
@@ -133,33 +133,41 @@ func GetMembers(c *gin.Context) {
 	})
 }
 
-// AddMember
+// InviteMember
 // @Tags Group
 // @Accept json
 // @Produce json
-// @Param data body response.AddMemberQ true "用户id，团队id"
-// @Success 200 {object} response.AddMemberA
-// @Router /group/add_member [post]
-func AddMember(c *gin.Context) {
-	data := utils.BindJsonAndValid(c, &response.AddMemberQ{}).(*response.AddMemberQ)
-	poster, _ := c.Get("user")
-	identity, notFound := service.QueryIdentity(poster.(database.User).UserID, data.GroupID)
+// @Param data body response.InviteMemberQ true "团队id，用户id"
+// @Success 200 {object} response.InviteMemberA
+// @Router /group/invite_member [post]
+func InviteMember(c *gin.Context) {
+	var data response.InviteMemberQ
+	if err := utils.ShouldBindAndValid(c, &data); err != nil {
+		c.JSON(http.StatusOK, response.PARAMERROR)
+		return
+	}
+	poster := c.MustGet("user").(database.User)
+	identity, notFound := service.QueryIdentity(poster.UserID, data.GroupID)
 	if notFound || identity.Status == 1 {
-		c.JSON(http.StatusOK, response.AddMemberA{CommonA: response.NOAUTH})
+		c.JSON(http.StatusOK, response.NOAUTH)
 		return
 	}
 	user, notFound := service.QueryUserByUsername(data.Username)
 	if notFound {
-		c.JSON(http.StatusOK, response.AddMemberA{
+		c.JSON(http.StatusOK, response.USERNOTEXSIT)
+		return
+	}
+	group, notFound := service.QueryGroupByGroupID(data.GroupID)
+	if notFound {
+		c.JSON(http.StatusOK, response.InviteMemberA{
 			CommonA: response.CommonA{
-				Message: "用户不存在",
+				Message: "团队不存在",
 				Success: false,
 			},
 		})
-		return
 	}
 	if _, notFound = service.QueryIdentity(user.UserID, data.GroupID); !notFound {
-		c.JSON(http.StatusOK, response.AddMemberA{
+		c.JSON(http.StatusOK, response.InviteMemberA{
 			CommonA: response.CommonA{
 				Message: "用户已在团队中",
 				Success: false,
@@ -167,17 +175,20 @@ func AddMember(c *gin.Context) {
 		})
 		return
 	}
-	identity = database.Identity{
-		UserID:  user.UserID,
-		GroupID: data.GroupID,
-		Status:  1,
+	message := database.Message{
+		SenderID:   poster.UserID,
+		ReceiverID: user.UserID,
+		Content:    poster.Username + " 邀请您加入团队 " + group.GroupName,
+		GroupID:    group.GroupID,
+		Type:       1,
 	}
-	if err := service.CreateIdentity(&identity); err != nil {
-		c.JSON(http.StatusOK, response.AddMemberA{CommonA: response.DBERROR})
+	if err := service.CreateMessage(&message); err != nil {
+		c.JSON(http.StatusOK, response.DBERROR)
+		return
 	}
-	c.JSON(http.StatusOK, response.AddMemberA{
+	c.JSON(http.StatusOK, response.InviteMemberA{
 		CommonA: response.CommonA{
-			Message: "添加成功",
+			Message: "邀请发送成功",
 			Success: true,
 		},
 	})
@@ -200,7 +211,7 @@ func RemoveMember(c *gin.Context) {
 	}
 	identity, notFound = service.QueryIdentity(data.UserID, data.GroupID)
 	if notFound {
-		c.JSON(http.StatusOK, response.RemoveMemberA{CommonA: response.NOMENBER})
+		c.JSON(http.StatusOK, response.RemoveMemberA{CommonA: response.USERNOTINGROUP})
 		return
 	}
 	if identity.Status >= 2 {
@@ -240,7 +251,7 @@ func SetMemberStatus(c *gin.Context) {
 	}
 	identity2, notFound := service.QueryIdentity(data.UserID, data.GroupID)
 	if notFound {
-		c.JSON(http.StatusOK, response.SetMemberStatusA{CommonA: response.NOMENBER})
+		c.JSON(http.StatusOK, response.SetMemberStatusA{CommonA: response.USERNOTINGROUP})
 		return
 	}
 	switch data.Status {
@@ -300,7 +311,7 @@ func GetGroups(c *gin.Context) {
 	if count == 0 {
 		c.JSON(http.StatusOK, response.GetGroupsA{
 			CommonA: response.CommonA{
-				Message: "没有团队",
+				Message: "您还没有团队",
 				Success: true,
 			},
 			Count: 0,
@@ -309,10 +320,131 @@ func GetGroups(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, response.GetGroupsA{
 		CommonA: response.CommonA{
-			Message: "获取成功",
+			Message: "获取团队成功",
 			Success: true,
 		},
 		Count:  count,
 		Groups: groups,
+	})
+}
+
+// GetMessages
+// @Summary 获取用户消息，按时间排序
+// @Tags Group
+// @Accept json
+// @Produce json
+// @Param data body response.GetMessagesQ true "空json"
+// @Success 200 {object} response.GetMessagesA
+// @Router /group/get_messages [post]
+func GetMessages(c *gin.Context) {
+	var data response.GetMessagesQ
+	if err := utils.ShouldBindAndValid(c, &data); err != nil {
+		c.JSON(http.StatusOK, response.PARAMERROR)
+		return
+	}
+	poster := c.MustGet("user").(database.User)
+	messages := service.GetMessages(poster.UserID)
+	count := len(messages)
+	if count == 0 {
+		c.JSON(http.StatusOK, response.GetMessagesA{
+			CommonA: response.CommonA{
+				Message: "您还没有消息",
+				Success: true,
+			},
+			Count: 0,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, response.GetMessagesA{
+		CommonA: response.CommonA{
+			Message: "获取消息成功",
+			Success: true,
+		},
+		Count:    count,
+		Messages: messages,
+	})
+}
+
+// DeclineInvitation
+// @Summary 拒绝加入团队邀请
+// @Tags Group
+// @Accept json
+// @Produce json
+// @Param data body response.DeclineInvitationQ true "消息ID"
+// @Success 200 {object} response.DeclineInvitationA
+// @Router /group/decline_invitation [post]
+func DeclineInvitation(c *gin.Context) {
+	var data response.DeclineInvitationQ
+	if err := utils.ShouldBindAndValid(c, &data); err != nil {
+		c.JSON(http.StatusOK, response.PARAMERROR)
+		return
+	}
+	poster := c.MustGet("user").(database.User)
+	message, notFound := service.QueryMessageByMessageID(data.MessageID)
+	if notFound || message.Type != 1 || message.ReceiverID != poster.UserID {
+		c.JSON(http.StatusOK, response.DeclineInvitationA{
+			Message: "没有找到该消息 或 消息类型错误 或 消息接收者错误",
+			Success: false,
+		})
+	}
+	message.Type = 2
+	_ = service.UpdateMessage(&message)
+	message = database.Message{
+		MessageID:  message.MessageID,
+		ReceiverID: message.SenderID,
+		SenderID:   0,
+		Content:    poster.Username + " 拒绝了您的邀请",
+		Type:       4,
+	}
+	_ = service.CreateMessage(&message)
+	c.JSON(http.StatusOK, response.DeclineInvitationA{
+		Message: "拒绝邀请成功",
+		Success: true,
+	})
+}
+
+// AcceptInvitation
+// @Summary 接受加入团队邀请
+// @Tags Group
+// @Accept json
+// @Produce json
+// @Param data body response.AcceptInvitationQ true "消息ID"
+// @Success 200 {object} response.AcceptInvitationA
+// @Router /group/accept_invitation [post]
+func AcceptInvitation(c *gin.Context) {
+	var data response.AcceptInvitationQ
+	if err := utils.ShouldBindAndValid(c, &data); err != nil {
+		c.JSON(http.StatusOK, response.PARAMERROR)
+		return
+	}
+	poster := c.MustGet("user").(database.User)
+	message, notFound := service.QueryMessageByMessageID(data.MessageID)
+	if notFound || message.Type != 1 || message.ReceiverID != poster.UserID {
+		c.JSON(http.StatusOK, response.DeclineInvitationA{
+			Message: "没有找到该消息 或 消息类型错误 或 消息接收者错误",
+			Success: false,
+		})
+	}
+	message.Type = 3
+	_ = service.UpdateMessage(&message)
+	members := service.GetGroupMembers(message.GroupID)
+	for _, member := range members {
+		message = database.Message{
+			ReceiverID: member.UserID,
+			SenderID:   0,
+			Content:    "新成员 " + poster.Username + " 加入了团队",
+			Type:       5,
+		}
+		_ = service.CreateMessage(&message)
+	}
+	identity := database.Identity{
+		UserID:  poster.UserID,
+		GroupID: message.GroupID,
+		Status:  1,
+	}
+	_ = service.CreateIdentity(&identity)
+	c.JSON(http.StatusOK, response.AcceptInvitationA{
+		Message: "接受邀请成功",
+		Success: true,
 	})
 }

@@ -76,3 +76,26 @@ func DeleteIdentity(identity *database.Identity) (err error) {
 	err = global.DB.Delete(&identity).Error
 	return err
 }
+
+func CreateMessage(message *database.Message) (err error) {
+	err = global.DB.Create(&message).Error
+	return err
+}
+
+func GetMessages(userID uint64) (messages []database.Message) {
+	global.DB.Raw(
+		"SELECT * FROM messages "+
+			"WHERE ? = receiver_id "+
+			"ORDER BY message_id DESC", userID).Find(&messages).RecordNotFound()
+	return messages
+}
+
+func QueryMessageByMessageID(messageID uint64) (message database.Message, notFound bool) {
+	notFound = global.DB.Where("message_id = ?", messageID).First(&message).RecordNotFound()
+	return message, notFound
+}
+
+func UpdateMessage(message *database.Message) (err error) {
+	err = global.DB.Save(message).Error
+	return err
+}

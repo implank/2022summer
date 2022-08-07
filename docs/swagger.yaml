@@ -17,13 +17,13 @@ definitions:
     type: object
   database.Group:
     properties:
-      groupID:
+      group_id:
         type: integer
-      groupInfo:
+      group_info:
         type: string
-      groupName:
+      group_name:
         type: string
-      userID:
+      user_id:
         description: 团队创建者
         type: integer
     type: object
@@ -31,14 +31,30 @@ definitions:
     properties:
       email:
         type: string
-      realName:
+      real_name:
         type: string
       status:
+        description: 1 普通成员、2 管理员、3 团队创建者
         type: string
-      userID:
+      user_id:
         type: integer
       username:
         type: string
+    type: object
+  database.Message:
+    properties:
+      content:
+        type: string
+      group_id:
+        type: integer
+      message_id:
+        type: integer
+      receiver_id:
+        type: integer
+      sender_id:
+        type: integer
+      type:
+        type: integer
     type: object
   database.PPage:
     properties:
@@ -116,18 +132,18 @@ definitions:
         type: string
       password:
         type: string
-      realName:
+      real_name:
         type: string
       sex:
         type: string
-      userID:
+      user_id:
         type: integer
-      userInfo:
+      user_info:
         type: string
       username:
         type: string
     type: object
-  response.AddMemberA:
+  response.AcceptInvitationA:
     properties:
       code:
         type: integer
@@ -136,12 +152,10 @@ definitions:
       success:
         type: boolean
     type: object
-  response.AddMemberQ:
+  response.AcceptInvitationQ:
     properties:
-      group_id:
+      message_id:
         type: integer
-      username:
-        type: string
     type: object
   response.CreateDocumentA:
     properties:
@@ -248,6 +262,20 @@ definitions:
         type: string
     required:
     - uml_name
+    type: object
+  response.DeclineInvitationA:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.DeclineInvitationQ:
+    properties:
+      message_id:
+        type: integer
     type: object
   response.DeletePPageA:
     properties:
@@ -375,6 +403,23 @@ definitions:
     properties:
       group_id:
         type: integer
+    type: object
+  response.GetMessagesA:
+    properties:
+      code:
+        type: integer
+      count:
+        type: integer
+      message:
+        type: string
+      messages:
+        items:
+          $ref: '#/definitions/database.Message'
+        type: array
+      success:
+        type: boolean
+    type: object
+  response.GetMessagesQ:
     type: object
   response.GetPPageByIDA:
     properties:
@@ -568,6 +613,22 @@ definitions:
     properties:
       user_id:
         type: integer
+    type: object
+  response.InviteMemberA:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.InviteMemberQ:
+    properties:
+      group_id:
+        type: integer
+      username:
+        type: string
     type: object
   response.LoginA:
     properties:
@@ -1267,24 +1328,25 @@ paths:
       summary: 上传文档
       tags:
       - 项目管理的第二页
-  /group/add_member:
+  /group/accept_invitation:
     post:
       consumes:
       - application/json
       parameters:
-      - description: 用户id，团队id
+      - description: 消息ID
         in: body
         name: data
         required: true
         schema:
-          $ref: '#/definitions/response.AddMemberQ'
+          $ref: '#/definitions/response.AcceptInvitationQ'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.AddMemberA'
+            $ref: '#/definitions/response.AcceptInvitationA'
+      summary: 接受加入团队邀请
       tags:
       - Group
   /group/create_group:
@@ -1305,6 +1367,27 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.CreateGroupA'
+      tags:
+      - Group
+  /group/decline_invitation:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 消息ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.DeclineInvitationQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.DeclineInvitationA'
+      summary: 拒绝加入团队邀请
       tags:
       - Group
   /group/get_group_members:
@@ -1340,7 +1423,28 @@ paths:
             $ref: '#/definitions/response.GetGroupsA'
       tags:
       - Group
-  /group/get_identity:
+  /group/get_messages:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 空json
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.GetMessagesQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.GetMessagesA'
+      summary: 获取用户消息，按时间排序
+      tags:
+      - Group
+  /group/get_my_identity:
     post:
       consumes:
       - application/json
@@ -1358,6 +1462,26 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.GetIdentityA'
+      tags:
+      - Group
+  /group/invite_member:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 团队id，用户id
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.InviteMemberQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.InviteMemberA'
       tags:
       - Group
   /group/modify_group:

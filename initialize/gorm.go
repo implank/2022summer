@@ -42,6 +42,7 @@ func InitMySQL() {
 		//group
 		&database.Identity{},
 		&database.Group{},
+		&database.Message{},
 		//project
 		&database.Proj{},
 		&database.Prototype{},

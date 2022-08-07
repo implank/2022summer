@@ -610,7 +610,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/group/add_member": {
+        "/group/accept_invitation": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -621,14 +621,15 @@ const docTemplate = `{
                 "tags": [
                     "Group"
                 ],
+                "summary": "接受加入团队邀请",
                 "parameters": [
                     {
-                        "description": "用户id，团队id",
+                        "description": "消息ID",
                         "name": "data",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/response.AddMemberQ"
+                            "$ref": "#/definitions/response.AcceptInvitationQ"
                         }
                     }
                 ],
@@ -636,7 +637,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.AddMemberA"
+                            "$ref": "#/definitions/response.AcceptInvitationA"
                         }
                     }
                 }
@@ -669,6 +670,39 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/response.CreateGroupA"
+                        }
+                    }
+                }
+            }
+        },
+        "/group/decline_invitation": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Group"
+                ],
+                "summary": "拒绝加入团队邀请",
+                "parameters": [
+                    {
+                        "description": "消息ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.DeclineInvitationQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.DeclineInvitationA"
                         }
                     }
                 }
@@ -727,7 +761,40 @@ const docTemplate = `{
                 }
             }
         },
-        "/group/get_identity": {
+        "/group/get_messages": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Group"
+                ],
+                "summary": "获取用户消息，按时间排序",
+                "parameters": [
+                    {
+                        "description": "空json",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.GetMessagesQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.GetMessagesA"
+                        }
+                    }
+                }
+            }
+        },
+        "/group/get_my_identity": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -754,6 +821,38 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/response.GetIdentityA"
+                        }
+                    }
+                }
+            }
+        },
+        "/group/invite_member": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Group"
+                ],
+                "parameters": [
+                    {
+                        "description": "团队id，用户id",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.InviteMemberQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.InviteMemberA"
                         }
                     }
                 }
@@ -1440,16 +1539,16 @@ const docTemplate = `{
         "database.Group": {
             "type": "object",
             "properties": {
-                "groupID": {
+                "group_id": {
                     "type": "integer"
                 },
-                "groupInfo": {
+                "group_info": {
                     "type": "string"
                 },
-                "groupName": {
+                "group_name": {
                     "type": "string"
                 },
-                "userID": {
+                "user_id": {
                     "description": "团队创建者",
                     "type": "integer"
                 }
@@ -1461,17 +1560,41 @@ const docTemplate = `{
                 "email": {
                     "type": "string"
                 },
-                "realName": {
+                "real_name": {
                     "type": "string"
                 },
                 "status": {
+                    "description": "1 普通成员、2 管理员、3 团队创建者",
                     "type": "string"
                 },
-                "userID": {
+                "user_id": {
                     "type": "integer"
                 },
                 "username": {
                     "type": "string"
+                }
+            }
+        },
+        "database.Message": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "group_id": {
+                    "type": "integer"
+                },
+                "message_id": {
+                    "type": "integer"
+                },
+                "receiver_id": {
+                    "type": "integer"
+                },
+                "sender_id": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "integer"
                 }
             }
         },
@@ -1588,16 +1711,16 @@ const docTemplate = `{
                 "password": {
                     "type": "string"
                 },
-                "realName": {
+                "real_name": {
                     "type": "string"
                 },
                 "sex": {
                     "type": "string"
                 },
-                "userID": {
+                "user_id": {
                     "type": "integer"
                 },
-                "userInfo": {
+                "user_info": {
                     "type": "string"
                 },
                 "username": {
@@ -1605,7 +1728,7 @@ const docTemplate = `{
                 }
             }
         },
-        "response.AddMemberA": {
+        "response.AcceptInvitationA": {
             "type": "object",
             "properties": {
                 "code": {
@@ -1619,14 +1742,11 @@ const docTemplate = `{
                 }
             }
         },
-        "response.AddMemberQ": {
+        "response.AcceptInvitationQ": {
             "type": "object",
             "properties": {
-                "group_id": {
+                "message_id": {
                     "type": "integer"
-                },
-                "username": {
-                    "type": "string"
                 }
             }
         },
@@ -1791,6 +1911,28 @@ const docTemplate = `{
                 },
                 "uml_name": {
                     "type": "string"
+                }
+            }
+        },
+        "response.DeclineInvitationA": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.DeclineInvitationQ": {
+            "type": "object",
+            "properties": {
+                "message_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -1990,6 +2132,32 @@ const docTemplate = `{
                     "type": "integer"
                 }
             }
+        },
+        "response.GetMessagesA": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "count": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "messages": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/database.Message"
+                    }
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.GetMessagesQ": {
+            "type": "object"
         },
         "response.GetPPageByIDA": {
             "type": "object",
@@ -2287,6 +2455,31 @@ const docTemplate = `{
             "properties": {
                 "user_id": {
                     "type": "integer"
+                }
+            }
+        },
+        "response.InviteMemberA": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.InviteMemberQ": {
+            "type": "object",
+            "properties": {
+                "group_id": {
+                    "type": "integer"
+                },
+                "username": {
+                    "type": "string"
                 }
             }
         },

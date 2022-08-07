@@ -35,11 +35,11 @@ type GetMembersA struct {
 	CommonA
 	Members []database.GroupMember `json:"members"`
 }
-type AddMemberQ struct {
+type InviteMemberQ struct {
 	GroupID  uint64 `json:"group_id"`
 	Username string `json:"username"`
 }
-type AddMemberA struct {
+type InviteMemberA struct {
 	CommonA
 }
 type RemoveMemberQ struct {
@@ -64,6 +64,29 @@ type GetGroupsA struct {
 	Count  int              `json:"count"`
 	Groups []database.Group `json:"groups"`
 }
+type GetMessagesQ struct {
+}
+type GetMessagesA struct {
+	CommonA
+	Count    int                `json:"count"`
+	Messages []database.Message `json:"messages"`
+}
+type DeclineInvitationQ struct {
+	MessageID uint64 `json:"message_id"`
+}
+type DeclineInvitationA struct {
+	Message string `json:"message"`
+	Success bool   `json:"success"`
+	Code    int    `json:"code"`
+}
+type AcceptInvitationQ struct {
+	MessageID uint64 `json:"message_id"`
+}
+type AcceptInvitationA struct {
+	Message string `json:"message"`
+	Success bool   `json:"success"`
+	Code    int    `json:"code"`
+}
 
 var (
 	NOAUTH = CommonA{
@@ -71,7 +94,7 @@ var (
 		Success: false,
 		Code:    0,
 	}
-	NOMENBER = CommonA{
+	USERNOTINGROUP = CommonA{
 		Message: "用户不在该团队中",
 		Success: false,
 		Code:    1,
@@ -85,5 +108,10 @@ var (
 		Message: "数据库错误",
 		Success: false,
 		Code:    3,
+	}
+	USERNOTEXSIT = CommonA{
+		Message: "用户不存在",
+		Success: false,
+		Code:    4,
 	}
 )
