@@ -96,3 +96,13 @@ type GetProjByIDA struct {
 	Success bool          `json:"success"`
 	Proj    database.Proj `json:"proj"`
 }
+
+type CopyProjQ struct {
+	ProjID uint64 `json:"proj_id" binding:"required"`
+}
+
+type CopyProjA struct {
+	Message string        `json:"message"`
+	Success bool          `json:"success"`
+	Proj    database.Proj `json:"proj"`
+}

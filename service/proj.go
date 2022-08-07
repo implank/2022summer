@@ -106,3 +106,62 @@ func GetUserProjsInGroup(userID uint64, groupID uint64, status int, op int, orde
 	query.Find(&projs).RecordNotFound()
 	return projs
 }
+
+func CopyProj(projSrcID uint64, userID uint64) (projDst database.Proj, err error) {
+	tx := global.DB.Begin()
+	projSrc, _ := QueryProjByProjID(projSrcID)
+	projDst = database.Proj{
+		ProjName: projSrc.ProjName + "的副本",
+		ProjInfo: projSrc.ProjInfo,
+		Status:   projSrc.Status,
+		GroupID:  projSrc.GroupID,
+		UserID:   userID,
+		Top:      projSrc.Top}
+	if err := global.DB.Create(&projDst).Error; err != nil {
+		tx.Rollback()
+		return projDst, err
+	}
+	var ppages []database.PPage
+	var umls []database.Uml
+	var documents []database.Document
+	global.DB.Where("proj_id = ?", projSrcID).Find(&ppages)
+	global.DB.Where("proj_id = ?", projSrcID).Find(&umls)
+	global.DB.Where("proj_id = ?", projSrcID).Find(&documents)
+	for _, value := range ppages {
+		tmp := database.PPage{
+			PPageName: value.PPageName,
+			PPageData: value.PPageData,
+			PPageURL:  "",
+			Status:    value.Status,
+			ProjID:    projDst.ProjID}
+		if err := global.DB.Create(&tmp).Error; err != nil {
+			tx.Rollback()
+			return projDst, err
+		}
+	}
+	for _, value := range umls {
+		tmp := database.Uml{
+			UmlName: value.UmlName,
+			UmlURL:  "",
+			Status:  value.Status,
+			ProjID:  projDst.ProjID}
+		if err := global.DB.Create(&tmp).Error; err != nil {
+			tx.Rollback()
+			return projDst, err
+		}
+	}
+	for _, value := range documents {
+		tmp := database.Document{
+			DocumentName: value.DocumentName,
+			// TODO 这里或许有 DocumentData
+			DocumentURL: "",
+			Status:      value.Status,
+			ProjID:      projDst.ProjID}
+		if err := global.DB.Create(&tmp).Error; err != nil {
+			tx.Rollback()
+			return projDst, err
+		}
+	}
+	tx.Commit()
+	return projDst, err
+}

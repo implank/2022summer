@@ -61,6 +61,7 @@ func SetupRouter(r *gin.Engine) {
 		projGroup.POST("/get_proj_join", v1.GetProjJoin)      // 不在回收站的某组"我参与的"
 		projGroup.POST("/get_proj_by_name", v1.GetProjByName) // 搜索框，只搜不在回收站的
 		projGroup.POST("/get_proj_by_id", v1.GetProjByID)     // 获取项目信息
+		projGroup.POST("/copy_proj", v1.CopyProj)             // 复制项目
 	}
 
 	fileGroup := r.Group("/api/v1/file", middleware.AuthRequired())

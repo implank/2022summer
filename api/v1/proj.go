@@ -261,3 +261,26 @@ func GetProjByID(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, response.GetProjByIDA{Message: "成功获取项目信息", Success: true, Proj: proj})
 }
+
+// CopyProj
+// @Summary 获取项目信息
+// @Tags 项目管理
+// @Accept json
+// @Produce json
+// @Param data body response.CopyProjQ true "项目ID"
+// @Success 200 {object} response.CopyProjA
+// @Router /proj/copy_proj [post]
+func CopyProj(c *gin.Context) {
+	poster, _ := c.Get("user")
+	var data response.CopyProjQ
+	if err := utils.ShouldBindAndValid(c, &data); err != nil {
+		c.JSON(http.StatusOK, response.CopyProjA{Message: "输入数据不符合要求", Success: false})
+		return
+	}
+	proj, err := service.CopyProj(data.ProjID, poster.(database.User).UserID)
+	if err != nil {
+		c.JSON(http.StatusOK, response.CopyProjA{Message: "复制项目失败", Success: false})
+		return
+	}
+	c.JSON(http.StatusOK, response.CopyProjA{Message: "复制项目成功", Success: false, Proj: proj})
+}
