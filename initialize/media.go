@@ -7,9 +7,9 @@ func InitMedia() {
 	if os.IsNotExist(err) {
 		_ = os.MkdirAll("./media", 0755)
 	}
-	_, err = os.Stat("./media/prototypes")
+	_, err = os.Stat("./media/ppages")
 	if os.IsNotExist(err) {
-		_ = os.MkdirAll("./media/prototypes", 0755)
+		_ = os.MkdirAll("./media/ppages", 0755)
 	}
 	_, err = os.Stat("./media/umls")
 	if os.IsNotExist(err) {

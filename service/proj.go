@@ -33,9 +33,9 @@ func UpdateProj(proj *database.Proj) (err error) {
 }
 
 func UpdateProjStatus(proj *database.Proj) (err error) {
-	// 移入或移出回收站: 先改变 Prototype, Uml, Document 的 Status, 再保存 Proj
+	// 移入或移出回收站: 先改变 PPage, Uml, Document 的 Status, 再保存 Proj
 	// 【注意】传入的 Proj 的 Status 应该是已被修改的
-	global.DB.Model(database.Prototype{}).Where("proj_id = ?", proj.ProjID).Updates(database.Prototype{Status: proj.Status})
+	global.DB.Model(database.PPage{}).Where("proj_id = ?", proj.ProjID).Updates(database.PPage{Status: proj.Status})
 	global.DB.Model(database.Uml{}).Where("proj_id = ?", proj.ProjID).Updates(database.Uml{Status: proj.Status})
 	global.DB.Model(database.Document{}).Where("proj_id = ?", proj.ProjID).Updates(database.Document{Status: proj.Status})
 	err = global.DB.Save(proj).Error
@@ -43,8 +43,8 @@ func UpdateProjStatus(proj *database.Proj) (err error) {
 }
 
 func DeleteProj(proj *database.Proj) (err error) {
-	// 删除回收站中的 Proj: 先删除 Prototype, Uml, Document, 再删除 Proj
-	global.DB.Where("proj_id = ?", proj.ProjID).Delete(database.Prototype{})
+	// 删除回收站中的 Proj: 先删除 PPage, Uml, Document, 再删除 Proj
+	global.DB.Where("proj_id = ?", proj.ProjID).Delete(database.PPage{})
 	global.DB.Where("proj_id = ?", proj.ProjID).Delete(database.Uml{})
 	global.DB.Where("proj_id = ?", proj.ProjID).Delete(database.Document{})
 	err = global.DB.Delete(&proj).Error

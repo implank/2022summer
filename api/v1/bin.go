@@ -31,7 +31,7 @@ func DeleteProj(c *gin.Context) {
 		c.JSON(http.StatusOK, response.DeleteProjA{Message: "项目不存在", Success: false})
 		return
 	}
-	documents := service.GetProjDocuments(data.ProjID, 2)
+	documents := service.GetProjDocuments(data.ProjID, 2) // TODO 或许以下几行代码可以删掉
 	for _, value := range documents {
 		filename := strings.Split(value.DocumentURL, "/")[len(strings.Split(value.DocumentURL, "/"))-1]
 		saveDir := "./media/documents/"
@@ -59,37 +59,37 @@ func DeleteProj(c *gin.Context) {
 	c.JSON(http.StatusOK, response.DeleteProjA{Message: "删除项目成功", Success: true})
 }
 
-// MovePrototypeFromBin
-// @Summary 设计原型移出回收站
+// MovePPageFromBin
+// @Summary 设计原型的某个页面移出回收站
 // @Tags 回收站
 // @Accept json
 // @Produce json
-// @Param data body response.MovePrototypeFromBinQ true "设计原型ID"
-// @Success 200 {object} response.MovePrototypeFromBinA
-// @Router /bin/move_prototype_from_bin [post]
-func MovePrototypeFromBin(c *gin.Context) {
-	var data response.MovePrototypeFromBinQ
+// @Param data body response.MovePPageFromBinQ true "设计原型的页面ID"
+// @Success 200 {object} response.MovePPageFromBinA
+// @Router /bin/move_PPage_from_bin [post]
+func MovePPageFromBin(c *gin.Context) {
+	var data response.MovePPageFromBinQ
 	if err := utils.ShouldBindAndValid(c, &data); err != nil {
-		c.JSON(http.StatusOK, response.MovePrototypeToBinA{Message: "输入数据不符合要求", Success: false})
+		c.JSON(http.StatusOK, response.MovePPageToBinA{Message: "输入数据不符合要求", Success: false})
 		return
 	}
-	prototype, notFound := service.QueryPrototypeByPrototypeID(data.PrototypeID)
+	ppage, notFound := service.QueryPPageByPPageID(data.PPageID)
 	if notFound {
-		c.JSON(http.StatusOK, response.MovePrototypeToBinA{Message: "设计原型不存在", Success: false})
+		c.JSON(http.StatusOK, response.MovePPageToBinA{Message: "设计原型不存在", Success: false})
 		return
 	}
-	proj, _ := service.QueryProjByProjID(prototype.ProjID)
+	proj, _ := service.QueryProjByProjID(ppage.ProjID)
 	if proj.Status == 2 {
-		c.JSON(http.StatusOK, response.MovePrototypeToBinA{Message: "请先将该设计原型所属项目移出回收站", Success: false})
+		c.JSON(http.StatusOK, response.MovePPageToBinA{Message: "请先将该设计原型所属项目移出回收站", Success: false})
 		return
 	}
-	prototype.Status = 1
-	err := service.UpdatePrototype(&prototype)
+	ppage.Status = 1
+	err := service.UpdatePPage(&ppage)
 	if err != nil {
-		c.JSON(http.StatusOK, response.MovePrototypeToBinA{Message: "移出回收站失败", Success: false})
+		c.JSON(http.StatusOK, response.MovePPageToBinA{Message: "移出回收站失败", Success: false})
 		return
 	}
-	c.JSON(http.StatusOK, response.MovePrototypeToBinA{Message: "移出回收站成功", Success: true})
+	c.JSON(http.StatusOK, response.MovePPageToBinA{Message: "移出回收站成功", Success: true})
 }
 
 // MoveUmlFromBin
@@ -158,31 +158,31 @@ func MoveDocumentFromBin(c *gin.Context) {
 	c.JSON(http.StatusOK, response.MoveDocumentToBinA{Message: "移出回收站成功", Success: true})
 }
 
-// DeletePrototype
-// @Summary 删除设计原型
+// DeletePPage
+// @Summary 删除设计原型的某个页面
 // @Tags 回收站
 // @Accept json
 // @Produce json
-// @Param data body response.DeletePrototypeQ true "设计原型ID"
-// @Success 200 {object} response.DeletePrototypeA
-// @Router /bin/delete_prototype [post]
-func DeletePrototype(c *gin.Context) {
-	var data response.DeletePrototypeQ
+// @Param data body response.DeletePPageQ true "设计原型的页面ID"
+// @Success 200 {object} response.DeletePPageA
+// @Router /bin/delete_ppage [post]
+func DeletePPage(c *gin.Context) {
+	var data response.DeletePPageQ
 	if err := utils.ShouldBindAndValid(c, &data); err != nil {
-		c.JSON(http.StatusOK, response.DeletePrototypeA{Message: "输入数据不符合要求", Success: false})
+		c.JSON(http.StatusOK, response.DeletePPageA{Message: "输入数据不符合要求", Success: false})
 		return
 	}
-	prototype, notFound := service.QueryPrototypeByPrototypeID(data.PrototypeID)
+	ppage, notFound := service.QueryPPageByPPageID(data.PPageID)
 	if notFound {
-		c.JSON(http.StatusOK, response.DeletePrototypeA{Message: "设计原型不存在", Success: false})
+		c.JSON(http.StatusOK, response.DeletePPageA{Message: "页面不存在", Success: false})
 		return
 	}
-	err := service.DeletePrototype(&prototype)
+	err := service.DeletePPage(&ppage)
 	if err != nil {
-		c.JSON(http.StatusOK, response.DeletePrototypeA{Message: "删除设计原型失败", Success: false})
+		c.JSON(http.StatusOK, response.DeletePPageA{Message: "删除页面失败", Success: false})
 		return
 	}
-	c.JSON(http.StatusOK, response.DeletePrototypeA{Message: "删除设计原型成功", Success: true})
+	c.JSON(http.StatusOK, response.DeletePPageA{Message: "删除页面成功", Success: true})
 }
 
 // DeleteUml
@@ -231,7 +231,7 @@ func DeleteDocument(c *gin.Context) {
 		c.JSON(http.StatusOK, response.DeleteDocumentA{Message: "文档不存在", Success: false})
 		return
 	}
-	filename := strings.Split(document.DocumentURL, "/")[len(strings.Split(document.DocumentURL, "/"))-1]
+	filename := strings.Split(document.DocumentURL, "/")[len(strings.Split(document.DocumentURL, "/"))-1] // TODO 或许以下几行代码可以删掉
 	saveDir := "./media/documents/"
 	savePath := path.Join(saveDir, filename)
 	if err := os.Remove(savePath); err != nil {
@@ -279,7 +279,7 @@ func GetProjInBin(c *gin.Context) {
 }
 
 // GetFilesInBin
-// @Summary 回收站中的设计原型 / Uml / 文档，这些设计原型 / Uml / 文档所在的项目并没有被移到回收站
+// @Summary 回收站中的设计原型页面 / Uml / 文档，这些设计原型 / Uml / 文档所在的项目并没有被移到回收站
 // @Tags 回收站
 // @Accept json
 // @Produce json
@@ -292,16 +292,16 @@ func GetFilesInBin(c *gin.Context) {
 		c.JSON(http.StatusOK, response.GetFilesInBinA{Message: "输入数据不符合要求", Success: false})
 		return
 	}
-	prototypes := service.GetProjPrototypesInBin(data.GroupID)
+	PPages := service.GetProjPPagesInBin(data.GroupID)
 	umls := service.GetProjUmlsInBin(data.GroupID)
 	documents := service.GetProjDocumentsInBin(data.GroupID)
 	c.JSON(http.StatusOK, response.GetFilesInBinA{
-		Message:         "回收站中有以下设计原型 / Uml / 文档",
-		Success:         true,
-		CountPrototypes: uint64(len(prototypes)),
-		Prototypes:      prototypes,
-		CountUmls:       uint64(len(umls)),
-		Umls:            umls,
-		CountDocuments:  uint64(len(documents)),
-		Documents:       documents})
+		Message:        "回收站中有以下设计原型 / Uml / 文档",
+		Success:        true,
+		CountPPages:    uint64(len(PPages)),
+		PPages:         PPages,
+		CountUmls:      uint64(len(umls)),
+		Umls:           umls,
+		CountDocuments: uint64(len(documents)),
+		Documents:      documents})
 }

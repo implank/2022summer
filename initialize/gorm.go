@@ -44,10 +44,9 @@ func InitMySQL() {
 		&database.Group{},
 		//project
 		&database.Proj{},
-		&database.Prototype{},
+		&database.PPage{},
 		&database.Uml{},
 		&database.Document{},
-		&database.PPage{},
 	)
 
 	// 检查数据库连接是否存在, 好像没啥用

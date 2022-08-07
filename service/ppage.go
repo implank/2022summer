@@ -5,19 +5,20 @@ import (
 	"2022summer/model/database"
 )
 
-func GetPPages(prototypeID uint64) (ppages []database.PPageID) {
+func GetProjPPages(projID uint64, status int) (ppages []database.PPageID) {
 	global.DB.Table("p_pages").Select("p_page_id, p_page_name").
-		Where("prototype_id = ?", prototypeID).Find(&ppages).RecordNotFound()
+		Where("proj_id = ? and status = ?", projID, status).Find(&ppages).RecordNotFound()
 	return ppages
 }
 
-/*func GetPPages(prototypeID uint64) (ppages []database.PPage) { // 如果需要把 data 一起传回去
-	global.DB.Where("prototype_id = ?", prototypeID).Find(&ppages).RecordNotFound()
+/*func GetProjPPages(projID uint64, status int) (ppages []database.PPage) { // 如果需要把 data 一起传回去
+	global.DB.Where("proj_id = ? and status = ?", projID, status).Find(&ppages).RecordNotFound()
 	return ppages
 }*/
 
-func QueryPPageByPPageName(pPageName string, prototypeID uint64) (ppage database.PPage, notFound bool) {
-	notFound = global.DB.Where("p_page_name = ? and prototype_id = ?", pPageName, prototypeID).First(&ppage).RecordNotFound()
+func QueryPPageByPPageName(pPageName string, projID uint64) (ppage database.PPage, notFound bool) {
+	// 同一项目的设计原型中不能有同名页面
+	notFound = global.DB.Where("p_page_name = ? and proj_id = ?", pPageName, projID).First(&ppage).RecordNotFound()
 	return ppage, notFound
 }
 

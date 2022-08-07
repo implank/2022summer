@@ -49,6 +49,39 @@ const docTemplate = `{
                 }
             }
         },
+        "/bin/delete_ppage": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "回收站"
+                ],
+                "summary": "删除设计原型的某个页面",
+                "parameters": [
+                    {
+                        "description": "设计原型的页面ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.DeletePPageQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.DeletePPageA"
+                        }
+                    }
+                }
+            }
+        },
         "/bin/delete_proj": {
             "post": {
                 "consumes": [
@@ -77,39 +110,6 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/response.DeleteProjA"
-                        }
-                    }
-                }
-            }
-        },
-        "/bin/delete_prototype": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "回收站"
-                ],
-                "summary": "删除设计原型",
-                "parameters": [
-                    {
-                        "description": "设计原型ID",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/response.DeletePrototypeQ"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.DeletePrototypeA"
                         }
                     }
                 }
@@ -159,7 +159,7 @@ const docTemplate = `{
                 "tags": [
                     "回收站"
                 ],
-                "summary": "回收站中的设计原型 / Uml / 文档，这些设计原型 / Uml / 文档所在的项目并没有被移到回收站",
+                "summary": "回收站中的设计原型页面 / Uml / 文档，这些设计原型 / Uml / 文档所在的项目并没有被移到回收站",
                 "parameters": [
                     {
                         "description": "团队ID",
@@ -214,6 +214,39 @@ const docTemplate = `{
                 }
             }
         },
+        "/bin/move_PPage_from_bin": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "回收站"
+                ],
+                "summary": "设计原型的某个页面移出回收站",
+                "parameters": [
+                    {
+                        "description": "设计原型的页面ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.MovePPageFromBinQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.MovePPageFromBinA"
+                        }
+                    }
+                }
+            }
+        },
         "/bin/move_document_from_bin": {
             "post": {
                 "consumes": [
@@ -242,39 +275,6 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/response.MoveDocumentFromBinA"
-                        }
-                    }
-                }
-            }
-        },
-        "/bin/move_prototype_from_bin": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "回收站"
-                ],
-                "summary": "设计原型移出回收站",
-                "parameters": [
-                    {
-                        "description": "设计原型ID",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/response.MovePrototypeFromBinQ"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.MovePrototypeFromBinA"
                         }
                     }
                 }
@@ -313,7 +313,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/file/create_document": {
+        "/doc/create_document": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -322,7 +322,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "项目管理的第二页"
+                    "共享文档"
                 ],
                 "summary": "创建文档",
                 "parameters": [
@@ -346,7 +346,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/file/create_prototype": {
+        "/doc/enter_document": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -355,73 +355,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "项目管理的第二页"
-                ],
-                "summary": "创建设计原型",
-                "parameters": [
-                    {
-                        "description": "设计原型名称，设计原型所属项目ID",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/response.CreatePrototypeQ"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.CreatePrototypeA"
-                        }
-                    }
-                }
-            }
-        },
-        "/file/create_uml": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "项目管理的第二页"
-                ],
-                "summary": "创建 Uml",
-                "parameters": [
-                    {
-                        "description": "Uml名称，Uml所属项目ID",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/response.CreateUmlQ"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.CreateUmlA"
-                        }
-                    }
-                }
-            }
-        },
-        "/file/enter_document": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "项目管理的第二页"
+                    "共享文档"
                 ],
                 "summary": "进入文档",
                 "parameters": [
@@ -440,6 +374,171 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/response.EnterDocumentA"
+                        }
+                    }
+                }
+            }
+        },
+        "/doc/get_proj_documents": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "共享文档"
+                ],
+                "summary": "获取某个项目不在回收站的文档",
+                "parameters": [
+                    {
+                        "description": "项目ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.GetProjDocumentsQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.GetProjDocumentsA"
+                        }
+                    }
+                }
+            }
+        },
+        "/doc/move_document_to_bin": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "共享文档"
+                ],
+                "summary": "文档移入回收站",
+                "parameters": [
+                    {
+                        "description": "文档 ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.MoveDocumentToBinQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.MoveDocumentToBinA"
+                        }
+                    }
+                }
+            }
+        },
+        "/doc/quit_document": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "共享文档"
+                ],
+                "summary": "退出文档",
+                "parameters": [
+                    {
+                        "description": "文档ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.QuitDocumentQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.QuitDocumentA"
+                        }
+                    }
+                }
+            }
+        },
+        "/doc/update_document": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "共享文档"
+                ],
+                "summary": "修改文档名称",
+                "parameters": [
+                    {
+                        "description": "文档ID，文档的新名字（必填，可以填原名，不能和其他项目同名）",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.UpdateDocumentQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.UpdateDocumentA"
+                        }
+                    }
+                }
+            }
+        },
+        "/doc/upload_document": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "共享文档"
+                ],
+                "summary": "上传文档",
+                "parameters": [
+                    {
+                        "description": "文档ID，文档内容",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.UploadDocumentQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.UploadDocumentA"
                         }
                     }
                 }
@@ -473,402 +572,6 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/response.GetFilesByNameA"
-                        }
-                    }
-                }
-            }
-        },
-        "/file/get_proj_by_id": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "项目管理的第二页"
-                ],
-                "summary": "获取项目信息",
-                "parameters": [
-                    {
-                        "description": "项目ID",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/response.GetProjByIDQ"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.GetProjByIDA"
-                        }
-                    }
-                }
-            }
-        },
-        "/file/get_proj_documents": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "项目管理的第二页"
-                ],
-                "summary": "获取项目的文档",
-                "parameters": [
-                    {
-                        "description": "项目ID",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/response.GetProjDocumentsQ"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.GetProjDocumentsA"
-                        }
-                    }
-                }
-            }
-        },
-        "/file/get_proj_prototypes": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "项目管理的第二页"
-                ],
-                "summary": "获取项目的设计原型",
-                "parameters": [
-                    {
-                        "description": "项目ID",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/response.GetProjPrototypesQ"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.GetProjPrototypesA"
-                        }
-                    }
-                }
-            }
-        },
-        "/file/get_proj_umls": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "项目管理的第二页"
-                ],
-                "summary": "获取项目的 Uml 图",
-                "parameters": [
-                    {
-                        "description": "项目ID",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/response.GetProjUmlsQ"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.GetProjUmlsA"
-                        }
-                    }
-                }
-            }
-        },
-        "/file/move_document_to_bin": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "项目管理的第二页"
-                ],
-                "summary": "文档移入回收站",
-                "parameters": [
-                    {
-                        "description": "文档 ID",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/response.MoveDocumentToBinQ"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.MoveDocumentToBinA"
-                        }
-                    }
-                }
-            }
-        },
-        "/file/move_prototype_to_bin": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "项目管理的第二页"
-                ],
-                "summary": "设计原型移入回收站",
-                "parameters": [
-                    {
-                        "description": "设计原型ID",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/response.MovePrototypeToBinQ"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.MovePrototypeToBinA"
-                        }
-                    }
-                }
-            }
-        },
-        "/file/move_uml_to_bin": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "项目管理的第二页"
-                ],
-                "summary": "Uml 移入回收站",
-                "parameters": [
-                    {
-                        "description": "Uml ID",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/response.MoveUmlToBinQ"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.MoveUmlToBinA"
-                        }
-                    }
-                }
-            }
-        },
-        "/file/quit_document": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "项目管理的第二页"
-                ],
-                "summary": "退出文档",
-                "parameters": [
-                    {
-                        "description": "文档ID",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/response.QuitDocumentQ"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.QuitDocumentA"
-                        }
-                    }
-                }
-            }
-        },
-        "/file/update_document": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "项目管理的第二页"
-                ],
-                "summary": "修改文档名称",
-                "parameters": [
-                    {
-                        "description": "文档ID，文档的新名字（必填，可以填原名，不能和其他项目同名）",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/response.UpdateDocumentQ"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.UpdateDocumentA"
-                        }
-                    }
-                }
-            }
-        },
-        "/file/update_prototype": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "项目管理的第二页"
-                ],
-                "summary": "修改设计原型名称",
-                "parameters": [
-                    {
-                        "description": "设计原型ID，设计原型的新名字（必填，可以填原名，不能和其他项目同名）",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/response.UpdatePrototypeQ"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.UpdatePrototypeA"
-                        }
-                    }
-                }
-            }
-        },
-        "/file/update_uml": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "项目管理的第二页"
-                ],
-                "summary": "修改 Uml 名称",
-                "parameters": [
-                    {
-                        "description": "Uml ID，Uml的新名字（必填，可以填原名，不能和其他项目同名）",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/response.UpdateUmlQ"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.UpdateUmlA"
-                        }
-                    }
-                }
-            }
-        },
-        "/file/upload_document": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "项目管理的第二页"
-                ],
-                "summary": "上传文档",
-                "parameters": [
-                    {
-                        "description": "文档ID，文档内容",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/response.UploadDocumentQ"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.UploadDocumentA"
                         }
                     }
                 }
@@ -1160,12 +863,12 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "设计原型的页面"
+                    "设计原型"
                 ],
                 "summary": "创建设计原型的一个页面",
                 "parameters": [
                     {
-                        "description": "页面名称，页面数据（可选），页面所属设计原型ID",
+                        "description": "页面名称，页面数据（可选），页面所属项目ID",
                         "name": "data",
                         "in": "body",
                         "required": true,
@@ -1184,39 +887,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/ppage/delete_ppage": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "设计原型的页面"
-                ],
-                "summary": "删除设计原型的某个页面",
-                "parameters": [
-                    {
-                        "description": "页面ID",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/response.DeletePPageQ"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.DeletePPageA"
-                        }
-                    }
-                }
-            }
-        },
         "/ppage/get_ppage_by_id": {
             "post": {
                 "consumes": [
@@ -1226,12 +896,12 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "设计原型的页面"
+                    "设计原型"
                 ],
                 "summary": "获取设计原型的某个页面",
                 "parameters": [
                     {
-                        "description": "页面ID",
+                        "description": "设计原型的页面ID",
                         "name": "data",
                         "in": "body",
                         "required": true,
@@ -1250,7 +920,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/ppage/get_ppages": {
+        "/ppage/get_proj_ppages": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -1259,17 +929,17 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "设计原型的页面"
+                    "设计原型"
                 ],
-                "summary": "获取某个设计原型的所有页面的ID",
+                "summary": "获取某个项目不在回收站的设计原型的页面",
                 "parameters": [
                     {
-                        "description": "设计原型ID",
+                        "description": "项目ID",
                         "name": "data",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/response.GetPPagesQ"
+                            "$ref": "#/definitions/response.GetProjPPagesQ"
                         }
                     }
                 ],
@@ -1277,7 +947,40 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.GetPPagesA"
+                            "$ref": "#/definitions/response.GetProjPPagesA"
+                        }
+                    }
+                }
+            }
+        },
+        "/ppage/move_ppage_to_bin": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "设计原型"
+                ],
+                "summary": "设计原型移入回收站",
+                "parameters": [
+                    {
+                        "description": "设计原型的页面ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.MovePPageToBinQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.MovePPageToBinA"
                         }
                     }
                 }
@@ -1292,12 +995,12 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "设计原型的页面"
+                    "设计原型"
                 ],
                 "summary": "修改设计原型的某个页面的名称或数据",
                 "parameters": [
                     {
-                        "description": "页面ID，页面名称（可选，如果没填或者为空字符串，则不修改），页面数据（可选，如果没填或者为空字符串，则不修改）",
+                        "description": "设计原型的页面ID，页面名称（可选，如果没填或者为空字符串，则不修改），页面数据（可选，如果没填或者为空字符串，则不修改）",
                         "name": "data",
                         "in": "body",
                         "required": true,
@@ -1325,7 +1028,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "项目管理的第一页"
+                    "项目管理"
                 ],
                 "summary": "创建项目",
                 "parameters": [
@@ -1358,7 +1061,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "项目管理的第一页"
+                    "项目管理"
                 ],
                 "summary": "全部项目",
                 "parameters": [
@@ -1382,6 +1085,39 @@ const docTemplate = `{
                 }
             }
         },
+        "/proj/get_proj_by_id": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "项目管理"
+                ],
+                "summary": "获取项目信息",
+                "parameters": [
+                    {
+                        "description": "项目ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.GetProjByIDQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.GetProjByIDA"
+                        }
+                    }
+                }
+            }
+        },
         "/proj/get_proj_by_name": {
             "post": {
                 "consumes": [
@@ -1391,7 +1127,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "项目管理的第一页"
+                    "项目管理"
                 ],
                 "summary": "搜索框",
                 "parameters": [
@@ -1424,7 +1160,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "项目管理的第一页"
+                    "项目管理"
                 ],
                 "summary": "我创建的",
                 "parameters": [
@@ -1457,7 +1193,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "项目管理的第一页"
+                    "项目管理"
                 ],
                 "summary": "我参与的",
                 "parameters": [
@@ -1490,7 +1226,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "项目管理的第一页"
+                    "项目管理"
                 ],
                 "summary": "移入或移出回收站",
                 "parameters": [
@@ -1523,7 +1259,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "项目管理的第一页"
+                    "项目管理"
                 ],
                 "summary": "修改项目名称、项目描述",
                 "parameters": [
@@ -1574,6 +1310,138 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/response.RegisterA"
+                        }
+                    }
+                }
+            }
+        },
+        "/uml/create_uml": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Uml"
+                ],
+                "summary": "创建 Uml",
+                "parameters": [
+                    {
+                        "description": "Uml名称，Uml所属项目ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.CreateUmlQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.CreateUmlA"
+                        }
+                    }
+                }
+            }
+        },
+        "/uml/get_proj_umls": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Uml"
+                ],
+                "summary": "获取某个项目不在回收站的 Uml",
+                "parameters": [
+                    {
+                        "description": "项目ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.GetProjUmlsQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.GetProjUmlsA"
+                        }
+                    }
+                }
+            }
+        },
+        "/uml/move_uml_to_bin": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Uml"
+                ],
+                "summary": "Uml 移入回收站",
+                "parameters": [
+                    {
+                        "description": "Uml ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.MoveUmlToBinQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.MoveUmlToBinA"
+                        }
+                    }
+                }
+            }
+        },
+        "/uml/update_uml": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Uml"
+                ],
+                "summary": "修改 Uml 名称",
+                "parameters": [
+                    {
+                        "description": "Uml ID，Uml的新名字（必填，可以填原名，不能和其他项目同名）",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.UpdateUmlQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.UpdateUmlA"
                         }
                     }
                 }
@@ -1755,7 +1623,11 @@ const docTemplate = `{
                     "description": "先写上",
                     "type": "string"
                 },
-                "prototype_id": {
+                "proj_id": {
+                    "type": "integer"
+                },
+                "status": {
+                    "description": "1 正常、2 回收站",
                     "type": "integer"
                 }
             }
@@ -1793,28 +1665,6 @@ const docTemplate = `{
                 },
                 "user_id": {
                     "description": "项目创建者",
-                    "type": "integer"
-                }
-            }
-        },
-        "database.Prototype": {
-            "type": "object",
-            "properties": {
-                "proj_id": {
-                    "type": "integer"
-                },
-                "prototype_id": {
-                    "type": "integer"
-                },
-                "prototype_name": {
-                    "type": "string"
-                },
-                "prototype_url": {
-                    "description": "先留着",
-                    "type": "string"
-                },
-                "status": {
-                    "description": "1 正常、2 回收站",
                     "type": "integer"
                 }
             }
@@ -1965,7 +1815,7 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "ppage_name",
-                "prototype_id"
+                "proj_id"
             ],
             "properties": {
                 "ppage_data": {
@@ -1974,7 +1824,7 @@ const docTemplate = `{
                 "ppage_name": {
                     "type": "string"
                 },
-                "prototype_id": {
+                "proj_id": {
                     "type": "integer"
                 }
             }
@@ -2004,31 +1854,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "proj_name": {
-                    "type": "string"
-                }
-            }
-        },
-        "response.CreatePrototypeA": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "response.CreatePrototypeQ": {
-            "type": "object",
-            "required": [
-                "prototype_name"
-            ],
-            "properties": {
-                "proj_id": {
-                    "type": "integer"
-                },
-                "prototype_name": {
                     "type": "string"
                 }
             }
@@ -2124,28 +1949,6 @@ const docTemplate = `{
                 }
             }
         },
-        "response.DeletePrototypeA": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "response.DeletePrototypeQ": {
-            "type": "object",
-            "required": [
-                "prototype_id"
-            ],
-            "properties": {
-                "prototype_id": {
-                    "type": "integer"
-                }
-            }
-        },
         "response.DeleteUmlA": {
             "type": "object",
             "properties": {
@@ -2205,7 +2008,7 @@ const docTemplate = `{
                 "count_documents": {
                     "type": "integer"
                 },
-                "count_prototypes": {
+                "count_ppage": {
                     "type": "integer"
                 },
                 "count_umls": {
@@ -2220,10 +2023,10 @@ const docTemplate = `{
                 "message": {
                     "type": "string"
                 },
-                "prototypes": {
+                "ppage": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/database.Prototype"
+                        "$ref": "#/definitions/database.PPage"
                     }
                 },
                 "success": {
@@ -2251,7 +2054,7 @@ const docTemplate = `{
                 "count_documents": {
                     "type": "integer"
                 },
-                "count_prototypes": {
+                "count_ppages": {
                     "type": "integer"
                 },
                 "count_umls": {
@@ -2266,10 +2069,10 @@ const docTemplate = `{
                 "message": {
                     "type": "string"
                 },
-                "prototypes": {
+                "ppages": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/database.Prototype"
+                        "$ref": "#/definitions/database.PPage"
                     }
                 },
                 "success": {
@@ -2395,37 +2198,6 @@ const docTemplate = `{
                 }
             }
         },
-        "response.GetPPagesA": {
-            "type": "object",
-            "properties": {
-                "count": {
-                    "type": "integer"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "ppages": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/database.PPageID"
-                    }
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "response.GetPPagesQ": {
-            "type": "object",
-            "required": [
-                "prototype_id"
-            ],
-            "properties": {
-                "prototype_id": {
-                    "type": "integer"
-                }
-            }
-        },
         "response.GetProjAllA": {
             "type": "object",
             "properties": {
@@ -2448,6 +2220,9 @@ const docTemplate = `{
         },
         "response.GetProjAllQ": {
             "type": "object",
+            "required": [
+                "group_id"
+            ],
             "properties": {
                 "group_id": {
                     "type": "integer"
@@ -2529,6 +2304,9 @@ const docTemplate = `{
         },
         "response.GetProjCreateQ": {
             "type": "object",
+            "required": [
+                "group_id"
+            ],
             "properties": {
                 "group_id": {
                     "type": "integer"
@@ -2619,13 +2397,16 @@ const docTemplate = `{
         },
         "response.GetProjJoinQ": {
             "type": "object",
+            "required": [
+                "group_id"
+            ],
             "properties": {
                 "group_id": {
                     "type": "integer"
                 }
             }
         },
-        "response.GetProjPrototypesA": {
+        "response.GetProjPPagesA": {
             "type": "object",
             "properties": {
                 "count": {
@@ -2634,10 +2415,10 @@ const docTemplate = `{
                 "message": {
                     "type": "string"
                 },
-                "prototypes": {
+                "ppages": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/database.Prototype"
+                        "$ref": "#/definitions/database.PPageID"
                     }
                 },
                 "success": {
@@ -2645,7 +2426,7 @@ const docTemplate = `{
                 }
             }
         },
-        "response.GetProjPrototypesQ": {
+        "response.GetProjPPagesQ": {
             "type": "object",
             "required": [
                 "proj_id"
@@ -2880,6 +2661,50 @@ const docTemplate = `{
                 }
             }
         },
+        "response.MovePPageFromBinA": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.MovePPageFromBinQ": {
+            "type": "object",
+            "required": [
+                "ppage_id"
+            ],
+            "properties": {
+                "ppage_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "response.MovePPageToBinA": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.MovePPageToBinQ": {
+            "type": "object",
+            "required": [
+                "ppage_id"
+            ],
+            "properties": {
+                "ppage_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "response.MoveProjBinA": {
             "type": "object",
             "properties": {
@@ -2898,50 +2723,6 @@ const docTemplate = `{
             ],
             "properties": {
                 "proj_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "response.MovePrototypeFromBinA": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "response.MovePrototypeFromBinQ": {
-            "type": "object",
-            "required": [
-                "prototype_id"
-            ],
-            "properties": {
-                "prototype_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "response.MovePrototypeToBinA": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "response.MovePrototypeToBinQ": {
-            "type": "object",
-            "required": [
-                "prototype_id"
-            ],
-            "properties": {
-                "prototype_id": {
                     "type": "integer"
                 }
             }
@@ -3182,32 +2963,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "proj_name": {
-                    "type": "string"
-                }
-            }
-        },
-        "response.UpdatePrototypeA": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "response.UpdatePrototypeQ": {
-            "type": "object",
-            "required": [
-                "prototype_id",
-                "prototype_name"
-            ],
-            "properties": {
-                "prototype_id": {
-                    "type": "integer"
-                },
-                "prototype_name": {
                     "type": "string"
                 }
             }

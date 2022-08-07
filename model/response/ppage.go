@@ -2,11 +2,11 @@ package response
 
 import "2022summer/model/database"
 
-type GetPPagesQ struct {
-	PrototypeID uint64 `json:"prototype_id" binding:"required"`
+type GetProjPPagesQ struct {
+	ProjID uint64 `json:"proj_id" binding:"required"`
 }
 
-type GetPPagesA struct {
+type GetProjPPagesA struct {
 	Message string             `json:"message"`
 	Success bool               `json:"success"`
 	Count   uint64             `json:"count"`
@@ -24,9 +24,9 @@ type GetPPageByIDA struct {
 }
 
 type CreatePPageQ struct {
-	PPageName   string `json:"ppage_name" binding:"required"`
-	PPageData   string `json:"ppage_data" binding:"omitempty"`
-	PrototypeID uint64 `json:"prototype_id" binding:"required"`
+	PPageName string `json:"ppage_name" binding:"required"`
+	PPageData string `json:"ppage_data" binding:"omitempty"`
+	ProjID    uint64 `json:"proj_id" binding:"required"`
 }
 
 type CreatePPageA struct {
@@ -45,11 +45,11 @@ type UpdatePPageA struct {
 	Success bool   `json:"success"`
 }
 
-type DeletePPageQ struct {
+type MovePPageToBinQ struct {
 	PPageID uint64 `json:"ppage_id" binding:"required"`
 }
 
-type DeletePPageA struct {
+type MovePPageToBinA struct {
 	Message string `json:"message"`
 	Success bool   `json:"success"`
 }

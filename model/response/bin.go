@@ -11,11 +11,11 @@ type DeleteProjA struct {
 	Success bool   `json:"success"`
 }
 
-type MovePrototypeFromBinQ struct {
-	PrototypeID uint64 `json:"prototype_id" binding:"required"`
+type MovePPageFromBinQ struct {
+	PPageID uint64 `json:"ppage_id" binding:"required"`
 }
 
-type MovePrototypeFromBinA struct {
+type MovePPageFromBinA struct {
 	Message string `json:"message"`
 	Success bool   `json:"success"`
 }
@@ -38,11 +38,11 @@ type MoveDocumentFromBinA struct {
 	Success bool   `json:"success"`
 }
 
-type DeletePrototypeQ struct {
-	PrototypeID uint64 `json:"prototype_id" binding:"required"`
+type DeletePPageQ struct {
+	PPageID uint64 `json:"ppage_id" binding:"required"`
 }
 
-type DeletePrototypeA struct {
+type DeletePPageA struct {
 	Message string `json:"message"`
 	Success bool   `json:"success"`
 }
@@ -81,12 +81,12 @@ type GetFilesInBinQ struct {
 }
 
 type GetFilesInBinA struct {
-	Message         string               `json:"message"`
-	Success         bool                 `json:"success"`
-	CountPrototypes uint64               `json:"count_prototypes"`
-	Prototypes      []database.Prototype `json:"prototypes"`
-	CountUmls       uint64               `json:"count_umls"`
-	Umls            []database.Uml       `json:"umls"`
-	CountDocuments  uint64               `json:"count_documents"`
-	Documents       []database.Document  `json:"documents"`
+	Message        string              `json:"message"`
+	Success        bool                `json:"success"`
+	CountPPages    uint64              `json:"count_ppages"`
+	PPages         []database.PPage    `json:"ppages"`
+	CountUmls      uint64              `json:"count_umls"`
+	Umls           []database.Uml      `json:"umls"`
+	CountDocuments uint64              `json:"count_documents"`
+	Documents      []database.Document `json:"documents"`
 }

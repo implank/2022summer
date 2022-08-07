@@ -5,13 +5,13 @@ import (
 	"2022summer/model/database"
 )
 
-func GetProjPrototypesInBin(groupID uint64) (prototypes []database.Prototype) {
+func GetProjPPagesInBin(groupID uint64) (pPages []database.PPage) {
 	// 获取某一团队在回收站的设计原型，但并不是整个项目都在回收站，后同
-	global.DB.Raw("SELECT * FROM prototypes, projs "+
-		"WHERE projs.proj_id = prototypes.proj_id "+
-		"AND projs.status = 1 AND prototypes.status = 2 "+
-		"AND projs.group_id = ?;", groupID).Find(&prototypes).RecordNotFound()
-	return prototypes
+	global.DB.Raw("SELECT * FROM p_pages, projs "+
+		"WHERE projs.proj_id = p_pages.proj_id "+
+		"AND projs.status = 1 AND p_pages.status = 2 "+
+		"AND projs.group_id = ?;", groupID).Find(&pPages).RecordNotFound()
+	return pPages
 }
 
 func GetProjUmlsInBin(groupID uint64) (umls []database.Uml) {
