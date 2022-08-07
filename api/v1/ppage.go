@@ -9,31 +9,31 @@ import (
 	"net/http"
 )
 
-// GetPPages
-// @Summary 获取某个设计原型的所有页面的ID
-// @Tags 设计原型的页面
+// GetProjPPages
+// @Summary 获取某个项目不在回收站的设计原型的页面
+// @Tags 设计原型
 // @Accept json
 // @Produce json
-// @Param data body response.GetPPagesQ true "设计原型ID"
-// @Success 200 {object} response.GetPPagesA
-// @Router /ppage/get_ppages [post]
-func GetPPages(c *gin.Context) {
-	var data response.GetPPagesQ
+// @Param data body response.GetProjPPagesQ true "项目ID"
+// @Success 200 {object} response.GetProjPPagesA
+// @Router /ppage/get_proj_ppages [post]
+func GetProjPPages(c *gin.Context) {
+	var data response.GetProjPPagesQ
 	if err := utils.ShouldBindAndValid(c, &data); err != nil {
-		c.JSON(http.StatusOK, response.GetPPagesA{Message: "输入数据不符合要求", Success: false})
+		c.JSON(http.StatusOK, response.GetProjPPagesA{Message: "输入数据不符合要求", Success: false})
 		return
 	}
-	ppages := service.GetPPages(data.PrototypeID)
+	ppages := service.GetProjPPages(data.ProjID, 1)
 	x := len(ppages)
 	if x == 0 {
-		c.JSON(http.StatusOK, response.GetPPagesA{
+		c.JSON(http.StatusOK, response.GetProjPPagesA{
 			Message: "没有找到捏",
 			Success: false,
 			Count:   uint64(x),
 			PPages:  ppages})
 		return
 	}
-	c.JSON(http.StatusOK, response.GetPPagesA{
+	c.JSON(http.StatusOK, response.GetProjPPagesA{
 		Message: "成功搜索到以下页面",
 		Success: true,
 		Count:   uint64(x),
@@ -42,10 +42,10 @@ func GetPPages(c *gin.Context) {
 
 // GetPPageByID
 // @Summary 获取设计原型的某个页面
-// @Tags 设计原型的页面
+// @Tags 设计原型
 // @Accept json
 // @Produce json
-// @Param data body response.GetPPageByIDQ true "页面ID"
+// @Param data body response.GetPPageByIDQ true "设计原型的页面ID"
 // @Success 200 {object} response.GetPPageByIDA
 // @Router /ppage/get_ppage_by_id [post]
 func GetPPageByID(c *gin.Context) {
@@ -64,10 +64,10 @@ func GetPPageByID(c *gin.Context) {
 
 // CreatePPage
 // @Summary 创建设计原型的一个页面
-// @Tags 设计原型的页面
+// @Tags 设计原型
 // @Accept json
 // @Produce json
-// @Param data body response.CreatePPageQ true "页面名称，页面数据（可选），页面所属设计原型ID"
+// @Param data body response.CreatePPageQ true "页面名称，页面数据（可选），页面所属项目ID"
 // @Success 200 {object} response.CreatePPageA
 // @Router /ppage/create_ppage [post]
 func CreatePPage(c *gin.Context) {
@@ -76,14 +76,14 @@ func CreatePPage(c *gin.Context) {
 		c.JSON(http.StatusOK, response.CreatePPageA{Message: "输入数据不符合要求", Success: false})
 		return
 	}
-	if _, notFound := service.QueryPPageByPPageName(data.PPageName, data.PrototypeID); !notFound {
+	if _, notFound := service.QueryPPageByPPageName(data.PPageName, data.ProjID); !notFound {
 		c.JSON(http.StatusOK, response.CreatePPageA{Message: "页面名已存在", Success: false})
 		return
 	}
 	err := service.CreatePPage(&database.PPage{
-		PPageName:   data.PPageName,
-		PPageData:   data.PPageData,
-		PrototypeID: data.PrototypeID})
+		PPageName: data.PPageName,
+		PPageData: data.PPageData,
+		ProjID:    data.ProjID})
 	if err != nil {
 		c.JSON(http.StatusOK, response.CreatePPageA{Message: "创建页面失败", Success: false})
 		return
@@ -93,10 +93,10 @@ func CreatePPage(c *gin.Context) {
 
 // UpdatePPage
 // @Summary 修改设计原型的某个页面的名称或数据
-// @Tags 设计原型的页面
+// @Tags 设计原型
 // @Accept json
 // @Produce json
-// @Param data body response.UpdatePPageQ true "页面ID，页面名称（可选，如果没填或者为空字符串，则不修改），页面数据（可选，如果没填或者为空字符串，则不修改）"
+// @Param data body response.UpdatePPageQ true "设计原型的页面ID，页面名称（可选，如果没填或者为空字符串，则不修改），页面数据（可选，如果没填或者为空字符串，则不修改）"
 // @Success 200 {object} response.UpdatePPageA
 // @Router /ppage/update_ppage [post]
 func UpdatePPage(c *gin.Context) {
@@ -110,7 +110,7 @@ func UpdatePPage(c *gin.Context) {
 		c.JSON(http.StatusOK, response.UpdatePPageA{Message: "页面不存在", Success: false})
 		return
 	}
-	PPageTmp, notFound := service.QueryPPageByPPageName(data.PPageName, ppage.PrototypeID)
+	PPageTmp, notFound := service.QueryPPageByPPageName(data.PPageName, ppage.ProjID)
 	if !notFound && ppage.PPageID != PPageTmp.PPageID {
 		c.JSON(http.StatusOK, response.UpdatePPageA{Message: "页面名已存在，同一设计原型中不能有同名页面", Success: false})
 		return
@@ -129,29 +129,30 @@ func UpdatePPage(c *gin.Context) {
 	c.JSON(http.StatusOK, response.UpdatePPageA{Message: "修改页面成功", Success: true})
 }
 
-// DeletePPage
-// @Summary 删除设计原型的某个页面
-// @Tags 设计原型的页面
+// MovePPageToBin
+// @Summary 设计原型移入回收站
+// @Tags 设计原型
 // @Accept json
 // @Produce json
-// @Param data body response.DeletePPageQ true "页面ID"
-// @Success 200 {object} response.DeletePPageA
-// @Router /ppage/delete_ppage [post]
-func DeletePPage(c *gin.Context) {
-	var data response.DeletePPageQ
+// @Param data body response.MovePPageToBinQ true "设计原型的页面ID"
+// @Success 200 {object} response.MovePPageToBinA
+// @Router /ppage/move_ppage_to_bin [post]
+func MovePPageToBin(c *gin.Context) {
+	var data response.MovePPageToBinQ
 	if err := utils.ShouldBindAndValid(c, &data); err != nil {
-		c.JSON(http.StatusOK, response.DeletePPageA{Message: "输入数据不符合要求", Success: false})
+		c.JSON(http.StatusOK, response.MovePPageToBinA{Message: "输入数据不符合要求", Success: false})
 		return
 	}
-	ppage, notFound := service.QueryPPageByPPageID(data.PPageID)
+	PPage, notFound := service.QueryPPageByPPageID(data.PPageID)
 	if notFound {
-		c.JSON(http.StatusOK, response.DeletePPageA{Message: "页面不存在", Success: false})
+		c.JSON(http.StatusOK, response.MovePPageToBinA{Message: "设计原型不存在", Success: false})
 		return
 	}
-	err := service.DeletePPage(&ppage)
+	PPage.Status = 2
+	err := service.UpdatePPage(&PPage)
 	if err != nil {
-		c.JSON(http.StatusOK, response.DeletePPageA{Message: "删除页面失败", Success: false})
+		c.JSON(http.StatusOK, response.MovePPageToBinA{Message: "移入回收站失败", Success: false})
 		return
 	}
-	c.JSON(http.StatusOK, response.DeletePPageA{Message: "删除页面成功", Success: true})
+	c.JSON(http.StatusOK, response.MovePPageToBinA{Message: "移入回收站成功", Success: true})
 }

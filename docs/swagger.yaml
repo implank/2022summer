@@ -67,7 +67,10 @@ definitions:
       ppage_url:
         description: 先写上
         type: string
-      prototype_id:
+      proj_id:
+        type: integer
+      status:
+        description: 1 正常、2 回收站
         type: integer
     type: object
   database.PPageID:
@@ -93,21 +96,6 @@ definitions:
         type: integer
       user_id:
         description: 项目创建者
-        type: integer
-    type: object
-  database.Prototype:
-    properties:
-      proj_id:
-        type: integer
-      prototype_id:
-        type: integer
-      prototype_name:
-        type: string
-      prototype_url:
-        description: 先留着
-        type: string
-      status:
-        description: 1 正常、2 回收站
         type: integer
     type: object
   database.Uml:
@@ -206,11 +194,11 @@ definitions:
         type: string
       ppage_name:
         type: string
-      prototype_id:
+      proj_id:
         type: integer
     required:
     - ppage_name
-    - prototype_id
+    - proj_id
     type: object
   response.CreateProjA:
     properties:
@@ -231,22 +219,6 @@ definitions:
     - group_id
     - proj_name
     type: object
-  response.CreatePrototypeA:
-    properties:
-      message:
-        type: string
-      success:
-        type: boolean
-    type: object
-  response.CreatePrototypeQ:
-    properties:
-      proj_id:
-        type: integer
-      prototype_name:
-        type: string
-    required:
-    - prototype_name
-    type: object
   response.CreateUmlA:
     properties:
       message:
@@ -260,6 +232,20 @@ definitions:
         type: integer
       uml_name:
         type: string
+    required:
+    - uml_name
+    type: object
+  response.DeleteDocumentA:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.DeleteDocumentQ:
+    properties:
+      document_id:
+        type: integer
     required:
     - uml_name
     type: object
@@ -305,6 +291,20 @@ definitions:
     required:
     - proj_id
     type: object
+  response.DeleteUmlA:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.DeleteUmlQ:
+    properties:
+      uml_id:
+        type: integer
+    required:
+    - uml_id
+    type: object
   response.EnterDocumentA:
     properties:
       code:
@@ -329,7 +329,7 @@ definitions:
     properties:
       count_documents:
         type: integer
-      count_prototypes:
+      count_ppage:
         type: integer
       count_umls:
         type: integer
@@ -339,9 +339,9 @@ definitions:
         type: array
       message:
         type: string
-      prototypes:
+      ppage:
         items:
-          $ref: '#/definitions/database.Prototype'
+          $ref: '#/definitions/database.PPage'
         type: array
       success:
         type: boolean
@@ -354,6 +354,38 @@ definitions:
     properties:
       name:
         type: string
+    type: object
+  response.GetFilesInBinA:
+    properties:
+      count_documents:
+        type: integer
+      count_ppages:
+        type: integer
+      count_umls:
+        type: integer
+      documents:
+        items:
+          $ref: '#/definitions/database.Document'
+        type: array
+      message:
+        type: string
+      ppages:
+        items:
+          $ref: '#/definitions/database.PPage'
+        type: array
+      success:
+        type: boolean
+      umls:
+        items:
+          $ref: '#/definitions/database.Uml'
+        type: array
+    type: object
+  response.GetFilesInBinQ:
+    properties:
+      group_id:
+        type: integer
+    required:
+    - group_id
     type: object
   response.GetGroupsA:
     properties:
@@ -437,26 +469,6 @@ definitions:
     required:
     - ppage_id
     type: object
-  response.GetPPagesA:
-    properties:
-      count:
-        type: integer
-      message:
-        type: string
-      ppages:
-        items:
-          $ref: '#/definitions/database.PPageID'
-        type: array
-      success:
-        type: boolean
-    type: object
-  response.GetPPagesQ:
-    properties:
-      prototype_id:
-        type: integer
-    required:
-    - prototype_id
-    type: object
   response.GetProjAllA:
     properties:
       count:
@@ -471,6 +483,11 @@ definitions:
         type: boolean
     type: object
   response.GetProjAllQ:
+    properties:
+      group_id:
+        type: integer
+    required:
+    - group_id
     type: object
   response.GetProjByIDA:
     properties:
@@ -520,6 +537,11 @@ definitions:
         type: boolean
     type: object
   response.GetProjCreateQ:
+    properties:
+      group_id:
+        type: integer
+    required:
+    - group_id
     type: object
   response.GetProjDocumentsA:
     properties:
@@ -541,6 +563,26 @@ definitions:
     required:
     - proj_id
     type: object
+  response.GetProjInBinA:
+    properties:
+      count:
+        type: integer
+      message:
+        type: string
+      projs:
+        items:
+          $ref: '#/definitions/database.Proj'
+        type: array
+      success:
+        type: boolean
+    type: object
+  response.GetProjInBinQ:
+    properties:
+      group_id:
+        type: integer
+    required:
+    - group_id
+    type: object
   response.GetProjJoinA:
     properties:
       count:
@@ -555,21 +597,26 @@ definitions:
         type: boolean
     type: object
   response.GetProjJoinQ:
+    properties:
+      group_id:
+        type: integer
+    required:
+    - group_id
     type: object
-  response.GetProjPrototypesA:
+  response.GetProjPPagesA:
     properties:
       count:
         type: integer
       message:
         type: string
-      prototypes:
+      ppages:
         items:
-          $ref: '#/definitions/database.Prototype'
+          $ref: '#/definitions/database.PPageID'
         type: array
       success:
         type: boolean
     type: object
-  response.GetProjPrototypesQ:
+  response.GetProjPPagesQ:
     properties:
       proj_id:
         type: integer
@@ -708,6 +755,20 @@ definitions:
     required:
     - password
     type: object
+  response.MoveDocumentFromBinA:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.MoveDocumentFromBinQ:
+    properties:
+      document_id:
+        type: integer
+    required:
+    - document_id
+    type: object
   response.MoveDocumentToBinA:
     properties:
       message:
@@ -721,6 +782,34 @@ definitions:
         type: integer
     required:
     - document_id
+    type: object
+  response.MovePPageFromBinA:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.MovePPageFromBinQ:
+    properties:
+      ppage_id:
+        type: integer
+    required:
+    - ppage_id
+    type: object
+  response.MovePPageToBinA:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.MovePPageToBinQ:
+    properties:
+      ppage_id:
+        type: integer
+    required:
+    - ppage_id
     type: object
   response.MoveProjBinA:
     properties:
@@ -736,19 +825,19 @@ definitions:
     required:
     - proj_id
     type: object
-  response.MovePrototypeToBinA:
+  response.MoveUmlFromBinA:
     properties:
       message:
         type: string
       success:
         type: boolean
     type: object
-  response.MovePrototypeToBinQ:
+  response.MoveUmlFromBinQ:
     properties:
-      prototype_id:
+      uml_id:
         type: integer
     required:
-    - prototype_id
+    - uml_id
     type: object
   response.MoveUmlToBinA:
     properties:
@@ -891,23 +980,6 @@ definitions:
     - proj_id
     - proj_name
     type: object
-  response.UpdatePrototypeA:
-    properties:
-      message:
-        type: string
-      success:
-        type: boolean
-    type: object
-  response.UpdatePrototypeQ:
-    properties:
-      prototype_id:
-        type: integer
-      prototype_name:
-        type: string
-    required:
-    - prototype_id
-    - prototype_name
-    type: object
   response.UpdateUmlA:
     properties:
       message:
@@ -950,6 +1022,48 @@ definitions:
 info:
   contact: {}
 paths:
+  /bin/delete_document:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 文档ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.DeleteDocumentQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.DeleteDocumentA'
+      summary: 删除文档
+      tags:
+      - 回收站
+  /bin/delete_ppage:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 设计原型的页面ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.DeletePPageQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.DeletePPageA'
+      summary: 删除设计原型的某个页面
+      tags:
+      - 回收站
   /bin/delete_proj:
     post:
       consumes:
@@ -971,7 +1085,133 @@ paths:
       summary: 删除项目
       tags:
       - 回收站
-  /file/create_document:
+  /bin/delete_uml:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Uml ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.DeleteUmlQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.DeleteUmlA'
+      summary: 删除 Uml
+      tags:
+      - 回收站
+  /bin/get_files_in_bin:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 团队ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.GetFilesInBinQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.GetFilesInBinA'
+      summary: 回收站中的设计原型页面 / Uml / 文档，这些设计原型 / Uml / 文档所在的项目并没有被移到回收站
+      tags:
+      - 回收站
+  /bin/get_projs_in_bin:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 团队ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.GetProjInBinQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.GetProjInBinA'
+      summary: 回收站中的所有项目
+      tags:
+      - 回收站
+  /bin/move_PPage_from_bin:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 设计原型的页面ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.MovePPageFromBinQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.MovePPageFromBinA'
+      summary: 设计原型的某个页面移出回收站
+      tags:
+      - 回收站
+  /bin/move_document_from_bin:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 文档ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.MoveDocumentFromBinQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.MoveDocumentFromBinA'
+      summary: 文档移出回收站
+      tags:
+      - 回收站
+  /bin/move_uml_from_bin:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: UmlID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.MoveUmlFromBinQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.MoveUmlFromBinA'
+      summary: Uml 移出回收站
+      tags:
+      - 回收站
+  /doc/create_document:
     post:
       consumes:
       - application/json
@@ -991,50 +1231,8 @@ paths:
             $ref: '#/definitions/response.CreateDocumentA'
       summary: 创建文档
       tags:
-      - 项目管理的第二页
-  /file/create_prototype:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 设计原型名称，设计原型所属项目ID
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/response.CreatePrototypeQ'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.CreatePrototypeA'
-      summary: 创建设计原型
-      tags:
-      - 项目管理的第二页
-  /file/create_uml:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: Uml名称，Uml所属项目ID
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/response.CreateUmlQ'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.CreateUmlA'
-      summary: 创建 Uml
-      tags:
-      - 项目管理的第二页
-  /file/enter_document:
+      - 共享文档
+  /doc/enter_document:
     post:
       consumes:
       - application/json
@@ -1054,50 +1252,8 @@ paths:
             $ref: '#/definitions/response.EnterDocumentA'
       summary: 进入文档
       tags:
-      - 项目管理的第二页
-  /file/get_files_by_name:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 文件名称（不一定是全名，子串搜索，为空时返回数据库中全部不在回收站的文件，包括设计原型、Uml、文档）
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/response.GetFilesByNameQ'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.GetFilesByNameA'
-      summary: 搜索框
-      tags:
-      - 项目管理的第二页
-  /file/get_proj_by_id:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 项目ID
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/response.GetProjByIDQ'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.GetProjByIDA'
-      summary: 获取项目信息
-      tags:
-      - 项目管理的第二页
-  /file/get_proj_documents:
+      - 共享文档
+  /doc/get_proj_documents:
     post:
       consumes:
       - application/json
@@ -1115,52 +1271,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.GetProjDocumentsA'
-      summary: 获取项目的文档
+      summary: 获取某个项目不在回收站的文档
       tags:
-      - 项目管理的第二页
-  /file/get_proj_prototypes:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 项目ID
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/response.GetProjPrototypesQ'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.GetProjPrototypesA'
-      summary: 获取项目的设计原型
-      tags:
-      - 项目管理的第二页
-  /file/get_proj_umls:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 项目ID
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/response.GetProjUmlsQ'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.GetProjUmlsA'
-      summary: 获取项目的 Uml 图
-      tags:
-      - 项目管理的第二页
-  /file/move_document_to_bin:
+      - 共享文档
+  /doc/move_document_to_bin:
     post:
       consumes:
       - application/json
@@ -1180,50 +1294,8 @@ paths:
             $ref: '#/definitions/response.MoveDocumentToBinA'
       summary: 文档移入回收站
       tags:
-      - 项目管理的第二页
-  /file/move_prototype_to_bin:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 设计原型ID
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/response.MovePrototypeToBinQ'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.MovePrototypeToBinA'
-      summary: 设计原型移入回收站
-      tags:
-      - 项目管理的第二页
-  /file/move_uml_to_bin:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: Uml ID
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/response.MoveUmlToBinQ'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.MoveUmlToBinA'
-      summary: Uml 移入回收站
-      tags:
-      - 项目管理的第二页
-  /file/quit_document:
+      - 共享文档
+  /doc/quit_document:
     post:
       consumes:
       - application/json
@@ -1243,8 +1315,8 @@ paths:
             $ref: '#/definitions/response.QuitDocumentA'
       summary: 退出文档
       tags:
-      - 项目管理的第二页
-  /file/update_document:
+      - 共享文档
+  /doc/update_document:
     post:
       consumes:
       - application/json
@@ -1264,50 +1336,8 @@ paths:
             $ref: '#/definitions/response.UpdateDocumentA'
       summary: 修改文档名称
       tags:
-      - 项目管理的第二页
-  /file/update_prototype:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 设计原型ID，设计原型的新名字（必填，可以填原名，不能和其他项目同名）
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/response.UpdatePrototypeQ'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.UpdatePrototypeA'
-      summary: 修改设计原型名称
-      tags:
-      - 项目管理的第二页
-  /file/update_uml:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: Uml ID，Uml的新名字（必填，可以填原名，不能和其他项目同名）
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/response.UpdateUmlQ'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.UpdateUmlA'
-      summary: 修改 Uml 名称
-      tags:
-      - 项目管理的第二页
-  /file/upload_document:
+      - 共享文档
+  /doc/upload_document:
     post:
       consumes:
       - application/json
@@ -1326,6 +1356,27 @@ paths:
           schema:
             $ref: '#/definitions/response.UploadDocumentA'
       summary: 上传文档
+      tags:
+      - 共享文档
+  /file/get_files_by_name:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 文件名称（不一定是全名，子串搜索，为空时返回数据库中全部不在回收站的文件，包括设计原型、Uml、文档）
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.GetFilesByNameQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.GetFilesByNameA'
+      summary: 搜索框
       tags:
       - 项目管理的第二页
   /group/accept_invitation:
@@ -1569,7 +1620,7 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: 页面名称，页面数据（可选），页面所属设计原型ID
+      - description: 页面名称，页面数据（可选），页面所属项目ID
         in: body
         name: data
         required: true
@@ -1584,34 +1635,13 @@ paths:
             $ref: '#/definitions/response.CreatePPageA'
       summary: 创建设计原型的一个页面
       tags:
-      - 设计原型的页面
-  /ppage/delete_ppage:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 页面ID
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/response.DeletePPageQ'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.DeletePPageA'
-      summary: 删除设计原型的某个页面
-      tags:
-      - 设计原型的页面
+      - 设计原型
   /ppage/get_ppage_by_id:
     post:
       consumes:
       - application/json
       parameters:
-      - description: 页面ID
+      - description: 设计原型的页面ID
         in: body
         name: data
         required: true
@@ -1626,34 +1656,55 @@ paths:
             $ref: '#/definitions/response.GetPPageByIDA'
       summary: 获取设计原型的某个页面
       tags:
-      - 设计原型的页面
-  /ppage/get_ppages:
+      - 设计原型
+  /ppage/get_proj_ppages:
     post:
       consumes:
       - application/json
       parameters:
-      - description: 设计原型ID
+      - description: 项目ID
         in: body
         name: data
         required: true
         schema:
-          $ref: '#/definitions/response.GetPPagesQ'
+          $ref: '#/definitions/response.GetProjPPagesQ'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.GetPPagesA'
-      summary: 获取某个设计原型的所有页面的ID
+            $ref: '#/definitions/response.GetProjPPagesA'
+      summary: 获取某个项目不在回收站的设计原型的页面
       tags:
-      - 设计原型的页面
+      - 设计原型
+  /ppage/move_ppage_to_bin:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 设计原型的页面ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.MovePPageToBinQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.MovePPageToBinA'
+      summary: 设计原型移入回收站
+      tags:
+      - 设计原型
   /ppage/update_ppage:
     post:
       consumes:
       - application/json
       parameters:
-      - description: 页面ID，页面名称（可选，如果没填或者为空字符串，则不修改），页面数据（可选，如果没填或者为空字符串，则不修改）
+      - description: 设计原型的页面ID，页面名称（可选，如果没填或者为空字符串，则不修改），页面数据（可选，如果没填或者为空字符串，则不修改）
         in: body
         name: data
         required: true
@@ -1668,7 +1719,7 @@ paths:
             $ref: '#/definitions/response.UpdatePPageA'
       summary: 修改设计原型的某个页面的名称或数据
       tags:
-      - 设计原型的页面
+      - 设计原型
   /proj/create_proj:
     post:
       consumes:
@@ -1689,13 +1740,13 @@ paths:
             $ref: '#/definitions/response.CreateProjA'
       summary: 创建项目
       tags:
-      - 项目管理的第一页
+      - 项目管理
   /proj/get_proj_all:
     post:
       consumes:
       - application/json
       parameters:
-      - description: 无
+      - description: 团队ID
         in: body
         name: data
         required: true
@@ -1710,7 +1761,28 @@ paths:
             $ref: '#/definitions/response.GetProjAllA'
       summary: 全部项目
       tags:
-      - 项目管理的第一页
+      - 项目管理
+  /proj/get_proj_by_id:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 项目ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.GetProjByIDQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.GetProjByIDA'
+      summary: 获取项目信息
+      tags:
+      - 项目管理
   /proj/get_proj_by_name:
     post:
       consumes:
@@ -1731,13 +1803,13 @@ paths:
             $ref: '#/definitions/response.GetProjByNameA'
       summary: 搜索框
       tags:
-      - 项目管理的第一页
+      - 项目管理
   /proj/get_proj_create:
     post:
       consumes:
       - application/json
       parameters:
-      - description: 无
+      - description: 团队ID
         in: body
         name: data
         required: true
@@ -1752,13 +1824,13 @@ paths:
             $ref: '#/definitions/response.GetProjCreateA'
       summary: 我创建的
       tags:
-      - 项目管理的第一页
+      - 项目管理
   /proj/get_proj_join:
     post:
       consumes:
       - application/json
       parameters:
-      - description: 无
+      - description: 团队ID
         in: body
         name: data
         required: true
@@ -1773,7 +1845,7 @@ paths:
             $ref: '#/definitions/response.GetProjJoinA'
       summary: 我参与的
       tags:
-      - 项目管理的第一页
+      - 项目管理
   /proj/move_proj_to_bin:
     post:
       consumes:
@@ -1794,7 +1866,7 @@ paths:
             $ref: '#/definitions/response.MoveProjBinA'
       summary: 移入或移出回收站
       tags:
-      - 项目管理的第一页
+      - 项目管理
   /proj/update_proj:
     post:
       consumes:
@@ -1815,7 +1887,7 @@ paths:
             $ref: '#/definitions/response.UpdateProjA'
       summary: 修改项目名称、项目描述
       tags:
-      - 项目管理的第一页
+      - 项目管理
   /register:
     post:
       consumes:
@@ -1836,6 +1908,90 @@ paths:
             $ref: '#/definitions/response.RegisterA'
       tags:
       - 基本模块
+  /uml/create_uml:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Uml名称，Uml所属项目ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.CreateUmlQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.CreateUmlA'
+      summary: 创建 Uml
+      tags:
+      - Uml
+  /uml/get_proj_umls:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 项目ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.GetProjUmlsQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.GetProjUmlsA'
+      summary: 获取某个项目不在回收站的 Uml
+      tags:
+      - Uml
+  /uml/move_uml_to_bin:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Uml ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.MoveUmlToBinQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.MoveUmlToBinA'
+      summary: Uml 移入回收站
+      tags:
+      - Uml
+  /uml/update_uml:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Uml ID，Uml的新名字（必填，可以填原名，不能和其他项目同名）
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.UpdateUmlQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.UpdateUmlA'
+      summary: 修改 Uml 名称
+      tags:
+      - Uml
   /user/info:
     post:
       consumes:

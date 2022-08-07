@@ -36,7 +36,7 @@ type MoveProjBinA struct {
 }
 
 type GetProjAllQ struct {
-	// GroupID uint64 `json:"group_id"`
+	GroupID uint64 `json:"group_id" binding:"required"`
 }
 
 type GetProjAllA struct {
@@ -47,7 +47,7 @@ type GetProjAllA struct {
 }
 
 type GetProjCreateQ struct {
-	// GroupID uint64 `json:"group_id"`
+	GroupID uint64 `json:"group_id" binding:"required"`
 }
 
 type GetProjCreateA struct {
@@ -58,7 +58,7 @@ type GetProjCreateA struct {
 }
 
 type GetProjJoinQ struct {
-	// GroupID uint64 `json:"group_id"`
+	GroupID uint64 `json:"group_id" binding:"required"`
 }
 
 type GetProjJoinA struct {
@@ -77,4 +77,14 @@ type GetProjByNameA struct {
 	Success bool            `json:"success"`
 	Count   uint64          `json:"count"`
 	Projs   []database.Proj `json:"projs"`
+}
+
+type GetProjByIDQ struct {
+	ProjID uint64 `json:"proj_id" binding:"required"`
+}
+
+type GetProjByIDA struct {
+	Message string        `json:"message"`
+	Success bool          `json:"success"`
+	Proj    database.Proj `json:"proj"`
 }

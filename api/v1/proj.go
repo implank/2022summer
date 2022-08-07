@@ -5,14 +5,13 @@ import (
 	"2022summer/model/response"
 	"2022summer/service"
 	"2022summer/utils"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 // CreateProj
 // @Summary 创建项目
-// @Tags 项目管理的第一页
+// @Tags 项目管理
 // @Accept json
 // @Produce json
 // @Param data body response.CreateProjQ true "项目名称，项目详情（可选），所属团队ID"
@@ -43,7 +42,7 @@ func CreateProj(c *gin.Context) {
 
 // UpdateProj
 // @Summary 修改项目名称、项目描述
-// @Tags 项目管理的第一页
+// @Tags 项目管理
 // @Accept json
 // @Produce json
 // @Param data body response.UpdateProjQ true "项目ID，项目名称（必填，可以填原名，不能和其他项目同名），项目详情（可选）"
@@ -77,7 +76,7 @@ func UpdateProj(c *gin.Context) {
 
 // MoveProjBin
 // @Summary 移入或移出回收站
-// @Tags 项目管理的第一页
+// @Tags 项目管理
 // @Accept json
 // @Produce json
 // @Param data body response.MoveProjBinQ true "项目ID"
@@ -109,22 +108,21 @@ func MoveProjBin(c *gin.Context) {
 
 // GetProjAll
 // @Summary 全部项目
-// @Tags 项目管理的第一页
+// @Tags 项目管理
 // @Accept json
 // @Produce json
-// @Param data body response.GetProjAllQ true "无"
+// @Param data body response.GetProjAllQ true "团队ID"
 // @Success 200 {object} response.GetProjAllA
 // @Router /proj/get_proj_all [post]
 func GetProjAll(c *gin.Context) {
 	poster, _ := c.Get("user")
-	/*var data response.GetProjAllQ
+	var data response.GetProjAllQ
 	if err := utils.ShouldBindAndValid(c, &data); err != nil {
 		c.JSON(http.StatusOK, response.GetProjAllA{Message: "输入数据不符合要求", Success: false})
 		return
 	}
-	projs := service.GetUserProjsInGroup(poster.(model.User).UserID, data.GroupID, 1, 3)*/
-	fmt.Println(poster.(database.User).UserID)
-	projs := service.GetUserProjs(poster.(database.User).UserID, 1, 3)
+	projs := service.GetUserProjsInGroup(poster.(database.User).UserID, data.GroupID, 1, 3)
+	// projs := service.GetUserProjs(poster.(database.User).UserID, 1, 3)
 	x := len(projs)
 	if x == 0 {
 		c.JSON(http.StatusOK, response.GetProjAllA{
@@ -143,15 +141,21 @@ func GetProjAll(c *gin.Context) {
 
 // GetProjCreate
 // @Summary 我创建的
-// @Tags 项目管理的第一页
+// @Tags 项目管理
 // @Accept json
 // @Produce json
-// @Param data body response.GetProjCreateQ true "无"
+// @Param data body response.GetProjCreateQ true "团队ID"
 // @Success 200 {object} response.GetProjCreateA
 // @Router /proj/get_proj_create [post]
 func GetProjCreate(c *gin.Context) {
 	poster, _ := c.Get("user")
-	projs := service.GetUserProjs(poster.(database.User).UserID, 1, 1)
+	var data response.GetProjCreateQ
+	if err := utils.ShouldBindAndValid(c, &data); err != nil {
+		c.JSON(http.StatusOK, response.GetProjCreateA{Message: "输入数据不符合要求", Success: false})
+		return
+	}
+	projs := service.GetUserProjsInGroup(poster.(database.User).UserID, data.GroupID, 1, 1)
+	// projs := service.GetUserProjs(poster.(database.User).UserID, 1, 1)
 	x := len(projs)
 	if x == 0 {
 		c.JSON(http.StatusOK, response.GetProjCreateA{
@@ -170,15 +174,21 @@ func GetProjCreate(c *gin.Context) {
 
 // GetProjJoin
 // @Summary 我参与的
-// @Tags 项目管理的第一页
+// @Tags 项目管理
 // @Accept json
 // @Produce json
-// @Param data body response.GetProjJoinQ true "无"
+// @Param data body response.GetProjJoinQ true "团队ID"
 // @Success 200 {object} response.GetProjJoinA
 // @Router /proj/get_proj_join [post]
 func GetProjJoin(c *gin.Context) {
 	poster, _ := c.Get("user")
-	projs := service.GetUserProjs(poster.(database.User).UserID, 1, 2)
+	var data response.GetProjJoinQ
+	if err := utils.ShouldBindAndValid(c, &data); err != nil {
+		c.JSON(http.StatusOK, response.GetProjJoinA{Message: "输入数据不符合要求", Success: false})
+		return
+	}
+	projs := service.GetUserProjsInGroup(poster.(database.User).UserID, data.GroupID, 1, 2)
+	// projs := service.GetUserProjs(poster.(database.User).UserID, 1, 2)
 	x := len(projs)
 	if x == 0 {
 		c.JSON(http.StatusOK, response.GetProjJoinA{
@@ -197,7 +207,7 @@ func GetProjJoin(c *gin.Context) {
 
 // GetProjByName
 // @Summary 搜索框
-// @Tags 项目管理的第一页
+// @Tags 项目管理
 // @Accept json
 // @Produce json
 // @Param data body response.GetProjByNameQ true "项目名称（不一定是全名，子串搜索，为空时返回数据库中全部不在回收站的项目）"
@@ -224,4 +234,26 @@ func GetProjByName(c *gin.Context) {
 		Success: true,
 		Count:   uint64(x),
 		Projs:   projs})
+}
+
+// GetProjByID
+// @Summary 获取项目信息
+// @Tags 项目管理
+// @Accept json
+// @Produce json
+// @Param data body response.GetProjByIDQ true "项目ID"
+// @Success 200 {object} response.GetProjByIDA
+// @Router /proj/get_proj_by_id [post]
+func GetProjByID(c *gin.Context) {
+	var data response.GetProjByIDQ
+	if err := utils.ShouldBindAndValid(c, &data); err != nil {
+		c.JSON(http.StatusOK, response.GetProjByIDA{Message: "输入数据不符合要求", Success: false})
+		return
+	}
+	proj, notFound := service.QueryProjByProjID(data.ProjID)
+	if notFound {
+		c.JSON(http.StatusOK, response.GetProjByIDA{Message: "项目不存在", Success: false, Proj: proj})
+		return
+	}
+	c.JSON(http.StatusOK, response.GetProjByIDA{Message: "成功获取项目信息", Success: true, Proj: proj})
 }

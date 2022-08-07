@@ -60,47 +60,53 @@ func SetupRouter(r *gin.Engine) {
 		projGroup.POST("/get_proj_create", v1.GetProjCreate)  // 我创建的
 		projGroup.POST("/get_proj_join", v1.GetProjJoin)      // 我参与的
 		projGroup.POST("/get_proj_by_name", v1.GetProjByName) // 搜索框
+		projGroup.POST("/get_proj_by_id", v1.GetProjByID)     // 获取项目信息
 	}
 
 	fileGroup := r.Group("/api/v1/file", middleware.AuthRequired())
 	{
-		fileGroup.POST("/get_proj_by_id", v1.GetProjByID)            // 获取项目信息
-		fileGroup.POST("/get_proj_prototypes", v1.GetProjPrototypes) // 获取项目的设计原型
-		fileGroup.POST("/get_proj_umls", v1.GetProjUmls)             // 获取项目的 Uml 图
-		fileGroup.POST("/get_proj_documents", v1.GetProjDocuments)   // 获取项目的文档
-		fileGroup.POST("/enter_document", v1.EnterDocument)
-		fileGroup.POST("/quit_document", v1.QuitDocument)
-		fileGroup.POST("/create_prototype", v1.CreatePrototype)         // 创建设计原型
-		fileGroup.POST("/create_uml", v1.CreateUml)                     // 创建 Uml
-		fileGroup.POST("/create_document", v1.CreateDocument)           // 创建文档
-		fileGroup.POST("/update_prototype", v1.UpdatePrototype)         // 修改设计原型名称
-		fileGroup.POST("/update_uml", v1.UpdateUml)                     // 修改 Uml 名称
-		fileGroup.POST("/update_document", v1.UpdateDocument)           // 修改文档名称
-		fileGroup.POST("/upload_document", v1.UploadDocument)           // 移入或移出设计原型回收站
-		fileGroup.POST("/move_prototype_to_bin", v1.MovePrototypeToBin) // 设计原型移入回收站
-		fileGroup.POST("/move_uml_to_bin", v1.MoveUmlToBin)             // Uml 移入回收站
-		fileGroup.POST("/move_document_to_bin", v1.MoveDocumentToBin)   // 文档移入回收站
-		fileGroup.POST("/get_files_by_name", v1.GetFilesByName)         // 搜索框
+		fileGroup.POST("/get_files_by_name", v1.GetFilesByName) // 搜索框
 	}
 
 	pPageGroup := r.Group("/api/v1/ppage", middleware.AuthRequired())
 	{
-		pPageGroup.POST("/get_ppages", v1.GetPPages)         // 获取某个设计原型的所有页面的 ID
-		pPageGroup.POST("/get_ppage_by_id", v1.GetPPageByID) // 获取设计原型的某个页面
-		pPageGroup.POST("/create_ppage", v1.CreatePPage)     // 创建设计原型的一个页面
-		pPageGroup.POST("/update_ppage", v1.UpdatePPage)     // 修改设计原型的某个页面的名称或数据
-		pPageGroup.POST("/delete_ppage", v1.DeletePPage)     // 删除设计原型的某个页面
+		pPageGroup.POST("/get_proj_ppages", v1.GetProjPPages)    // 获取某个项目不在回收站的设计原型的页面
+		pPageGroup.POST("/get_ppage_by_id", v1.GetPPageByID)     // 获取设计原型的某个页面
+		pPageGroup.POST("/create_ppage", v1.CreatePPage)         // 创建设计原型的一个页面
+		pPageGroup.POST("/update_ppage", v1.UpdatePPage)         // 修改设计原型的某个页面的名称或数据
+		pPageGroup.POST("/move_ppage_to_bin", v1.MovePPageToBin) // 设计原型移入回收站
+	}
+
+	umlGroup := r.Group("/api/v1/uml", middleware.AuthRequired())
+	{
+		umlGroup.POST("/get_proj_umls", v1.GetProjUmls)    // 获取某个项目不在回收站的 Uml
+		umlGroup.POST("/create_uml", v1.CreateUml)         // 创建 Uml
+		umlGroup.POST("/update_uml", v1.UpdateUml)         // 修改 Uml 名称
+		umlGroup.POST("/move_uml_to_bin", v1.MoveUmlToBin) // Uml 移入回收站
+	}
+
+	docGroup := r.Group("/api/v1/doc", middleware.AuthRequired())
+	{
+		docGroup.POST("/get_proj_documents", v1.GetProjDocuments) // 获取某个项目不在回收站的文档
+		docGroup.POST("/enter_document", v1.EnterDocument)
+		docGroup.POST("/quit_document", v1.QuitDocument)
+		docGroup.POST("/create_document", v1.CreateDocument) // 创建文档
+		docGroup.POST("/update_document", v1.UpdateDocument) // 修改文档名称
+		docGroup.POST("/upload_document", v1.UploadDocument)
+		docGroup.POST("/move_document_to_bin", v1.MoveDocumentToBin) // 文档移入回收站
 	}
 
 	binGroup := r.Group("/api/v1/bin", middleware.AuthRequired())
 	{
-		binGroup.POST("/delete_proj", v1.DeleteProj)                       // 删除项目
-		binGroup.POST("/move_prototype_from_bin", v1.MovePrototypeFromBin) // 设计原型移出回收站
-		binGroup.POST("/move_uml_from_bin", v1.MoveUmlFromBin)             // Uml 移出回收站
-		binGroup.POST("/move_document_from_bin", v1.MoveDocumentFromBin)   // 文档移出回收站
-		binGroup.POST("/delete_prototype", v1.DeletePrototype)             // 删除设计原型
-		binGroup.POST("/delete_uml", v1.DeleteUml)                         // 删除 Uml
-		binGroup.POST("/delete_document", v1.DeleteDocument)               // 删除文档
+		binGroup.POST("/delete_proj", v1.DeleteProj)                     // 删除项目
+		binGroup.POST("/move_ppage_from_bin", v1.MovePPageFromBin)       // 设计原型的某个页面移出回收站
+		binGroup.POST("/move_uml_from_bin", v1.MoveUmlFromBin)           // Uml 移出回收站
+		binGroup.POST("/move_document_from_bin", v1.MoveDocumentFromBin) // 文档移出回收站
+		binGroup.POST("/delete_ppage", v1.DeletePPage)                   // 删除设计原型的某个页面
+		binGroup.POST("/delete_uml", v1.DeleteUml)                       // 删除 Uml
+		binGroup.POST("/delete_document", v1.DeleteDocument)             // 删除文档
+		binGroup.POST("/get_projs_in_bin", v1.GetProjInBin)              // 回收站中的所有项目
+		binGroup.POST("/get_files_in_bin", v1.GetFilesInBin)             // 回收站中的设计原型页面 / Uml / 文档
 	}
 }
 
