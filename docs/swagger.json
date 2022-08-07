@@ -1635,6 +1635,9 @@
         "database.Document": {
             "type": "object",
             "properties": {
+                "content": {
+                    "type": "string"
+                },
                 "count": {
                     "type": "integer"
                 },
@@ -3237,7 +3240,7 @@
         "response.UploadDocumentQ": {
             "type": "object",
             "properties": {
-                "context": {
+                "content": {
                     "type": "string"
                 },
                 "document_id": {

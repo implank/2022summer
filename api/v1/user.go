@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
+	"regexp"
 )
 
 // Register
@@ -23,6 +24,16 @@ func Register(c *gin.Context) {
 		c.JSON(http.StatusOK, response.RegisterA{
 			CommonA: response.CommonA{
 				Message: "用户名已存在",
+				Success: false,
+			},
+		})
+		return
+	}
+	matched, _ := regexp.Match("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,40}$", []byte(data.Password))
+	if !matched {
+		c.JSON(http.StatusOK, response.ModifyInfoA{
+			CommonA: response.CommonA{
+				Message: "密码格式不正确",
 				Success: false,
 			},
 		})
