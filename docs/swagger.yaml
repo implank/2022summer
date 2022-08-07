@@ -1,6 +1,8 @@
 definitions:
   database.Document:
     properties:
+      content:
+        type: string
       count:
         type: integer
       document_id:
@@ -1010,7 +1012,7 @@ definitions:
     type: object
   response.UploadDocumentQ:
     properties:
-      context:
+      content:
         type: string
       document_id:
         type: integer

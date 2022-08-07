@@ -47,7 +47,7 @@ type UploadDocumentQ struct {
 	DocumentName string `json:"document_name"`
 	DocumentID   uint64 `json:"document_id"`
 	ProjID       uint64 `json:"proj_id"`
-	Context      string `json:"context"`
+	Content      string `json:"content"`
 }
 
 type UploadDocumentA struct {

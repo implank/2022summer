@@ -5,13 +5,8 @@ import (
 	"2022summer/model/response"
 	"2022summer/service"
 	"2022summer/utils"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"os"
-	"path"
-	"strings"
-	"time"
 )
 
 // GetProjDocuments
@@ -137,17 +132,19 @@ func CreateDocument(c *gin.Context) {
 		c.JSON(http.StatusOK, response.CreateDocumentA{Message: "文档名已存在", Success: false})
 		return
 	}
-	raw := fmt.Sprintf("%d", data.ProjID) + time.Now().String() + data.DocumentName
-	md5 := utils.GetMd5(raw)
-	dir := "./media/documents"
-	name := md5 + ".md"
-	filePath := path.Join(dir, name)
-	file, err := os.Create(filePath)
-	defer utils.CloseFile(file)
-	err = service.CreateDocument(&database.Document{
+	//raw := fmt.Sprintf("%d", data.ProjID) + time.Now().String() + data.DocumentName
+	//md5 := utils.GetMd5(raw)
+	//dir := "./media/documents"
+	//name := md5 + ".md"
+	//filePath := path.Join(dir, name)
+	//file, err := os.Create(filePath)
+	//defer utils.CloseFile(file)
+	err := service.CreateDocument(&database.Document{
 		DocumentName: data.DocumentName,
-		DocumentURL:  "http://43.138.77.133:81/media/documents/" + name,
-		ProjID:       data.ProjID})
+		//DocumentURL:  "http://43.138.77.133:81/media/documents/" + name,
+		ProjID: data.ProjID,
+		Status: 1,
+	})
 	if err != nil {
 		c.JSON(http.StatusOK, response.CreateDocumentA{Message: "创建文档失败", Success: false})
 		return
@@ -179,21 +176,23 @@ func UploadDocument(c *gin.Context) {
 		})
 		return
 	}
-	filename := strings.Split(document.DocumentURL, "/")[len(strings.Split(document.DocumentURL, "/"))-1]
-	saveDir := "./media/documents/"
-	savePath := path.Join(saveDir, filename)
-	file, err := os.OpenFile(savePath, os.O_WRONLY|os.O_CREATE, 0666)
-	if err != nil {
-		c.JSON(http.StatusOK, response.UploadDocumentA{
-			CommonA: response.CommonA{
-				Message: "文档不存在",
-				Success: false,
-			},
-		})
-		return
-	}
-	file.Write([]byte(data.Context))
-	file.Close()
+	document.Content = data.Content
+	service.UpdateDocument(&document)
+	//filename := strings.Split(document.DocumentURL, "/")[len(strings.Split(document.DocumentURL, "/"))-1]
+	//saveDir := "./media/documents/"
+	//savePath := path.Join(saveDir, filename)
+	//file, err := os.OpenFile(savePath, os.O_WRONLY|os.O_CREATE, 0666)
+	//if err != nil {
+	//	c.JSON(http.StatusOK, response.UploadDocumentA{
+	//		CommonA: response.CommonA{
+	//			Message: "文档不存在",
+	//			Success: false,
+	//		},
+	//	})
+	//	return
+	//}
+	//file.Write([]byte(data.Context))
+	//file.Close()
 	c.JSON(http.StatusOK, response.UploadDocumentA{
 		CommonA: response.CommonA{
 			Message: "上传文件成功",

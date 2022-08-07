@@ -1647,6 +1647,9 @@ const docTemplate = `{
         "database.Document": {
             "type": "object",
             "properties": {
+                "content": {
+                    "type": "string"
+                },
                 "count": {
                     "type": "integer"
                 },
@@ -3206,7 +3209,7 @@ const docTemplate = `{
         "response.UploadDocumentQ": {
             "type": "object",
             "properties": {
-                "context": {
+                "content": {
                     "type": "string"
                 },
                 "document_id": {
