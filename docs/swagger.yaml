@@ -66,6 +66,10 @@ definitions:
     type: object
   database.Proj:
     properties:
+      created_at:
+        type: string
+      edit_times:
+        type: integer
       group_id:
         description: 项目所属团队
         type: integer
@@ -78,6 +82,11 @@ definitions:
       status:
         description: 1 正常、2 回收站
         type: integer
+      top:
+        description: 1 不置顶、2 置顶
+        type: integer
+      updated_at:
+        type: string
       user_id:
         description: 项目创建者
         type: integer
@@ -201,6 +210,8 @@ definitions:
         type: string
       proj_name:
         type: string
+      top:
+        type: integer
     required:
     - group_id
     - proj_name
@@ -441,6 +452,12 @@ definitions:
     properties:
       group_id:
         type: integer
+      is_desc:
+        description: true 降序、false 升序
+        type: boolean
+      order_by:
+        description: 1 按创建时间排序、2 按修改时间排序、3 按编辑次数排序
+        type: integer
     required:
     - group_id
     type: object
@@ -494,6 +511,12 @@ definitions:
   response.GetProjCreateQ:
     properties:
       group_id:
+        type: integer
+      is_desc:
+        description: true 降序、false 升序
+        type: boolean
+      order_by:
+        description: 1 按创建时间排序、2 按修改时间排序、3 按编辑次数排序
         type: integer
     required:
     - group_id
@@ -554,6 +577,12 @@ definitions:
   response.GetProjJoinQ:
     properties:
       group_id:
+        type: integer
+      is_desc:
+        description: true 降序、false 升序
+        type: boolean
+      order_by:
+        description: 1 按创建时间排序、2 按修改时间排序、3 按编辑次数排序
         type: integer
     required:
     - group_id
@@ -915,6 +944,8 @@ definitions:
         type: string
       proj_name:
         type: string
+      top:
+        type: integer
     required:
     - proj_id
     - proj_name
@@ -1210,7 +1241,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.GetProjDocumentsA'
-      summary: 获取某个项目不在回收站的文档
+      summary: 获取某个项目的不在回收站的文档
       tags:
       - 共享文档
   /doc/move_document_to_bin:
@@ -1315,7 +1346,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.GetFilesByNameA'
-      summary: 搜索框
+      summary: 搜索框，只搜不在回收站的
       tags:
       - 项目管理的第二页
   /group/add_member:
@@ -1551,7 +1582,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.GetProjPPagesA'
-      summary: 获取某个项目不在回收站的设计原型的页面
+      summary: 获取某个项目的不在回收站的设计原型的页面
       tags:
       - 设计原型
   /ppage/move_ppage_to_bin:
@@ -1601,7 +1632,7 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: 项目名称，项目详情（可选），所属团队ID
+      - description: 项目名称，项目详情（可选），所属团队ID，是否置顶（可选，1 不置顶、2 置顶）
         in: body
         name: data
         required: true
@@ -1622,7 +1653,7 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: 团队ID
+      - description: 团队ID，排序方式（1 按创建时间排序、2 按修改时间排序、3 按编辑次数），是否降序
         in: body
         name: data
         required: true
@@ -1635,7 +1666,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.GetProjAllA'
-      summary: 全部项目
+      summary: 不在回收站的某组"全部项目"
       tags:
       - 项目管理
   /proj/get_proj_by_id:
@@ -1677,7 +1708,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.GetProjByNameA'
-      summary: 搜索框
+      summary: 搜索框，只搜不在回收站的
       tags:
       - 项目管理
   /proj/get_proj_create:
@@ -1685,7 +1716,7 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: 团队ID
+      - description: 团队ID，排序方式（1 按创建时间排序、2 按修改时间排序、3 按编辑次数），是否降序
         in: body
         name: data
         required: true
@@ -1698,7 +1729,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.GetProjCreateA'
-      summary: 我创建的
+      summary: 不在回收站的某组"我创建的"
       tags:
       - 项目管理
   /proj/get_proj_join:
@@ -1706,7 +1737,7 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: 团队ID
+      - description: 团队ID，排序方式（1 按创建时间排序、2 按修改时间排序、3 按编辑次数），是否降序
         in: body
         name: data
         required: true
@@ -1719,7 +1750,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.GetProjJoinA'
-      summary: 我参与的
+      summary: 不在回收站的某组"我参与的"
       tags:
       - 项目管理
   /proj/move_proj_to_bin:
@@ -1748,7 +1779,7 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: 项目ID，项目名称（必填，可以填原名，不能和其他项目同名），项目详情（可选）
+      - description: 项目ID，项目名称（必填，可以填原名，不能和其他项目同名），项目详情（可选），是否置顶（可选，1 不置顶、2 置顶）
         in: body
         name: data
         required: true
@@ -1761,7 +1792,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.UpdateProjA'
-      summary: 修改项目名称、项目描述
+      summary: 修改项目名称、项目描述、是否置顶
       tags:
       - 项目管理
   /register:
@@ -1823,7 +1854,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.GetProjUmlsA'
-      summary: 获取某个项目不在回收站的 Uml
+      summary: 获取某个项目的不在回收站的 Uml
       tags:
       - Uml
   /uml/move_uml_to_bin:

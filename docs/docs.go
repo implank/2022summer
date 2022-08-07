@@ -390,7 +390,7 @@ const docTemplate = `{
                 "tags": [
                     "共享文档"
                 ],
-                "summary": "获取某个项目不在回收站的文档",
+                "summary": "获取某个项目的不在回收站的文档",
                 "parameters": [
                     {
                         "description": "项目ID",
@@ -555,7 +555,7 @@ const docTemplate = `{
                 "tags": [
                     "项目管理的第二页"
                 ],
-                "summary": "搜索框",
+                "summary": "搜索框，只搜不在回收站的",
                 "parameters": [
                     {
                         "description": "文件名称（不一定是全名，子串搜索，为空时返回数据库中全部不在回收站的文件，包括设计原型、Uml、文档）",
@@ -931,7 +931,7 @@ const docTemplate = `{
                 "tags": [
                     "设计原型"
                 ],
-                "summary": "获取某个项目不在回收站的设计原型的页面",
+                "summary": "获取某个项目的不在回收站的设计原型的页面",
                 "parameters": [
                     {
                         "description": "项目ID",
@@ -1033,7 +1033,7 @@ const docTemplate = `{
                 "summary": "创建项目",
                 "parameters": [
                     {
-                        "description": "项目名称，项目详情（可选），所属团队ID",
+                        "description": "项目名称，项目详情（可选），所属团队ID，是否置顶（可选，1 不置顶、2 置顶）",
                         "name": "data",
                         "in": "body",
                         "required": true,
@@ -1063,10 +1063,10 @@ const docTemplate = `{
                 "tags": [
                     "项目管理"
                 ],
-                "summary": "全部项目",
+                "summary": "不在回收站的某组\"全部项目\"",
                 "parameters": [
                     {
-                        "description": "团队ID",
+                        "description": "团队ID，排序方式（1 按创建时间排序、2 按修改时间排序、3 按编辑次数），是否降序",
                         "name": "data",
                         "in": "body",
                         "required": true,
@@ -1129,7 +1129,7 @@ const docTemplate = `{
                 "tags": [
                     "项目管理"
                 ],
-                "summary": "搜索框",
+                "summary": "搜索框，只搜不在回收站的",
                 "parameters": [
                     {
                         "description": "项目名称（不一定是全名，子串搜索，为空时返回数据库中全部不在回收站的项目）",
@@ -1162,10 +1162,10 @@ const docTemplate = `{
                 "tags": [
                     "项目管理"
                 ],
-                "summary": "我创建的",
+                "summary": "不在回收站的某组\"我创建的\"",
                 "parameters": [
                     {
-                        "description": "团队ID",
+                        "description": "团队ID，排序方式（1 按创建时间排序、2 按修改时间排序、3 按编辑次数），是否降序",
                         "name": "data",
                         "in": "body",
                         "required": true,
@@ -1195,10 +1195,10 @@ const docTemplate = `{
                 "tags": [
                     "项目管理"
                 ],
-                "summary": "我参与的",
+                "summary": "不在回收站的某组\"我参与的\"",
                 "parameters": [
                     {
-                        "description": "团队ID",
+                        "description": "团队ID，排序方式（1 按创建时间排序、2 按修改时间排序、3 按编辑次数），是否降序",
                         "name": "data",
                         "in": "body",
                         "required": true,
@@ -1261,10 +1261,10 @@ const docTemplate = `{
                 "tags": [
                     "项目管理"
                 ],
-                "summary": "修改项目名称、项目描述",
+                "summary": "修改项目名称、项目描述、是否置顶",
                 "parameters": [
                     {
-                        "description": "项目ID，项目名称（必填，可以填原名，不能和其他项目同名），项目详情（可选）",
+                        "description": "项目ID，项目名称（必填，可以填原名，不能和其他项目同名），项目详情（可选），是否置顶（可选，1 不置顶、2 置顶）",
                         "name": "data",
                         "in": "body",
                         "required": true,
@@ -1359,7 +1359,7 @@ const docTemplate = `{
                 "tags": [
                     "Uml"
                 ],
-                "summary": "获取某个项目不在回收站的 Uml",
+                "summary": "获取某个项目的不在回收站的 Uml",
                 "parameters": [
                     {
                         "description": "项目ID",
@@ -1646,6 +1646,12 @@ const docTemplate = `{
         "database.Proj": {
             "type": "object",
             "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "edit_times": {
+                    "type": "integer"
+                },
                 "group_id": {
                     "description": "项目所属团队",
                     "type": "integer"
@@ -1662,6 +1668,13 @@ const docTemplate = `{
                 "status": {
                     "description": "1 正常、2 回收站",
                     "type": "integer"
+                },
+                "top": {
+                    "description": "1 不置顶、2 置顶",
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "string"
                 },
                 "user_id": {
                     "description": "项目创建者",
@@ -1855,6 +1868,9 @@ const docTemplate = `{
                 },
                 "proj_name": {
                     "type": "string"
+                },
+                "top": {
+                    "type": "integer"
                 }
             }
         },
@@ -2226,6 +2242,14 @@ const docTemplate = `{
             "properties": {
                 "group_id": {
                     "type": "integer"
+                },
+                "is_desc": {
+                    "description": "true 降序、false 升序",
+                    "type": "boolean"
+                },
+                "order_by": {
+                    "description": "1 按创建时间排序、2 按修改时间排序、3 按编辑次数排序",
+                    "type": "integer"
                 }
             }
         },
@@ -2309,6 +2333,14 @@ const docTemplate = `{
             ],
             "properties": {
                 "group_id": {
+                    "type": "integer"
+                },
+                "is_desc": {
+                    "description": "true 降序、false 升序",
+                    "type": "boolean"
+                },
+                "order_by": {
+                    "description": "1 按创建时间排序、2 按修改时间排序、3 按编辑次数排序",
                     "type": "integer"
                 }
             }
@@ -2402,6 +2434,14 @@ const docTemplate = `{
             ],
             "properties": {
                 "group_id": {
+                    "type": "integer"
+                },
+                "is_desc": {
+                    "description": "true 降序、false 升序",
+                    "type": "boolean"
+                },
+                "order_by": {
+                    "description": "1 按创建时间排序、2 按修改时间排序、3 按编辑次数排序",
                     "type": "integer"
                 }
             }
@@ -2964,6 +3004,9 @@ const docTemplate = `{
                 },
                 "proj_name": {
                     "type": "string"
+                },
+                "top": {
+                    "type": "integer"
                 }
             }
         },
