@@ -10,7 +10,7 @@ import (
 )
 
 // GetProjPPages
-// @Summary 获取某个项目不在回收站的设计原型的页面
+// @Summary 获取某个项目的不在回收站的设计原型的页面
 // @Tags 设计原型
 // @Accept json
 // @Produce json

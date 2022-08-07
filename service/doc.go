@@ -3,6 +3,7 @@ package service
 import (
 	"2022summer/global"
 	"2022summer/model/database"
+	"github.com/jinzhu/gorm"
 )
 
 func GetProjDocuments(projID uint64, status int) (documents []database.Document) {
@@ -23,6 +24,8 @@ func QueryDocumentByDocumentID(documentID uint64) (document database.Document, n
 }
 
 func CreateDocument(document *database.Document) (err error) {
+	global.DB.Model(database.Proj{}).Where("proj_id = ?", document.ProjID).
+		Update("edit_times", gorm.Expr("edit_times + ?", 1))
 	if err = global.DB.Create(&document).Error; err != nil {
 		return err
 	}
@@ -30,6 +33,8 @@ func CreateDocument(document *database.Document) (err error) {
 }
 
 func UpdateDocument(document *database.Document) (err error) {
+	global.DB.Model(database.Proj{}).Where("proj_id = ?", document.ProjID).
+		Update("edit_times", gorm.Expr("edit_times + ?", 1))
 	err = global.DB.Save(document).Error
 	return err
 }

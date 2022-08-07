@@ -261,7 +261,7 @@ func GetProjInBin(c *gin.Context) {
 		c.JSON(http.StatusOK, response.GetProjInBinA{Message: "输入数据不符合要求", Success: false})
 		return
 	}
-	projs := service.GetUserProjsInGroup(poster.(database.User).UserID, data.GroupID, 2, 3)
+	projs := service.GetUserProjsInGroup(poster.(database.User).UserID, data.GroupID, 2, 3, 1, true)
 	x := len(projs)
 	if x == 0 {
 		c.JSON(http.StatusOK, response.GetProjJoinA{

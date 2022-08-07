@@ -54,23 +54,23 @@ func SetupRouter(r *gin.Engine) {
 	projGroup := r.Group("/api/v1/proj", middleware.AuthRequired())
 	{
 		projGroup.POST("/create_proj", v1.CreateProj)         // 创建项目
-		projGroup.POST("/update_proj", v1.UpdateProj)         // 修改项目名称、项目描述
+		projGroup.POST("/update_proj", v1.UpdateProj)         // 修改项目名称、项目描述、是否置顶
 		projGroup.POST("/move_proj_to_bin", v1.MoveProjBin)   // 移入或移出回收站
-		projGroup.POST("/get_proj_all", v1.GetProjAll)        // 全部项目
-		projGroup.POST("/get_proj_create", v1.GetProjCreate)  // 我创建的
-		projGroup.POST("/get_proj_join", v1.GetProjJoin)      // 我参与的
-		projGroup.POST("/get_proj_by_name", v1.GetProjByName) // 搜索框
+		projGroup.POST("/get_proj_all", v1.GetProjAll)        // 不在回收站的某组"全部项目"
+		projGroup.POST("/get_proj_create", v1.GetProjCreate)  // 不在回收站的某组"我创建的"
+		projGroup.POST("/get_proj_join", v1.GetProjJoin)      // 不在回收站的某组"我参与的"
+		projGroup.POST("/get_proj_by_name", v1.GetProjByName) // 搜索框，只搜不在回收站的
 		projGroup.POST("/get_proj_by_id", v1.GetProjByID)     // 获取项目信息
 	}
 
 	fileGroup := r.Group("/api/v1/file", middleware.AuthRequired())
 	{
-		fileGroup.POST("/get_files_by_name", v1.GetFilesByName) // 搜索框
+		fileGroup.POST("/get_files_by_name", v1.GetFilesByName) // 搜索框，只搜不在回收站的
 	}
 
 	pPageGroup := r.Group("/api/v1/ppage", middleware.AuthRequired())
 	{
-		pPageGroup.POST("/get_proj_ppages", v1.GetProjPPages)    // 获取某个项目不在回收站的设计原型的页面
+		pPageGroup.POST("/get_proj_ppages", v1.GetProjPPages)    // 获取某个项目的不在回收站的设计原型的页面
 		pPageGroup.POST("/get_ppage_by_id", v1.GetPPageByID)     // 获取设计原型的某个页面
 		pPageGroup.POST("/create_ppage", v1.CreatePPage)         // 创建设计原型的一个页面
 		pPageGroup.POST("/update_ppage", v1.UpdatePPage)         // 修改设计原型的某个页面的名称或数据
@@ -79,7 +79,7 @@ func SetupRouter(r *gin.Engine) {
 
 	umlGroup := r.Group("/api/v1/uml", middleware.AuthRequired())
 	{
-		umlGroup.POST("/get_proj_umls", v1.GetProjUmls)    // 获取某个项目不在回收站的 Uml
+		umlGroup.POST("/get_proj_umls", v1.GetProjUmls)    // 获取某个项目的不在回收站的 Uml
 		umlGroup.POST("/create_uml", v1.CreateUml)         // 创建 Uml
 		umlGroup.POST("/update_uml", v1.UpdateUml)         // 修改 Uml 名称
 		umlGroup.POST("/move_uml_to_bin", v1.MoveUmlToBin) // Uml 移入回收站
@@ -87,7 +87,7 @@ func SetupRouter(r *gin.Engine) {
 
 	docGroup := r.Group("/api/v1/doc", middleware.AuthRequired())
 	{
-		docGroup.POST("/get_proj_documents", v1.GetProjDocuments) // 获取某个项目不在回收站的文档
+		docGroup.POST("/get_proj_documents", v1.GetProjDocuments) // 获取某个项目的不在回收站的文档
 		docGroup.POST("/enter_document", v1.EnterDocument)
 		docGroup.POST("/quit_document", v1.QuitDocument)
 		docGroup.POST("/create_document", v1.CreateDocument) // 创建文档

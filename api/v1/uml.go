@@ -5,16 +5,12 @@ import (
 	"2022summer/model/response"
 	"2022summer/service"
 	"2022summer/utils"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"os"
-	"path"
-	"time"
 )
 
 // GetProjUmls
-// @Summary 获取某个项目不在回收站的 Uml
+// @Summary 获取某个项目的不在回收站的 Uml
 // @Tags Uml
 // @Accept json
 // @Produce json
@@ -62,17 +58,17 @@ func CreateUml(c *gin.Context) {
 		c.JSON(http.StatusOK, response.CreateUmlA{Message: "Uml名已存在", Success: false})
 		return
 	}
-	raw := fmt.Sprintf("%d", data.ProjID) + time.Now().String() + data.UmlName
+	/*raw := fmt.Sprintf("%d", data.ProjID) + time.Now().String() + data.UmlName
 	md5 := utils.GetMd5(raw)
 	dir := "./media/umls"
-	name := md5 + ".meow" // TODO 随便起的后缀名
+	name := md5 + ".meow"
 	filePath := path.Join(dir, name)
 	file, err := os.Create(filePath)
-	defer utils.CloseFile(file)
-	err = service.CreateUml(&database.Uml{
+	defer utils.CloseFile(file)*/
+	err := service.CreateUml(&database.Uml{
 		UmlName: data.UmlName,
-		UmlURL:  "http://43.138.77.133:81/media/umls/" + name,
-		ProjID:  data.ProjID})
+		// UmlURL:  "http://" + global.VP.GetString("host") + "/media/umls/" + name,
+		ProjID: data.ProjID})
 	if err != nil {
 		c.JSON(http.StatusOK, response.CreateUmlA{Message: "创建Uml失败", Success: false})
 		return

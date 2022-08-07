@@ -9,7 +9,7 @@ import (
 )
 
 // GetFilesByName
-// @Summary 搜索框
+// @Summary 搜索框，只搜不在回收站的
 // @Tags 项目管理的第二页
 // @Accept json
 // @Produce json

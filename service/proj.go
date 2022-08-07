@@ -3,6 +3,7 @@ package service
 import (
 	"2022summer/global"
 	"2022summer/model/database"
+	"github.com/jinzhu/gorm"
 )
 
 func QueryProjByProjName(projName string) (proj database.Proj, notFound bool) {
@@ -28,6 +29,7 @@ func CreateProj(proj *database.Proj) (err error) {
 }
 
 func UpdateProj(proj *database.Proj) (err error) {
+	proj.EditTimes += 1
 	err = global.DB.Save(proj).Error
 	return err
 }
@@ -38,6 +40,7 @@ func UpdateProjStatus(proj *database.Proj) (err error) {
 	global.DB.Model(database.PPage{}).Where("proj_id = ?", proj.ProjID).Updates(database.PPage{Status: proj.Status})
 	global.DB.Model(database.Uml{}).Where("proj_id = ?", proj.ProjID).Updates(database.Uml{Status: proj.Status})
 	global.DB.Model(database.Document{}).Where("proj_id = ?", proj.ProjID).Updates(database.Document{Status: proj.Status})
+	proj.EditTimes += 1
 	err = global.DB.Save(proj).Error
 	return err
 }
@@ -69,22 +72,37 @@ func GetUserProjs(userID uint64, status int, op int) (projs []database.Proj) {
 	return projs
 }
 
-func GetUserProjsInGroup(userID uint64, groupID uint64, status int, op int) (projs []database.Proj) {
+func GetUserProjsInGroup(userID uint64, groupID uint64, status int, op int, orderBy int, isDesc bool) (projs []database.Proj) {
 	// 查找该用户在某个团队中的项目
 	// op = 1 时查找"我创建的", op = 2 时查找"我参与的", op = 3 时查找"全部项目"
+	var query *gorm.DB
 	if op == 1 {
-		global.DB.Where("user_id = ? and group_id = ? and status = ?",
-			userID, groupID, status).Find(&projs).RecordNotFound()
+		query = global.DB.Where("user_id = ? and group_id = ? and status = ?",
+			userID, groupID, status)
 	} else if op == 2 {
-		global.DB.Raw("SELECT * FROM projs, identities "+
+		query = global.DB.Raw("SELECT * FROM projs, identities "+
 			"WHERE identities.user_id = ? AND projs.user_id != ? "+
 			"AND projs.group_id = ? AND identities.group_id = ? "+
-			"AND projs.status = ?;", userID, userID, groupID, groupID, status).Find(&projs).RecordNotFound()
+			"AND projs.status = ?", userID, userID, groupID, groupID, status)
 	} else {
-		global.DB.Raw("SELECT * FROM projs, identities "+
+		query = global.DB.Raw("SELECT * FROM projs, identities "+
 			"WHERE identities.user_id = ? "+
 			"AND projs.group_id = ? AND identities.group_id = ? "+
-			"AND projs.status = ?;", userID, groupID, groupID, status).Find(&projs).RecordNotFound()
+			"AND projs.status = ?", userID, groupID, groupID, status)
 	}
+	query = query.Order("top DESC")
+	var str string
+	if orderBy == 1 {
+		str = "created_at"
+	} else if orderBy == 2 {
+		str = "updated_at "
+	} else {
+		str = "edit_times"
+	}
+	if isDesc {
+		str += " DESC"
+	}
+	query = query.Order(str)
+	query.Find(&projs).RecordNotFound()
 	return projs
 }

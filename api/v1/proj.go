@@ -14,7 +14,7 @@ import (
 // @Tags 项目管理
 // @Accept json
 // @Produce json
-// @Param data body response.CreateProjQ true "项目名称，项目详情（可选），所属团队ID"
+// @Param data body response.CreateProjQ true "项目名称，项目详情（可选），所属团队ID，是否置顶（可选，1 不置顶、2 置顶）"
 // @Success 200 {object} response.CreateProjA
 // @Router /proj/create_proj [post]
 func CreateProj(c *gin.Context) {
@@ -32,7 +32,8 @@ func CreateProj(c *gin.Context) {
 		ProjName: data.ProjName,
 		ProjInfo: data.ProjInfo,
 		GroupID:  data.GroupID,
-		UserID:   poster.(database.User).UserID})
+		UserID:   poster.(database.User).UserID,
+		Top:      data.Top})
 	if err != nil {
 		c.JSON(http.StatusOK, response.CreateProjA{Message: "创建项目失败", Success: false})
 		return
@@ -41,11 +42,11 @@ func CreateProj(c *gin.Context) {
 }
 
 // UpdateProj
-// @Summary 修改项目名称、项目描述
+// @Summary 修改项目名称、项目描述、是否置顶
 // @Tags 项目管理
 // @Accept json
 // @Produce json
-// @Param data body response.UpdateProjQ true "项目ID，项目名称（必填，可以填原名，不能和其他项目同名），项目详情（可选）"
+// @Param data body response.UpdateProjQ true "项目ID，项目名称（必填，可以填原名，不能和其他项目同名），项目详情（可选），是否置顶（可选，1 不置顶、2 置顶）"
 // @Success 200 {object} response.UpdateProjA
 // @Router /proj/update_proj [post]
 func UpdateProj(c *gin.Context) {
@@ -66,6 +67,9 @@ func UpdateProj(c *gin.Context) {
 	}
 	proj.ProjName = data.ProjName
 	proj.ProjInfo = data.ProjInfo
+	if data.Top == 1 || data.Top == 2 {
+		proj.Top = data.Top
+	}
 	err := service.UpdateProj(&proj)
 	if err != nil {
 		c.JSON(http.StatusOK, response.UpdateProjA{Message: "修改项目失败", Success: false})
@@ -107,11 +111,11 @@ func MoveProjBin(c *gin.Context) {
 }
 
 // GetProjAll
-// @Summary 全部项目
+// @Summary 不在回收站的某组"全部项目"
 // @Tags 项目管理
 // @Accept json
 // @Produce json
-// @Param data body response.GetProjAllQ true "团队ID"
+// @Param data body response.GetProjAllQ true "团队ID，排序方式（1 按创建时间排序、2 按修改时间排序、3 按编辑次数），是否降序"
 // @Success 200 {object} response.GetProjAllA
 // @Router /proj/get_proj_all [post]
 func GetProjAll(c *gin.Context) {
@@ -121,7 +125,7 @@ func GetProjAll(c *gin.Context) {
 		c.JSON(http.StatusOK, response.GetProjAllA{Message: "输入数据不符合要求", Success: false})
 		return
 	}
-	projs := service.GetUserProjsInGroup(poster.(database.User).UserID, data.GroupID, 1, 3)
+	projs := service.GetUserProjsInGroup(poster.(database.User).UserID, data.GroupID, 1, 3, data.OrderBy, data.IsDesc)
 	// projs := service.GetUserProjs(poster.(database.User).UserID, 1, 3)
 	x := len(projs)
 	if x == 0 {
@@ -140,11 +144,11 @@ func GetProjAll(c *gin.Context) {
 }
 
 // GetProjCreate
-// @Summary 我创建的
+// @Summary 不在回收站的某组"我创建的"
 // @Tags 项目管理
 // @Accept json
 // @Produce json
-// @Param data body response.GetProjCreateQ true "团队ID"
+// @Param data body response.GetProjCreateQ true "团队ID，排序方式（1 按创建时间排序、2 按修改时间排序、3 按编辑次数），是否降序"
 // @Success 200 {object} response.GetProjCreateA
 // @Router /proj/get_proj_create [post]
 func GetProjCreate(c *gin.Context) {
@@ -154,7 +158,7 @@ func GetProjCreate(c *gin.Context) {
 		c.JSON(http.StatusOK, response.GetProjCreateA{Message: "输入数据不符合要求", Success: false})
 		return
 	}
-	projs := service.GetUserProjsInGroup(poster.(database.User).UserID, data.GroupID, 1, 1)
+	projs := service.GetUserProjsInGroup(poster.(database.User).UserID, data.GroupID, 1, 1, data.OrderBy, data.IsDesc)
 	// projs := service.GetUserProjs(poster.(database.User).UserID, 1, 1)
 	x := len(projs)
 	if x == 0 {
@@ -173,11 +177,11 @@ func GetProjCreate(c *gin.Context) {
 }
 
 // GetProjJoin
-// @Summary 我参与的
+// @Summary 不在回收站的某组"我参与的"
 // @Tags 项目管理
 // @Accept json
 // @Produce json
-// @Param data body response.GetProjJoinQ true "团队ID"
+// @Param data body response.GetProjJoinQ true "团队ID，排序方式（1 按创建时间排序、2 按修改时间排序、3 按编辑次数），是否降序"
 // @Success 200 {object} response.GetProjJoinA
 // @Router /proj/get_proj_join [post]
 func GetProjJoin(c *gin.Context) {
@@ -187,7 +191,7 @@ func GetProjJoin(c *gin.Context) {
 		c.JSON(http.StatusOK, response.GetProjJoinA{Message: "输入数据不符合要求", Success: false})
 		return
 	}
-	projs := service.GetUserProjsInGroup(poster.(database.User).UserID, data.GroupID, 1, 2)
+	projs := service.GetUserProjsInGroup(poster.(database.User).UserID, data.GroupID, 1, 2, data.OrderBy, data.IsDesc)
 	// projs := service.GetUserProjs(poster.(database.User).UserID, 1, 2)
 	x := len(projs)
 	if x == 0 {
@@ -206,7 +210,7 @@ func GetProjJoin(c *gin.Context) {
 }
 
 // GetProjByName
-// @Summary 搜索框
+// @Summary 搜索框，只搜不在回收站的
 // @Tags 项目管理
 // @Accept json
 // @Produce json

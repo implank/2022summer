@@ -3,6 +3,7 @@ package service
 import (
 	"2022summer/global"
 	"2022summer/model/database"
+	"github.com/jinzhu/gorm"
 )
 
 func GetProjPPages(projID uint64, status int) (ppages []database.PPageID) {
@@ -28,6 +29,8 @@ func QueryPPageByPPageID(pPageID uint64) (ppage database.PPage, notFound bool) {
 }
 
 func CreatePPage(pPage *database.PPage) (err error) {
+	global.DB.Model(database.Proj{}).Where("proj_id = ?", pPage.ProjID).
+		Update("edit_times", gorm.Expr("edit_times + ?", 1))
 	if err = global.DB.Create(&pPage).Error; err != nil {
 		return err
 	}
@@ -35,6 +38,8 @@ func CreatePPage(pPage *database.PPage) (err error) {
 }
 
 func UpdatePPage(pPage *database.PPage) (err error) {
+	global.DB.Model(database.Proj{}).Where("proj_id = ?", pPage.ProjID).
+		Update("edit_times", gorm.Expr("edit_times + ?", 1))
 	err = global.DB.Save(pPage).Error
 	return err
 }

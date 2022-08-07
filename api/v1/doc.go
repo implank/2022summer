@@ -5,17 +5,15 @@ import (
 	"2022summer/model/response"
 	"2022summer/service"
 	"2022summer/utils"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"os"
 	"path"
 	"strings"
-	"time"
 )
 
 // GetProjDocuments
-// @Summary 获取某个项目不在回收站的文档
+// @Summary 获取某个项目的不在回收站的文档
 // @Tags 共享文档
 // @Accept json
 // @Produce json
@@ -137,17 +135,17 @@ func CreateDocument(c *gin.Context) {
 		c.JSON(http.StatusOK, response.CreateDocumentA{Message: "文档名已存在", Success: false})
 		return
 	}
-	raw := fmt.Sprintf("%d", data.ProjID) + time.Now().String() + data.DocumentName
+	/*raw := fmt.Sprintf("%d", data.ProjID) + time.Now().String() + data.DocumentName
 	md5 := utils.GetMd5(raw)
 	dir := "./media/documents"
 	name := md5 + ".md"
 	filePath := path.Join(dir, name)
 	file, err := os.Create(filePath)
-	defer utils.CloseFile(file)
-	err = service.CreateDocument(&database.Document{
+	defer utils.CloseFile(file)*/
+	err := service.CreateDocument(&database.Document{
 		DocumentName: data.DocumentName,
-		DocumentURL:  "http://43.138.77.133:81/media/documents/" + name,
-		ProjID:       data.ProjID})
+		// DocumentURL:  "http://" + global.VP.GetString("host") + "/media/documents/" + name,
+		ProjID: data.ProjID})
 	if err != nil {
 		c.JSON(http.StatusOK, response.CreateDocumentA{Message: "创建文档失败", Success: false})
 		return

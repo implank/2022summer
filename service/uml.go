@@ -3,6 +3,7 @@ package service
 import (
 	"2022summer/global"
 	"2022summer/model/database"
+	"github.com/jinzhu/gorm"
 )
 
 func GetProjUmls(projID uint64, status int) (umls []database.Uml) {
@@ -22,6 +23,8 @@ func QueryUmlByUmlID(umlID uint64) (uml database.Uml, notFound bool) {
 }
 
 func CreateUml(uml *database.Uml) (err error) {
+	global.DB.Model(database.Proj{}).Where("proj_id = ?", uml.ProjID).
+		Update("edit_times", gorm.Expr("edit_times + ?", 1))
 	if err = global.DB.Create(&uml).Error; err != nil {
 		return err
 	}
@@ -29,6 +32,8 @@ func CreateUml(uml *database.Uml) (err error) {
 }
 
 func UpdateUml(uml *database.Uml) (err error) {
+	global.DB.Model(database.Proj{}).Where("proj_id = ?", uml.ProjID).
+		Update("edit_times", gorm.Expr("edit_times + ?", 1))
 	err = global.DB.Save(uml).Error
 	return err
 }

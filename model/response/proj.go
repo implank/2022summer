@@ -8,6 +8,7 @@ type CreateProjQ struct {
 	ProjName string `json:"proj_name" binding:"required"`
 	ProjInfo string `json:"proj_info" binding:"omitempty"`
 	GroupID  uint64 `json:"group_id" binding:"required"`
+	Top      int    `json:"top" binding:"omitempty"`
 }
 
 type CreateProjA struct {
@@ -19,6 +20,7 @@ type UpdateProjQ struct {
 	ProjID   uint64 `json:"proj_id" binding:"required"`
 	ProjName string `json:"proj_name" binding:"required"`
 	ProjInfo string `json:"proj_info" binding:"omitempty"`
+	Top      int    `json:"top" binding:"omitempty"`
 }
 
 type UpdateProjA struct {
@@ -37,6 +39,8 @@ type MoveProjBinA struct {
 
 type GetProjAllQ struct {
 	GroupID uint64 `json:"group_id" binding:"required"`
+	OrderBy int    `json:"order_by"` // 1 按创建时间排序、2 按修改时间排序、3 按编辑次数排序
+	IsDesc  bool   `json:"is_desc"`  // true 降序、false 升序
 }
 
 type GetProjAllA struct {
@@ -48,6 +52,8 @@ type GetProjAllA struct {
 
 type GetProjCreateQ struct {
 	GroupID uint64 `json:"group_id" binding:"required"`
+	OrderBy int    `json:"order_by"` // 1 按创建时间排序、2 按修改时间排序、3 按编辑次数排序
+	IsDesc  bool   `json:"is_desc"`  // true 降序、false 升序
 }
 
 type GetProjCreateA struct {
@@ -59,6 +65,8 @@ type GetProjCreateA struct {
 
 type GetProjJoinQ struct {
 	GroupID uint64 `json:"group_id" binding:"required"`
+	OrderBy int    `json:"order_by"` // 1 按创建时间排序、2 按修改时间排序、3 按编辑次数排序
+	IsDesc  bool   `json:"is_desc"`  // true 降序、false 升序
 }
 
 type GetProjJoinA struct {
