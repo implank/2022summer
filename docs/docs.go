@@ -2003,28 +2003,6 @@ const docTemplate = `{
                 }
             }
         },
-        "response.DeleteDocumentA": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "response.DeleteDocumentQ": {
-            "type": "object",
-            "required": [
-                "document_id"
-            ],
-            "properties": {
-                "document_id": {
-                    "type": "integer"
-                }
-            }
-        },
         "response.DeclineInvitationA": {
             "type": "object",
             "properties": {
@@ -2043,6 +2021,28 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "message_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "response.DeleteDocumentA": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.DeleteDocumentQ": {
+            "type": "object",
+            "required": [
+                "document_id"
+            ],
+            "properties": {
+                "document_id": {
                     "type": "integer"
                 }
             }

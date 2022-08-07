@@ -235,20 +235,6 @@ definitions:
     required:
     - uml_name
     type: object
-  response.DeleteDocumentA:
-    properties:
-      message:
-        type: string
-      success:
-        type: boolean
-    type: object
-  response.DeleteDocumentQ:
-    properties:
-      document_id:
-        type: integer
-    required:
-    - uml_name
-    type: object
   response.DeclineInvitationA:
     properties:
       code:
@@ -262,6 +248,20 @@ definitions:
     properties:
       message_id:
         type: integer
+    type: object
+  response.DeleteDocumentA:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.DeleteDocumentQ:
+    properties:
+      document_id:
+        type: integer
+    required:
+    - document_id
     type: object
   response.DeletePPageA:
     properties:
