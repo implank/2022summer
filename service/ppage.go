@@ -7,7 +7,7 @@ import (
 )
 
 func GetProjPPages(projID uint64, status int) (ppages []database.PPageID) {
-	global.DB.Table("p_pages").Select("p_page_id, p_page_name").
+	global.DB.Table("p_pages").Select("p_page_id, p_page_name").Order("p_page_id DESC").
 		Where("proj_id = ? and status = ?", projID, status).Find(&ppages).RecordNotFound()
 	return ppages
 }

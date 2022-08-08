@@ -1118,6 +1118,39 @@ const docTemplate = `{
                 }
             }
         },
+        "/proj/copy_proj": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "项目管理"
+                ],
+                "summary": "获取项目信息",
+                "parameters": [
+                    {
+                        "description": "项目ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.CopyProjQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.CopyProjA"
+                        }
+                    }
+                }
+            }
+        },
         "/proj/create_proj": {
             "post": {
                 "consumes": [
@@ -1876,6 +1909,31 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "message_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "response.CopyProjA": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "proj": {
+                    "$ref": "#/definitions/database.Proj"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.CopyProjQ": {
+            "type": "object",
+            "required": [
+                "proj_id"
+            ],
+            "properties": {
+                "proj_id": {
                     "type": "integer"
                 }
             }

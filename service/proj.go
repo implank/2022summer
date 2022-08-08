@@ -4,15 +4,16 @@ import (
 	"2022summer/global"
 	"2022summer/model/database"
 	"github.com/jinzhu/gorm"
+	"strconv"
 )
 
-func QueryProjByProjName(projName string) (proj database.Proj, notFound bool) {
-	notFound = global.DB.Where("proj_name = ?", projName).First(&proj).RecordNotFound()
+func QueryProjByProjName(projName string, groupID uint64) (proj database.Proj, notFound bool) { // 同一组的项目不能重名
+	notFound = global.DB.Where("proj_name = ? and group_id = ?", projName, groupID).First(&proj).RecordNotFound()
 	return proj, notFound
 }
 
 func GetProjsByProjNameBur(projName string) (projs []database.Proj) { // 模糊搜索
-	global.DB.Where("proj_name like '%" + projName + "%' and status = 1").Find(&projs).RecordNotFound()
+	global.DB.Order("proj_id DESC").Where("proj_name like '%" + projName + "%' and status = 1").Find(&projs).RecordNotFound()
 	return projs
 }
 
@@ -110,8 +111,19 @@ func GetUserProjsInGroup(userID uint64, groupID uint64, status int, op int, orde
 func CopyProj(projSrcID uint64, userID uint64) (projDst database.Proj, err error) {
 	tx := global.DB.Begin()
 	projSrc, _ := QueryProjByProjID(projSrcID)
+	cnt := 0
+	name := projSrc.ProjName + "的副本"
+	for {
+		notFound := global.DB.Where("proj_name = ? and group_id = ?", name, projSrc.GroupID).
+			First(&database.Proj{}).RecordNotFound()
+		if notFound {
+			break
+		}
+		cnt += 1
+		name = projSrc.ProjName + "的副本" + strconv.Itoa(cnt)
+	}
 	projDst = database.Proj{
-		ProjName: projSrc.ProjName + "的副本",
+		ProjName: name,
 		ProjInfo: projSrc.ProjInfo,
 		Status:   projSrc.Status,
 		GroupID:  projSrc.GroupID,
@@ -153,10 +165,10 @@ func CopyProj(projSrcID uint64, userID uint64) (projDst database.Proj, err error
 	for _, value := range documents {
 		tmp := database.Document{
 			DocumentName: value.DocumentName,
-			// TODO 这里或许有 DocumentData
-			DocumentURL: "",
-			Status:      value.Status,
-			ProjID:      projDst.ProjID}
+			DocumentURL:  "",
+			Status:       value.Status,
+			ProjID:       projDst.ProjID,
+			Content:      value.Content}
 		if err := global.DB.Create(&tmp).Error; err != nil {
 			tx.Rollback()
 			return projDst, err

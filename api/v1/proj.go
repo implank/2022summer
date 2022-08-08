@@ -24,7 +24,7 @@ func CreateProj(c *gin.Context) {
 		c.JSON(http.StatusOK, response.CreateProjA{Message: "输入数据不符合要求", Success: false})
 		return
 	}
-	if _, notFound := service.QueryProjByProjName(data.ProjName); !notFound {
+	if _, notFound := service.QueryProjByProjName(data.ProjName, data.GroupID); !notFound {
 		c.JSON(http.StatusOK, response.CreateProjA{Message: "项目名已存在", Success: false})
 		return
 	}
@@ -60,7 +60,7 @@ func UpdateProj(c *gin.Context) {
 		c.JSON(http.StatusOK, response.UpdateProjA{Message: "项目不存在", Success: false})
 		return
 	}
-	projTmp, notFound := service.QueryProjByProjName(data.ProjName)
+	projTmp, notFound := service.QueryProjByProjName(data.ProjName, proj.GroupID)
 	if !notFound && proj.ProjID != projTmp.ProjID {
 		c.JSON(http.StatusOK, response.UpdateProjA{Message: "项目名已存在", Success: false})
 		return

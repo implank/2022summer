@@ -156,6 +156,22 @@ definitions:
       message_id:
         type: integer
     type: object
+  response.CopyProjA:
+    properties:
+      message:
+        type: string
+      proj:
+        $ref: '#/definitions/database.Proj'
+      success:
+        type: boolean
+    type: object
+  response.CopyProjQ:
+    properties:
+      proj_id:
+        type: integer
+    required:
+    - proj_id
+    type: object
   response.CreateDocumentA:
     properties:
       message:
@@ -1753,6 +1769,27 @@ paths:
       summary: 修改设计原型的某个页面的名称或数据
       tags:
       - 设计原型
+  /proj/copy_proj:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 项目ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.CopyProjQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.CopyProjA'
+      summary: 获取项目信息
+      tags:
+      - 项目管理
   /proj/create_proj:
     post:
       consumes:

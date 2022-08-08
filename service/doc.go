@@ -7,7 +7,7 @@ import (
 )
 
 func GetProjDocuments(projID uint64, status int) (documents []database.Document) {
-	global.DB.Where("proj_id = ? and status = ?", projID, status).Find(&documents).RecordNotFound()
+	global.DB.Order("document_id DESC").Where("proj_id = ? and status = ?", projID, status).Find(&documents).RecordNotFound()
 	return documents
 }
 

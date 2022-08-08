@@ -7,7 +7,7 @@ import (
 )
 
 func GetProjUmls(projID uint64, status int) (umls []database.Uml) {
-	global.DB.Where("proj_id = ? and status = ?", projID, status).Find(&umls).RecordNotFound()
+	global.DB.Order("uml_id DESC").Where("proj_id = ? and status = ?", projID, status).Find(&umls).RecordNotFound()
 	return umls
 }
 
