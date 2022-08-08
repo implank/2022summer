@@ -29,7 +29,7 @@ func Register(c *gin.Context) {
 		})
 		return
 	}
-	matched, _ := regexp.Match("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,40}$", []byte(data.Password))
+	matched, _ := regexp.Match("^[A-Za-z\\d]{8,40}$", []byte(data.Password))
 	if !matched {
 		c.JSON(http.StatusOK, response.ModifyInfoA{
 			CommonA: response.CommonA{
