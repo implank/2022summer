@@ -2,8 +2,13 @@ definitions:
   database.Document:
     properties:
       content:
+        description: 文档内容
         type: string
       count:
+        description: 仅为文档文件使用
+        type: integer
+      dir_id:
+        description: 文档所属目录
         type: integer
       document_id:
         type: integer
@@ -11,7 +16,11 @@ definitions:
         type: string
       document_url:
         type: string
+      is_dir:
+        description: 是否为目录 0为文件 1为目录
+        type: boolean
       proj_id:
+        description: 非0表示项目文档并表示所属项目
         type: integer
       status:
         description: 1 正常、2 回收站
@@ -54,6 +63,9 @@ definitions:
       receiver_id:
         type: integer
       sender_id:
+        type: integer
+      status:
+        description: 0 未读 1 已读
         type: integer
       type:
         type: integer
@@ -920,6 +932,17 @@ definitions:
     required:
     - document_id
     type: object
+  response.ReadAllMessagesA:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.ReadAllMessagesQ:
+    type: object
   response.RegisterA:
     properties:
       code:
@@ -1428,27 +1451,6 @@ paths:
       summary: 搜索框，只搜不在回收站的
       tags:
       - 项目管理的第二页
-  /group/accept_invitation:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 消息ID
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/response.AcceptInvitationQ'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.AcceptInvitationA'
-      summary: 接受加入团队邀请
-      tags:
-      - Group
   /group/create_group:
     post:
       consumes:
@@ -1467,27 +1469,6 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.CreateGroupA'
-      tags:
-      - Group
-  /group/decline_invitation:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 消息ID
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/response.DeclineInvitationQ'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.DeclineInvitationA'
-      summary: 拒绝加入团队邀请
       tags:
       - Group
   /group/get_group_members:
@@ -1521,27 +1502,6 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.GetGroupsA'
-      tags:
-      - Group
-  /group/get_messages:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 空json
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/response.GetMessagesQ'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.GetMessagesA'
-      summary: 获取用户消息，按时间排序
       tags:
       - Group
   /group/get_my_identity:
@@ -2062,6 +2022,69 @@ paths:
       summary: 修改 Uml 名称
       tags:
       - Uml
+  /user/accept_invitation:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 消息ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.AcceptInvitationQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.AcceptInvitationA'
+      summary: 接受加入团队邀请
+      tags:
+      - 用户模块
+  /user/decline_invitation:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 消息ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.DeclineInvitationQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.DeclineInvitationA'
+      summary: 拒绝加入团队邀请
+      tags:
+      - 用户模块
+  /user/get_messages:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 空json
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.GetMessagesQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.GetMessagesA'
+      summary: 获取用户消息，按时间排序
+      tags:
+      - 用户模块
   /user/info:
     post:
       consumes:
@@ -2120,6 +2143,27 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.ModifyPasswordA'
+      tags:
+      - 用户模块
+  /user/read_all_messages:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 空json
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.ReadAllMessagesQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ReadAllMessagesA'
+      summary: 标记所有消息为已读
       tags:
       - 用户模块
 swagger: "2.0"

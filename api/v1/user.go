@@ -53,19 +53,6 @@ func Register(c *gin.Context) {
 		})
 		return
 	}
-	group := database.Group{
-		GroupName: data.Username + "的团队",
-		UserID:    user.UserID,
-	}
-	if err := service.CreateGroup(&group); err != nil {
-		c.JSON(http.StatusOK, response.RegisterA{
-			CommonA: response.CommonA{
-				Message: "创建团队失败",
-				Success: false,
-			},
-		})
-		return
-	}
 	c.JSON(http.StatusOK, response.RegisterA{
 		CommonA: response.CommonA{
 			Message: "注册成功",
@@ -218,4 +205,151 @@ func ModifyInfo(c *gin.Context) {
 			},
 		})
 	}
+}
+
+// GetMessages
+// @Summary 获取用户消息，按时间排序
+// @Tags 用户模块
+// @Accept json
+// @Produce json
+// @Param data body response.GetMessagesQ true "空json"
+// @Success 200 {object} response.GetMessagesA
+// @Router /user/get_messages [post]
+func GetMessages(c *gin.Context) {
+	var data response.GetMessagesQ
+	if err := utils.ShouldBindAndValid(c, &data); err != nil {
+		c.JSON(http.StatusOK, response.PARAMERROR)
+		return
+	}
+	poster := c.MustGet("user").(database.User)
+	messages := service.GetMessages(poster.UserID)
+	count := len(messages)
+	if count == 0 {
+		c.JSON(http.StatusOK, response.GetMessagesA{
+			CommonA: response.CommonA{
+				Message: "您还没有消息",
+				Success: true,
+			},
+			Count: 0,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, response.GetMessagesA{
+		CommonA: response.CommonA{
+			Message: "获取消息成功",
+			Success: true,
+		},
+		Count:    count,
+		Messages: messages,
+	})
+}
+
+// DeclineInvitation
+// @Summary 拒绝加入团队邀请
+// @Tags 用户模块
+// @Accept json
+// @Produce json
+// @Param data body response.DeclineInvitationQ true "消息ID"
+// @Success 200 {object} response.DeclineInvitationA
+// @Router /user/decline_invitation [post]
+func DeclineInvitation(c *gin.Context) {
+	var data response.DeclineInvitationQ
+	if err := utils.ShouldBindAndValid(c, &data); err != nil {
+		c.JSON(http.StatusOK, response.PARAMERROR)
+		return
+	}
+	poster := c.MustGet("user").(database.User)
+	message, notFound := service.QueryMessageByMessageID(data.MessageID)
+	if notFound || message.Type != 1 || message.ReceiverID != poster.UserID {
+		c.JSON(http.StatusOK, response.DeclineInvitationA{
+			Message: "没有找到该消息 或 消息类型错误 或 消息接收者错误",
+			Success: false,
+		})
+	}
+	message.Type = 2
+	_ = service.UpdateMessage(&message)
+	message = database.Message{
+		MessageID:  message.MessageID,
+		ReceiverID: message.SenderID,
+		SenderID:   0,
+		Content:    poster.Username + " 拒绝了您的邀请",
+		Type:       4,
+	}
+	_ = service.CreateMessage(&message)
+	c.JSON(http.StatusOK, response.DeclineInvitationA{
+		Message: "拒绝邀请成功",
+		Success: true,
+	})
+}
+
+// AcceptInvitation
+// @Summary 接受加入团队邀请
+// @Tags 用户模块
+// @Accept json
+// @Produce json
+// @Param data body response.AcceptInvitationQ true "消息ID"
+// @Success 200 {object} response.AcceptInvitationA
+// @Router /user/accept_invitation [post]
+func AcceptInvitation(c *gin.Context) {
+	var data response.AcceptInvitationQ
+	if err := utils.ShouldBindAndValid(c, &data); err != nil {
+		c.JSON(http.StatusOK, response.PARAMERROR)
+		return
+	}
+	poster := c.MustGet("user").(database.User)
+	message, notFound := service.QueryMessageByMessageID(data.MessageID)
+	if notFound || message.Type != 1 || message.ReceiverID != poster.UserID {
+		c.JSON(http.StatusOK, response.DeclineInvitationA{
+			Message: "没有找到该消息 或 消息类型错误 或 消息接收者错误",
+			Success: false,
+		})
+	}
+	message.Type = 3
+	_ = service.UpdateMessage(&message)
+	members := service.GetGroupMembers(message.GroupID)
+	for _, member := range members {
+		message = database.Message{
+			ReceiverID: member.UserID,
+			SenderID:   0,
+			Content:    "新成员 " + poster.Username + " 加入了团队",
+			Type:       5,
+		}
+		_ = service.CreateMessage(&message)
+	}
+	identity := database.Identity{
+		UserID:  poster.UserID,
+		GroupID: message.GroupID,
+		Status:  1,
+	}
+	_ = service.CreateIdentity(&identity)
+	c.JSON(http.StatusOK, response.AcceptInvitationA{
+		Message: "接受邀请成功",
+		Success: true,
+	})
+}
+
+// ReadAllMessages
+// @Summary 标记所有消息为已读
+// @Tags 用户模块
+// @Accept json
+// @Produce json
+// @Param data body response.ReadAllMessagesQ true "空json"
+// @Success 200 {object} response.ReadAllMessagesA
+// @Router /user/read_all_messages [post]
+func ReadAllMessages(c *gin.Context) {
+	post := c.MustGet("user").(database.User)
+	messages := service.GetMessages(post.UserID)
+	for _, message := range messages {
+		message.Status = 1
+		if err := service.UpdateMessage(&message); err != nil {
+			c.JSON(http.StatusOK, response.DBERROR)
+			return
+		}
+	}
+	c.JSON(http.StatusOK, response.ReadAllMessagesA{
+		CommonA: response.CommonA{
+			Message: "操作成功",
+			Success: true,
+		},
+	})
 }

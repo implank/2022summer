@@ -64,29 +64,6 @@ type GetGroupsA struct {
 	Count  int              `json:"count"`
 	Groups []database.Group `json:"groups"`
 }
-type GetMessagesQ struct {
-}
-type GetMessagesA struct {
-	CommonA
-	Count    int                `json:"count"`
-	Messages []database.Message `json:"messages"`
-}
-type DeclineInvitationQ struct {
-	MessageID uint64 `json:"message_id"`
-}
-type DeclineInvitationA struct {
-	Message string `json:"message"`
-	Success bool   `json:"success"`
-	Code    int    `json:"code"`
-}
-type AcceptInvitationQ struct {
-	MessageID uint64 `json:"message_id"`
-}
-type AcceptInvitationA struct {
-	Message string `json:"message"`
-	Success bool   `json:"success"`
-	Code    int    `json:"code"`
-}
 
 var (
 	NOAUTH = CommonA{

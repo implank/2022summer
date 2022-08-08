@@ -577,39 +577,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/group/accept_invitation": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Group"
-                ],
-                "summary": "接受加入团队邀请",
-                "parameters": [
-                    {
-                        "description": "消息ID",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/response.AcceptInvitationQ"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.AcceptInvitationA"
-                        }
-                    }
-                }
-            }
-        },
         "/group/create_group": {
             "post": {
                 "consumes": [
@@ -637,39 +604,6 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/response.CreateGroupA"
-                        }
-                    }
-                }
-            }
-        },
-        "/group/decline_invitation": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Group"
-                ],
-                "summary": "拒绝加入团队邀请",
-                "parameters": [
-                    {
-                        "description": "消息ID",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/response.DeclineInvitationQ"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.DeclineInvitationA"
                         }
                     }
                 }
@@ -723,39 +657,6 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/response.GetGroupsA"
-                        }
-                    }
-                }
-            }
-        },
-        "/group/get_messages": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Group"
-                ],
-                "summary": "获取用户消息，按时间排序",
-                "parameters": [
-                    {
-                        "description": "空json",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/response.GetMessagesQ"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.GetMessagesA"
                         }
                     }
                 }
@@ -1579,6 +1480,105 @@ const docTemplate = `{
                 }
             }
         },
+        "/user/accept_invitation": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户模块"
+                ],
+                "summary": "接受加入团队邀请",
+                "parameters": [
+                    {
+                        "description": "消息ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.AcceptInvitationQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.AcceptInvitationA"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/decline_invitation": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户模块"
+                ],
+                "summary": "拒绝加入团队邀请",
+                "parameters": [
+                    {
+                        "description": "消息ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.DeclineInvitationQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.DeclineInvitationA"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/get_messages": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户模块"
+                ],
+                "summary": "获取用户消息，按时间排序",
+                "parameters": [
+                    {
+                        "description": "空json",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.GetMessagesQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.GetMessagesA"
+                        }
+                    }
+                }
+            }
+        },
         "/user/info": {
             "post": {
                 "consumes": [
@@ -1674,6 +1674,39 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/user/read_all_messages": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户模块"
+                ],
+                "summary": "标记所有消息为已读",
+                "parameters": [
+                    {
+                        "description": "空json",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.ReadAllMessagesQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.ReadAllMessagesA"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -1681,9 +1714,15 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "content": {
+                    "description": "文档内容",
                     "type": "string"
                 },
                 "count": {
+                    "description": "仅为文档文件使用",
+                    "type": "integer"
+                },
+                "dir_id": {
+                    "description": "文档所属目录",
                     "type": "integer"
                 },
                 "document_id": {
@@ -1695,7 +1734,12 @@ const docTemplate = `{
                 "document_url": {
                     "type": "string"
                 },
+                "is_dir": {
+                    "description": "是否为目录 0为文件 1为目录",
+                    "type": "boolean"
+                },
                 "proj_id": {
+                    "description": "非0表示项目文档并表示所属项目",
                     "type": "integer"
                 },
                 "status": {
@@ -1759,6 +1803,10 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "sender_id": {
+                    "type": "integer"
+                },
+                "status": {
+                    "description": "0 未读 1 已读",
                     "type": "integer"
                 },
                 "type": {
@@ -3095,6 +3143,23 @@ const docTemplate = `{
                     "type": "integer"
                 }
             }
+        },
+        "response.ReadAllMessagesA": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.ReadAllMessagesQ": {
+            "type": "object"
         },
         "response.RegisterA": {
             "type": "object",

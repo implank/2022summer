@@ -34,6 +34,10 @@ func SetupRouter(r *gin.Engine) {
 		userGroup.POST("/info", v1.GetUserInfo)
 		userGroup.POST("/modify_password", v1.ModifyPassword)
 		userGroup.POST("/modify_info", v1.ModifyInfo)
+		userGroup.POST("/get_messages", v1.GetMessages)
+		userGroup.POST("/decline_invitation", v1.DeclineInvitation)
+		userGroup.POST("/accept_invitation", v1.AcceptInvitation)
+		userGroup.POST("/read_all_messages", v1.ReadAllMessages)
 	}
 
 	groupGroup := baseGroup.Group("/group", middleware.AuthRequired())
@@ -46,9 +50,6 @@ func SetupRouter(r *gin.Engine) {
 		groupGroup.POST("/remove_member", v1.RemoveMember)
 		groupGroup.POST("/set_member_status", v1.SetMemberStatus)
 		groupGroup.POST("/get_groups", v1.GetGroups)
-		groupGroup.POST("/get_messages", v1.GetMessages)
-		groupGroup.POST("/decline_invitation", v1.DeclineInvitation)
-		groupGroup.POST("/accept_invitation", v1.AcceptInvitation)
 	}
 
 	projGroup := r.Group("/api/v1/proj", middleware.AuthRequired())

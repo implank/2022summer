@@ -10,3 +10,19 @@ type User struct {
 	Age      uint   `gorm:"default:0;" json:"age"`
 	UserInfo string `gorm:"type:text;" json:"user_info"`
 }
+
+// Message
+// * 1 待Rec确认的邀请
+// * 2 已被Rec拒绝的邀请
+// * 3 已被Rec同意的邀请
+// * 4 用户拒绝了邀请（仅发送给管理员
+// * 5 广播用户加入了团队（发送给全体团队成员
+type Message struct {
+	MessageID  uint64 `gorm:"primary_key;" json:"message_id"`
+	ReceiverID uint64 `gorm:"not null;" json:"receiver_id"`
+	SenderID   uint64 `gorm:"not null;" json:"sender_id"`
+	Content    string `gorm:"type:text;" json:"content"`
+	GroupID    uint64 `gorm:"not null;" json:"group_id"`
+	Type       int    `gorm:"not null;" json:"type"`
+	Status     int    `gorm:"not null;" json:"status"` // 0 未读 1 已读
+}

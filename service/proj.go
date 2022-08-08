@@ -165,10 +165,10 @@ func CopyProj(projSrcID uint64, userID uint64) (projDst database.Proj, err error
 	for _, value := range documents {
 		tmp := database.Document{
 			DocumentName: value.DocumentName,
-			DocumentURL:  "",
-			Status:       value.Status,
-			ProjID:       projDst.ProjID,
-			Content:      value.Content}
+			//DocumentURL:  "",
+			Status:  value.Status,
+			ProjID:  projDst.ProjID,
+			Content: value.Content}
 		if err := global.DB.Create(&tmp).Error; err != nil {
 			tx.Rollback()
 			return projDst, err
