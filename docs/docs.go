@@ -2418,6 +2418,9 @@ const docTemplate = `{
                 "code": {
                     "type": "integer"
                 },
+                "count": {
+                    "type": "integer"
+                },
                 "members": {
                     "type": "array",
                     "items": {

@@ -33,6 +33,7 @@ type GetMembersQ struct {
 }
 type GetMembersA struct {
 	CommonA
+	Count   int                    `json:"count"`
 	Members []database.GroupMember `json:"members"`
 }
 type InviteMemberQ struct {

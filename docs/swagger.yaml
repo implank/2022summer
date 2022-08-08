@@ -463,6 +463,8 @@ definitions:
     properties:
       code:
         type: integer
+      count:
+        type: integer
       members:
         items:
           $ref: '#/definitions/database.GroupMember'

@@ -129,6 +129,7 @@ func GetMembers(c *gin.Context) {
 			Message: "获取成功",
 			Success: true,
 		},
+		Count:   len(members),
 		Members: members,
 	})
 }
