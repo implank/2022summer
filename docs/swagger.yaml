@@ -128,11 +128,14 @@ definitions:
       status:
         description: 1 正常、2 回收站
         type: integer
+      uml_data:
+        type: string
       uml_id:
         type: integer
       uml_name:
         type: string
       uml_url:
+        description: 先写上
         type: string
     type: object
   database.User:
@@ -704,6 +707,24 @@ definitions:
     required:
     - proj_id
     type: object
+  response.GetUmlByIDA:
+    properties:
+      count:
+        type: integer
+      message:
+        type: string
+      success:
+        type: boolean
+      uml:
+        $ref: '#/definitions/database.Uml'
+    type: object
+  response.GetUmlByIDQ:
+    properties:
+      uml_id:
+        type: integer
+    required:
+    - uml_id
+    type: object
   response.GetUserInfoA:
     properties:
       code:
@@ -1092,6 +1113,22 @@ definitions:
         type: string
       proj_id:
         type: integer
+    type: object
+  response.UploadUmlA:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.UploadUmlQ:
+    properties:
+      uml_data:
+        type: string
+      uml_id:
+        type: integer
+    required:
+    - uml_id
     type: object
 info:
   contact: {}
@@ -1749,7 +1786,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.CopyProjA'
-      summary: 获取项目信息
+      summary: 复制项目
       tags:
       - 项目管理
   /proj/create_proj:
@@ -1982,6 +2019,27 @@ paths:
       summary: 获取某个项目的不在回收站的 Uml
       tags:
       - Uml
+  /uml/get_uml_by_id:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Uml ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.GetUmlByIDQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.GetUmlByIDA'
+      summary: 获取某个设计原型
+      tags:
+      - Uml
   /uml/move_uml_to_bin:
     post:
       consumes:
@@ -2022,6 +2080,27 @@ paths:
           schema:
             $ref: '#/definitions/response.UpdateUmlA'
       summary: 修改 Uml 名称
+      tags:
+      - Uml
+  /uml/upload_uml:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Uml ID，Uml 数据
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.UploadUmlQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.UploadUmlA'
+      summary: Uml 修改 Uml 内容
       tags:
       - Uml
   /user/accept_invitation:

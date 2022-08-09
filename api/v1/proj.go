@@ -263,7 +263,7 @@ func GetProjByID(c *gin.Context) {
 }
 
 // CopyProj
-// @Summary 获取项目信息
+// @Summary 复制项目
 // @Tags 项目管理
 // @Accept json
 // @Produce json

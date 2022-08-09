@@ -13,6 +13,17 @@ type GetProjUmlsA struct {
 	Umls    []database.Uml `json:"umls"`
 }
 
+type GetUmlByIDQ struct {
+	UmlID uint64 `json:"uml_id" binding:"required"`
+}
+
+type GetUmlByIDA struct {
+	Message string       `json:"message"`
+	Success bool         `json:"success"`
+	Count   uint64       `json:"count"`
+	Uml     database.Uml `json:"uml"`
+}
+
 type CreateUmlQ struct {
 	UmlName string `json:"uml_name" binding:"required"`
 	ProjID  uint64 `json:"proj_id"`
@@ -29,6 +40,16 @@ type UpdateUmlQ struct {
 }
 
 type UpdateUmlA struct {
+	Message string `json:"message"`
+	Success bool   `json:"success"`
+}
+
+type UploadUmlQ struct {
+	UmlID   uint64 `json:"uml_id" binding:"required"`
+	UmlData string `json:"uml_data" binding:"omitempty"`
+}
+
+type UploadUmlA struct {
 	Message string `json:"message"`
 	Success bool   `json:"success"`
 }

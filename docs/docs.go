@@ -1030,7 +1030,7 @@ const docTemplate = `{
                 "tags": [
                     "项目管理"
                 ],
-                "summary": "获取项目信息",
+                "summary": "复制项目",
                 "parameters": [
                     {
                         "description": "项目ID",
@@ -1414,6 +1414,39 @@ const docTemplate = `{
                 }
             }
         },
+        "/uml/get_uml_by_id": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Uml"
+                ],
+                "summary": "获取某个设计原型",
+                "parameters": [
+                    {
+                        "description": "Uml ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.GetUmlByIDQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.GetUmlByIDA"
+                        }
+                    }
+                }
+            }
+        },
         "/uml/move_uml_to_bin": {
             "post": {
                 "consumes": [
@@ -1475,6 +1508,39 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/response.UpdateUmlA"
+                        }
+                    }
+                }
+            }
+        },
+        "/uml/upload_uml": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Uml"
+                ],
+                "summary": "Uml 修改 Uml 内容",
+                "parameters": [
+                    {
+                        "description": "Uml ID，Uml 数据",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.UploadUmlQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.UploadUmlA"
                         }
                     }
                 }
@@ -1899,6 +1965,9 @@ const docTemplate = `{
                     "description": "1 正常、2 回收站",
                     "type": "integer"
                 },
+                "uml_data": {
+                    "type": "string"
+                },
                 "uml_id": {
                     "type": "integer"
                 },
@@ -1906,6 +1975,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "uml_url": {
+                    "description": "先写上",
                     "type": "string"
                 }
             }
@@ -2788,6 +2858,34 @@ const docTemplate = `{
                 }
             }
         },
+        "response.GetUmlByIDA": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                },
+                "uml": {
+                    "$ref": "#/definitions/database.Uml"
+                }
+            }
+        },
+        "response.GetUmlByIDQ": {
+            "type": "object",
+            "required": [
+                "uml_id"
+            ],
+            "properties": {
+                "uml_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "response.GetUserInfoA": {
             "type": "object",
             "properties": {
@@ -3388,6 +3486,31 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "proj_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "response.UploadUmlA": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.UploadUmlQ": {
+            "type": "object",
+            "required": [
+                "uml_id"
+            ],
+            "properties": {
+                "uml_data": {
+                    "type": "string"
+                },
+                "uml_id": {
                     "type": "integer"
                 }
             }

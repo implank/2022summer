@@ -40,6 +40,28 @@ func GetProjUmls(c *gin.Context) {
 		Umls:    umls})
 }
 
+// GetUmlByID
+// @Summary 获取某个设计原型
+// @Tags Uml
+// @Accept json
+// @Produce json
+// @Param data body response.GetUmlByIDQ true "Uml ID"
+// @Success 200 {object} response.GetUmlByIDA
+// @Router /uml/get_uml_by_id [post]
+func GetUmlByID(c *gin.Context) {
+	var data response.GetUmlByIDQ
+	if err := utils.ShouldBindAndValid(c, &data); err != nil {
+		c.JSON(http.StatusOK, response.GetUmlByIDA{Message: "输入数据不符合要求", Success: false})
+		return
+	}
+	uml, notFound := service.QueryUmlByUmlID(data.UmlID)
+	if notFound {
+		c.JSON(http.StatusOK, response.GetUmlByIDA{Message: "页面不存在", Success: false, Uml: uml})
+		return
+	}
+	c.JSON(http.StatusOK, response.GetUmlByIDA{Message: "成功获取页面信息", Success: true, Uml: uml})
+}
+
 // CreateUml
 // @Summary 创建 Uml
 // @Tags Uml
@@ -92,7 +114,7 @@ func UpdateUml(c *gin.Context) {
 	}
 	uml, notFound := service.QueryUmlByUmlID(data.UmlID)
 	if notFound {
-		c.JSON(http.StatusOK, response.UpdateUmlA{Message: "Unl不存在", Success: false})
+		c.JSON(http.StatusOK, response.UpdateUmlA{Message: "Uml不存在", Success: false})
 		return
 	}
 	umlTmp, notFound := service.QueryUmlByUmlName(data.UmlName, uml.ProjID)
@@ -107,6 +129,33 @@ func UpdateUml(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, response.UpdateUmlA{Message: "修改Uml成功", Success: true})
+}
+
+// UploadUml
+// @Summary Uml 修改 Uml 内容
+// @Tags Uml
+// @Accept json
+// @Produce json
+// @Param data body response.UploadUmlQ true "Uml ID，Uml 数据"
+// @Success 200 {object} response.UploadUmlA
+// @Router /uml/upload_uml [post]
+func UploadUml(c *gin.Context) {
+	var data response.UploadUmlQ
+	if err := utils.ShouldBindAndValid(c, &data); err != nil {
+		c.JSON(http.StatusOK, response.UploadUmlA{Message: "输入数据不符合要求", Success: false})
+		return
+	}
+	uml, notFound := service.QueryUmlByUmlID(data.UmlID)
+	if notFound {
+		c.JSON(http.StatusOK, response.UploadUmlA{Message: "Uml不存在", Success: false})
+		return
+	}
+	uml.UmlData = data.UmlData
+	err := service.UpdateUml(&uml)
+	if err != nil {
+		c.JSON(http.StatusOK, response.UploadUmlA{Message: "修改Uml失败", Success: false})
+		return
+	}
 }
 
 // MoveUmlToBin

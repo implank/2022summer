@@ -82,8 +82,10 @@ func SetupRouter(r *gin.Engine) {
 	umlGroup := r.Group("/api/v1/uml", middleware.AuthRequired())
 	{
 		umlGroup.POST("/get_proj_umls", v1.GetProjUmls)    // 获取某个项目的不在回收站的 Uml
+		umlGroup.POST("/get_uml_by_id", v1.GetUmlByID)     // 获取某个设计原型
 		umlGroup.POST("/create_uml", v1.CreateUml)         // 创建 Uml
 		umlGroup.POST("/update_uml", v1.UpdateUml)         // 修改 Uml 名称
+		umlGroup.POST("/upload_uml", v1.UploadUml)         // 修改 Uml 内容
 		umlGroup.POST("/move_uml_to_bin", v1.MoveUmlToBin) // Uml 移入回收站
 	}
 
