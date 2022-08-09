@@ -1777,7 +1777,7 @@ const docTemplate = `{
                 },
                 "status": {
                     "description": "1 普通成员、2 管理员、3 团队创建者",
-                    "type": "string"
+                    "type": "integer"
                 },
                 "user_id": {
                     "type": "integer"
