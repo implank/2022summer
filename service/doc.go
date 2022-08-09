@@ -7,13 +7,13 @@ import (
 )
 
 func GetProjDocuments(projID uint64, status int) (documents []database.Document) {
-	global.DB.Order("document_id DESC").Where("proj_id = ? and status = ?", projID, status).Find(&documents).RecordNotFound()
+	global.DB.Order("document_id DESC").Where("proj_id = ? and status = ? and is_dir != 1", projID, status).Find(&documents).RecordNotFound()
 	return documents
 }
 
 func QueryDocumentByDocumentName(documentName string, projID uint64) (document database.Document, notFound bool) {
 	// 同一项目中不能有同名文档
-	notFound = global.DB.Where("document_name = ? and proj_id = ?",
+	notFound = global.DB.Where("document_name = ? and proj_id = ? and is_dir != 1",
 		documentName, projID).First(&document).RecordNotFound()
 	return document, notFound
 }
@@ -42,4 +42,8 @@ func UpdateDocument(document *database.Document) (err error) {
 func DeleteDocument(document *database.Document) (err error) {
 	err = global.DB.Delete(&document).Error
 	return err
+}
+func GetDocumentsInDir(dirID uint64) (documents []database.Document) {
+	global.DB.Order("document_id DESC").Where("dir_id = ? and status != 2", dirID).Find(&documents).RecordNotFound()
+	return documents
 }

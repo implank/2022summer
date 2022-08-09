@@ -1,10 +1,11 @@
 package database
 
 type Group struct {
-	GroupID   uint64 `gorm:"primary_key;not null;" json:"group_id"`
-	GroupName string `gorm:"size:255;not null;" json:"group_name"`
-	GroupInfo string `gorm:"type:text;" json:"group_info"`
-	UserID    uint64 `gorm:"not null;" json:"user_id"` // 团队创建者
+	GroupID    uint64 `gorm:"primary_key;not null;" json:"group_id"`
+	GroupName  string `gorm:"size:255;not null;" json:"group_name"`
+	GroupInfo  string `gorm:"type:text;" json:"group_info"`
+	UserID     uint64 `gorm:"not null;" json:"user_id"`     // 团队创建者
+	DocumentID uint64 `gorm:"not null;" json:"document_id"` // 团队目录
 }
 
 type Identity struct {

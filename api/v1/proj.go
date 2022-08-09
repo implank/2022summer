@@ -28,16 +28,25 @@ func CreateProj(c *gin.Context) {
 		c.JSON(http.StatusOK, response.CreateProjA{Message: "项目名已存在", Success: false})
 		return
 	}
-	err := service.CreateProj(&database.Proj{
+	proj := database.Proj{
 		ProjName: data.ProjName,
 		ProjInfo: data.ProjInfo,
 		GroupID:  data.GroupID,
 		UserID:   poster.(database.User).UserID,
-		Top:      data.Top})
-	if err != nil {
+		Top:      data.Top,
+	}
+	if err := service.CreateProj(&proj); err != nil {
 		c.JSON(http.StatusOK, response.CreateProjA{Message: "创建项目失败", Success: false})
 		return
 	}
+
+	//doc := database.Document{
+	//	DocumentName: data.ProjName,
+	//	Status:       1,
+	//	ProjID:       proj.ProjID,
+	//	DirID:        1,
+	//	IsDir:        1,
+	//}
 	c.JSON(http.StatusOK, response.CreateProjA{Message: "创建项目成功", Success: true})
 }
 

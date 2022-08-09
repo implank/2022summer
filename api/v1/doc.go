@@ -132,18 +132,12 @@ func CreateDocument(c *gin.Context) {
 		c.JSON(http.StatusOK, response.CreateDocumentA{Message: "文档名已存在", Success: false})
 		return
 	}
-	//raw := fmt.Sprintf("%d", data.ProjID) + time.Now().String() + data.DocumentName
-	//md5 := utils.GetMd5(raw)
-	//dir := "./media/documents"
-	//name := md5 + ".md"
-	//filePath := path.Join(dir, name)
-	//file, err := os.Create(filePath)
-	//defer utils.CloseFile(file)
+	proj, _ := service.QueryProjByProjID(data.ProjID)
 	err := service.CreateDocument(&database.Document{
 		DocumentName: data.DocumentName,
-		//DocumentURL:  "http://43.138.77.133:81/media/documents/" + name,
-		ProjID: data.ProjID,
-		Status: 1,
+		Status:       1,
+		ProjID:       data.ProjID,
+		DirID:        proj.DocumentID,
 	})
 	if err != nil {
 		c.JSON(http.StatusOK, response.CreateDocumentA{Message: "创建文档失败", Success: false})
@@ -261,4 +255,126 @@ func MoveDocumentToBin(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, response.MoveDocumentToBinA{Message: "移入回收站成功", Success: true})
+}
+
+// CreateDocFile
+// @Summary 创建文档文件
+// @Tags 共享文档
+// @Accept json
+// @Produce json
+// @Param data body response.CreateDocFileQ true "父目录ID，文档名称，创建的是目录还是文件夹"
+// @Success 200 {object} response.CreateDocFileA
+// @Router /doc/create_doc_file [post]
+func CreateDocFile(c *gin.Context) {
+	var data response.CreateDocFileQ
+	if err := utils.ShouldBindAndValid(c, &data); err != nil {
+		c.JSON(http.StatusOK, response.PARAMERROR)
+		return
+	}
+	Dir, notFound := service.QueryDocumentByDocumentID(data.DirID)
+	if notFound {
+		c.JSON(http.StatusOK, response.CreateDocFileA{
+			Message: "文件夹不存在",
+			Success: false,
+		})
+		return
+	}
+	if Dir.IsDir == 0 {
+		c.JSON(http.StatusOK, response.CreateDocFileA{
+			Message: "不是文件夹",
+			Success: false,
+		})
+		return
+	}
+	if Dir.IsFixed == 1 || (Dir.ProjID != 0 && data.IsDir == 1) {
+		c.JSON(http.StatusOK, response.CreateDocFileA{
+			Message: "文件夹内不能添加文件夹",
+			Success: false,
+		})
+		return
+	}
+	if Dir.Status == 2 {
+		c.JSON(http.StatusOK, response.CreateDocFileA{
+			Message: "文件夹已经被移入回收站",
+			Success: false,
+		})
+		return
+	}
+	files := service.GetDocumentsInDir(Dir.DocumentID)
+	for _, file := range files {
+		if file.DocumentName == data.Filename {
+			c.JSON(http.StatusOK, response.CreateDocFileA{
+				Message: "文件已存在",
+				Success: false,
+			})
+			return
+		}
+	}
+	doc := database.Document{
+		DocumentName: data.Filename,
+		Status:       1,
+		ProjID:       Dir.ProjID,
+		DirID:        Dir.DirID,
+		IsDir:        data.IsDir,
+	}
+	err := service.CreateDocument(&doc)
+	if err != nil {
+		c.JSON(http.StatusOK, response.DBERROR)
+		return
+	}
+	c.JSON(http.StatusOK, response.CreateDocFileA{
+		Message: "创建文件成功",
+		Success: true,
+	})
+}
+
+// GetDocFiles
+// @Summary 获取团队文件
+// @Tags 共享文档
+// @Accept json
+// @Produce json
+// @Param data body response.GetDocFilesQ true "团队ID"
+// @Success 200 {object} response.GetDocFilesA
+// @Router /doc/get_doc_files [post]
+func GetDocFiles(c *gin.Context) {
+	var data response.GetDocFilesQ
+	if err := utils.ShouldBindAndValid(c, &data); err != nil {
+		c.JSON(http.StatusOK, response.PARAMERROR)
+		return
+	}
+	group, notFound := service.QueryGroupByGroupID(data.GroupID)
+	if notFound {
+		c.JSON(http.StatusOK, response.GetDocFilesA{
+			Message: "团队不存在",
+			Success: false,
+		})
+		return
+	}
+	files := Tree(group.DocumentID)
+	c.JSON(http.StatusOK, response.GetDocFilesA{
+		Message: "获取文件列表成功",
+		Success: true,
+		Files:   files,
+	})
+}
+
+func Tree(DocumentID uint64) (files []database.File) {
+	documents := service.GetDocumentsInDir(DocumentID)
+	for _, document := range documents {
+		if document.IsDir == 1 {
+			files = append(files, database.File{
+				FileID:         document.DocumentID,
+				Filename:       document.DocumentName,
+				IsDir:          1,
+				ContainedFiles: Tree(document.DocumentID),
+			})
+		} else {
+			files = append(files, database.File{
+				FileID:   document.DocumentID,
+				Filename: document.DocumentName,
+				IsDir:    0,
+			})
+		}
+	}
+	return files
 }

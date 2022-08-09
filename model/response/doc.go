@@ -44,10 +44,8 @@ type CreateDocumentA struct {
 }
 
 type UploadDocumentQ struct {
-	DocumentName string `json:"document_name"`
-	DocumentID   uint64 `json:"document_id"`
-	ProjID       uint64 `json:"proj_id"`
-	Content      string `json:"content"`
+	DocumentID uint64 `json:"document_id"`
+	Content    string `json:"content"`
 }
 
 type UploadDocumentA struct {
@@ -72,4 +70,25 @@ type MoveDocumentToBinQ struct {
 type MoveDocumentToBinA struct {
 	Message string `json:"message"`
 	Success bool   `json:"success"`
+}
+
+//---
+type CreateDocFileQ struct {
+	DirID    uint64 `json:"dir_id" binding:"required"`
+	Filename string `json:"filename" binding:"required"`
+	IsDir    int    `json:"is_dir"`
+}
+type CreateDocFileA struct {
+	Message string `json:"message"`
+	Success bool   `json:"success"`
+	Code    int    `json:"code"`
+}
+type GetDocFilesQ struct {
+	GroupID uint64 `json:"group_id" binding:"required"`
+}
+type GetDocFilesA struct {
+	Message string          `json:"message"`
+	Success bool            `json:"success"`
+	Code    int             `json:"code"`
+	Files   []database.File `json:"files"`
 }
