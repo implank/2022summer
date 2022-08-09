@@ -265,17 +265,17 @@ func DeclineInvitation(c *gin.Context) {
 			Message: "没有找到该消息 或 消息类型错误 或 消息接收者错误",
 			Success: false,
 		})
+		return
 	}
 	message.Type = 2
 	_ = service.UpdateMessage(&message)
-	message = database.Message{
-		MessageID:  message.MessageID,
+	newMessage := database.Message{
 		ReceiverID: message.SenderID,
 		SenderID:   0,
 		Content:    poster.Username + " 拒绝了您的邀请",
 		Type:       4,
 	}
-	_ = service.CreateMessage(&message)
+	_ = service.CreateMessage(&newMessage)
 	c.JSON(http.StatusOK, response.DeclineInvitationA{
 		Message: "拒绝邀请成功",
 		Success: true,
