@@ -29,6 +29,13 @@ func CreateGroup(c *gin.Context) {
 		GroupInfo: data.GroupInfo,
 		UserID:    poster.UserID,
 	}
+	doc := database.Document{
+		DocumentName: "团队:" + data.GroupName + " 的文档目录",
+		Status:       1,
+		IsDir:        1,
+		IsFixed:      0,
+	}
+	_ = service.CreateDocument(&doc)
 	if err := service.CreateGroup(&group); err != nil {
 		c.JSON(http.StatusOK, response.DBERROR)
 		return
@@ -318,7 +325,8 @@ func GetGroups(c *gin.Context) {
 				Message: "您还没有团队",
 				Success: true,
 			},
-			Count: 0,
+			Count:  0,
+			Groups: groups,
 		})
 		return
 	}

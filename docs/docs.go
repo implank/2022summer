@@ -313,6 +313,39 @@ const docTemplate = `{
                 }
             }
         },
+        "/doc/create_doc_file": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "共享文档"
+                ],
+                "summary": "创建文档文件",
+                "parameters": [
+                    {
+                        "description": "父目录ID，文档名称，创建的是目录还是文件夹",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.CreateDocFileQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.CreateDocFileA"
+                        }
+                    }
+                }
+            }
+        },
         "/doc/create_document": {
             "post": {
                 "consumes": [
@@ -374,6 +407,39 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/response.EnterDocumentA"
+                        }
+                    }
+                }
+            }
+        },
+        "/doc/get_doc_files": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "共享文档"
+                ],
+                "summary": "获取团队文件",
+                "parameters": [
+                    {
+                        "description": "团队ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.GetDocFilesQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.GetDocFilesA"
                         }
                     }
                 }
@@ -1732,11 +1798,16 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "document_url": {
+                    "description": "unuse",
                     "type": "string"
                 },
                 "is_dir": {
                     "description": "是否为目录 0为文件 1为目录",
-                    "type": "boolean"
+                    "type": "integer"
+                },
+                "is_fixed": {
+                    "description": "是否为固定文件 0为非固定 1为固定",
+                    "type": "integer"
                 },
                 "proj_id": {
                     "description": "非0表示项目文档并表示所属项目",
@@ -1748,9 +1819,33 @@ const docTemplate = `{
                 }
             }
         },
+        "database.File": {
+            "type": "object",
+            "properties": {
+                "contained_files": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/database.File"
+                    }
+                },
+                "file_id": {
+                    "type": "integer"
+                },
+                "file_name": {
+                    "type": "string"
+                },
+                "is_dir": {
+                    "type": "integer"
+                }
+            }
+        },
         "database.Group": {
             "type": "object",
             "properties": {
+                "document_id": {
+                    "description": "团队目录",
+                    "type": "integer"
+                },
                 "group_id": {
                     "type": "integer"
                 },
@@ -1855,6 +1950,10 @@ const docTemplate = `{
             "properties": {
                 "created_at": {
                     "type": "string"
+                },
+                "document_id": {
+                    "description": "项目目录",
+                    "type": "integer"
                 },
                 "edit_times": {
                     "type": "integer"
@@ -1982,6 +2081,38 @@ const docTemplate = `{
             ],
             "properties": {
                 "proj_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "response.CreateDocFileA": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.CreateDocFileQ": {
+            "type": "object",
+            "required": [
+                "dir_id",
+                "filename"
+            ],
+            "properties": {
+                "dir_id": {
+                    "type": "integer"
+                },
+                "filename": {
+                    "type": "string"
+                },
+                "is_dir": {
                     "type": "integer"
                 }
             }
@@ -2265,6 +2396,37 @@ const docTemplate = `{
             ],
             "properties": {
                 "document_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "response.GetDocFilesA": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "files": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/database.File"
+                    }
+                },
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.GetDocFilesQ": {
+            "type": "object",
+            "required": [
+                "group_id"
+            ],
+            "properties": {
+                "group_id": {
                     "type": "integer"
                 }
             }
@@ -3379,12 +3541,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "document_id": {
-                    "type": "integer"
-                },
-                "document_name": {
-                    "type": "string"
-                },
-                "proj_id": {
                     "type": "integer"
                 }
             }

@@ -20,13 +20,14 @@ type Uml struct {
 type Document struct {
 	DocumentID   uint64 `gorm:"primary_key;not null;" json:"document_id"`
 	DocumentName string `gorm:"size:255;not null;" json:"document_name"`
-	DocumentURL  string `gorm:"size:255;not null;" json:"document_url"`
-	Status       int    `gorm:"default:1;not null" json:"status"` // 1 正常、2 回收站
-	ProjID       uint64 `gorm:"not null;" json:"proj_id"`         // 非0表示项目文档并表示所属项目
-	Count        uint64 `gorm:"default:0;not null" json:"count"`  // 仅为文档文件使用
-	Content      string `gorm:"size:max;" json:"content"`         // 文档内容
-	DirID        uint64 `gorm:"not null;" json:"dir_id"`          // 文档所属目录
-	IsDir        bool   `gorm:"not null;" json:"is_dir"`          // 是否为目录 0为文件 1为目录
+	DocumentURL  string `gorm:"size:255;not null;" json:"document_url"` // unuse
+	Status       int    `gorm:"default:1;not null" json:"status"`       // 1 正常、2 回收站
+	ProjID       uint64 `gorm:"not null;" json:"proj_id"`               // 非0表示项目文档并表示所属项目
+	Count        uint64 `gorm:"default:0;not null" json:"count"`        // 仅为文档文件使用
+	Content      string `gorm:"size:max;" json:"content"`               // 文档内容
+	DirID        uint64 `gorm:"not null;" json:"dir_id"`                // 文档所属目录
+	IsDir        int    `gorm:"not null;" json:"is_dir"`                // 是否为目录 0为文件 1为目录
+	IsFixed      int    `gorm:"not null;" json:"is_fixed"`              // 是否为固定文件 0为非固定 1为固定
 }
 
 /* * * * * * * * * * * */
@@ -38,7 +39,7 @@ type PPageID struct {
 
 type File struct {
 	FileID         uint64 `json:"file_id"`
-	FileName       string `json:"file_name"`
-	IsDir          bool   `json:"is_dir"`
+	Filename       string `json:"file_name"`
+	IsDir          int    `json:"is_dir"`
 	ContainedFiles []File `json:"contained_files"`
 }

@@ -15,10 +15,14 @@ definitions:
       document_name:
         type: string
       document_url:
+        description: unuse
         type: string
       is_dir:
         description: 是否为目录 0为文件 1为目录
-        type: boolean
+        type: integer
+      is_fixed:
+        description: 是否为固定文件 0为非固定 1为固定
+        type: integer
       proj_id:
         description: 非0表示项目文档并表示所属项目
         type: integer
@@ -26,8 +30,24 @@ definitions:
         description: 1 正常、2 回收站
         type: integer
     type: object
+  database.File:
+    properties:
+      contained_files:
+        items:
+          $ref: '#/definitions/database.File'
+        type: array
+      file_id:
+        type: integer
+      file_name:
+        type: string
+      is_dir:
+        type: integer
+    type: object
   database.Group:
     properties:
+      document_id:
+        description: 团队目录
+        type: integer
       group_id:
         type: integer
       group_info:
@@ -98,6 +118,9 @@ definitions:
     properties:
       created_at:
         type: string
+      document_id:
+        description: 项目目录
+        type: integer
       edit_times:
         type: integer
       group_id:
@@ -183,6 +206,27 @@ definitions:
         type: integer
     required:
     - proj_id
+    type: object
+  response.CreateDocFileA:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.CreateDocFileQ:
+    properties:
+      dir_id:
+        type: integer
+      filename:
+        type: string
+      is_dir:
+        type: integer
+    required:
+    - dir_id
+    - filename
     type: object
   response.CreateDocumentA:
     properties:
@@ -365,6 +409,26 @@ definitions:
         type: integer
     required:
     - document_id
+    type: object
+  response.GetDocFilesA:
+    properties:
+      code:
+        type: integer
+      files:
+        items:
+          $ref: '#/definitions/database.File'
+        type: array
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.GetDocFilesQ:
+    properties:
+      group_id:
+        type: integer
+    required:
+    - group_id
     type: object
   response.GetFilesByNameA:
     properties:
@@ -1086,10 +1150,6 @@ definitions:
         type: string
       document_id:
         type: integer
-      document_name:
-        type: string
-      proj_id:
-        type: integer
     type: object
 info:
   contact: {}
@@ -1283,6 +1343,27 @@ paths:
       summary: Uml 移出回收站
       tags:
       - 回收站
+  /doc/create_doc_file:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 父目录ID，文档名称，创建的是目录还是文件夹
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.CreateDocFileQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.CreateDocFileA'
+      summary: 创建文档文件
+      tags:
+      - 共享文档
   /doc/create_document:
     post:
       consumes:
@@ -1323,6 +1404,27 @@ paths:
           schema:
             $ref: '#/definitions/response.EnterDocumentA'
       summary: 进入文档
+      tags:
+      - 共享文档
+  /doc/get_doc_files:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 团队ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.GetDocFilesQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.GetDocFilesA'
+      summary: 获取团队文件
       tags:
       - 共享文档
   /doc/get_proj_documents:

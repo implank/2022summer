@@ -96,6 +96,8 @@ func SetupRouter(r *gin.Engine) {
 		docGroup.POST("/update_document", v1.UpdateDocument) // 修改文档名称
 		docGroup.POST("/upload_document", v1.UploadDocument)
 		docGroup.POST("/move_document_to_bin", v1.MoveDocumentToBin) // 文档移入回收站
+		docGroup.POST("/get_doc_files", v1.GetDocFiles)              // 获取文档的文件
+		docGroup.POST("/create_doc_file", v1.CreateDocFile)          // 获取文档的某个文件
 	}
 
 	binGroup := r.Group("/api/v1/bin", middleware.AuthRequired())
