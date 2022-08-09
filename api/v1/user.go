@@ -306,6 +306,12 @@ func AcceptInvitation(c *gin.Context) {
 	}
 	message.Type = 3
 	_ = service.UpdateMessage(&message)
+	identity := database.Identity{
+		UserID:  poster.UserID,
+		GroupID: message.GroupID,
+		Status:  1,
+	}
+	_ = service.CreateIdentity(&identity)
 	members := service.GetGroupMembers(message.GroupID)
 	for _, member := range members {
 		message = database.Message{
@@ -316,12 +322,6 @@ func AcceptInvitation(c *gin.Context) {
 		}
 		_ = service.CreateMessage(&message)
 	}
-	identity := database.Identity{
-		UserID:  poster.UserID,
-		GroupID: message.GroupID,
-		Status:  1,
-	}
-	_ = service.CreateIdentity(&identity)
 	c.JSON(http.StatusOK, response.AcceptInvitationA{
 		Message: "接受邀请成功",
 		Success: true,
