@@ -30,7 +30,7 @@ func (g GroupMemberList) Len() int {
 }
 
 func (g GroupMemberList) Less(i, j int) bool {
-	return g[i].Status < g[j].Status
+	return g[i].Status > g[j].Status
 }
 func (g GroupMemberList) Swap(i, j int) {
 	g[i], g[j] = g[j], g[i]
