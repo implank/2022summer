@@ -20,5 +20,18 @@ type GroupMember struct {
 	Username string `json:"username"`
 	RealName string `json:"real_name"`
 	Email    string `json:"email"`
-	Status   string `json:"status"` // 1 普通成员、2 管理员、3 团队创建者
+	Status   int    `json:"status"` // 1 普通成员、2 管理员、3 团队创建者
+}
+
+type GroupMemberList []GroupMember
+
+func (g GroupMemberList) Len() int {
+	return len(g)
+}
+
+func (g GroupMemberList) Less(i, j int) bool {
+	return g[i].Status < g[j].Status
+}
+func (g GroupMemberList) Swap(i, j int) {
+	g[i], g[j] = g[j], g[i]
 }

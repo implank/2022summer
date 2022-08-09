@@ -7,6 +7,7 @@ import (
 	"2022summer/utils"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"sort"
 )
 
 // CreateGroup
@@ -124,12 +125,15 @@ func GetMembers(c *gin.Context) {
 		return
 	}
 	members := service.GetGroupMembers(data.GroupID)
+	var groupMembersList database.GroupMemberList
+	groupMembersList = members
+	sort.Sort(groupMembersList)
 	c.JSON(http.StatusOK, response.GetMembersA{
 		CommonA: response.CommonA{
 			Message: "获取成功",
 			Success: true,
 		},
-		Members: members,
+		Members: groupMembersList,
 	})
 }
 
@@ -204,21 +208,21 @@ func InviteMember(c *gin.Context) {
 func RemoveMember(c *gin.Context) {
 	data := utils.BindJsonAndValid(c, &response.RemoveMemberQ{}).(*response.RemoveMemberQ)
 	poster, _ := c.Get("user")
-	identity, notFound := service.QueryIdentity(poster.(database.User).UserID, data.GroupID)
-	if notFound || identity.Status == 1 {
+	identity1, notFound := service.QueryIdentity(poster.(database.User).UserID, data.GroupID)
+	if notFound || identity1.Status == 1 {
 		c.JSON(http.StatusOK, response.RemoveMemberA{CommonA: response.NOAUTH})
 		return
 	}
-	identity, notFound = service.QueryIdentity(data.UserID, data.GroupID)
+	identity2, notFound := service.QueryIdentity(data.UserID, data.GroupID)
 	if notFound {
 		c.JSON(http.StatusOK, response.RemoveMemberA{CommonA: response.USERNOTINGROUP})
 		return
 	}
-	if identity.Status >= 2 {
+	if identity1.Status == 2 && identity2.Status >= 2 {
 		c.JSON(http.StatusOK, response.RemoveMemberA{CommonA: response.NOAUTH})
 		return
 	}
-	if err := service.DeleteIdentity(&identity); err != nil {
+	if err := service.DeleteIdentity(&identity1); err != nil {
 		c.JSON(http.StatusOK, response.RemoveMemberA{CommonA: response.DBERROR})
 		return
 	}
