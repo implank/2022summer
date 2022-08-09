@@ -2173,13 +2173,13 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "dir_id",
-                "filename"
+                "file_name"
             ],
             "properties": {
                 "dir_id": {
                     "type": "integer"
                 },
-                "filename": {
+                "file_name": {
                     "type": "string"
                 },
                 "is_dir": {
@@ -2476,11 +2476,8 @@ const docTemplate = `{
                 "code": {
                     "type": "integer"
                 },
-                "files": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/database.File"
-                    }
+                "file": {
+                    "$ref": "#/definitions/database.File"
                 },
                 "message": {
                     "type": "string"

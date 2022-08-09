@@ -75,7 +75,7 @@ type MoveDocumentToBinA struct {
 //---
 type CreateDocFileQ struct {
 	DirID    uint64 `json:"dir_id" binding:"required"`
-	Filename string `json:"filename" binding:"required"`
+	FileName string `json:"file_name" binding:"required"`
 	IsDir    int    `json:"is_dir"`
 }
 type CreateDocFileA struct {
@@ -87,8 +87,8 @@ type GetDocFilesQ struct {
 	GroupID uint64 `json:"group_id" binding:"required"`
 }
 type GetDocFilesA struct {
-	Message string          `json:"message"`
-	Success bool            `json:"success"`
-	Code    int             `json:"code"`
-	Files   []database.File `json:"files"`
+	Message string        `json:"message"`
+	Success bool          `json:"success"`
+	Code    int           `json:"code"`
+	File    database.File `json:"file"`
 }

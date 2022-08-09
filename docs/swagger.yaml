@@ -223,13 +223,13 @@ definitions:
     properties:
       dir_id:
         type: integer
-      filename:
+      file_name:
         type: string
       is_dir:
         type: integer
     required:
     - dir_id
-    - filename
+    - file_name
     type: object
   response.CreateDocumentA:
     properties:
@@ -417,10 +417,8 @@ definitions:
     properties:
       code:
         type: integer
-      files:
-        items:
-          $ref: '#/definitions/database.File'
-        type: array
+      file:
+        $ref: '#/definitions/database.File'
       message:
         type: string
       success:

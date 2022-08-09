@@ -40,7 +40,7 @@ type PPageID struct {
 
 type File struct {
 	FileID         uint64 `json:"file_id"`
-	Filename       string `json:"file_name"`
+	FileName       string `json:"file_name"`
 	IsDir          int    `json:"is_dir"`
 	ContainedFiles []File `json:"contained_files"`
 }

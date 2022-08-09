@@ -39,14 +39,26 @@ func CreateProj(c *gin.Context) {
 		c.JSON(http.StatusOK, response.CreateProjA{Message: "创建项目失败", Success: false})
 		return
 	}
-
-	//doc := database.Document{
-	//	DocumentName: data.ProjName,
-	//	Status:       1,
-	//	ProjID:       proj.ProjID,
-	//	DirID:        1,
-	//	IsDir:        1,
-	//}
+	group, _ := service.QueryGroupByGroupID(data.GroupID)
+	Dirs := service.GetDocumentsInDir(group.DocumentID)
+	for _, dir := range Dirs {
+		if dir.IsFixed == 1 {
+			doc := database.Document{
+				DocumentName: data.ProjName,
+				Status:       1,
+				ProjID:       proj.ProjID,
+				DirID:        dir.DocumentID,
+				IsDir:        1,
+			}
+			if err := service.CreateDocument(&doc); err != nil {
+				c.JSON(http.StatusOK, response.CreateProjA{Message: "创建项目失败", Success: false})
+				return
+			}
+			proj.DocumentID = doc.DocumentID
+			_ = service.UpdateProj(&proj)
+			break
+		}
+	}
 	c.JSON(http.StatusOK, response.CreateProjA{Message: "创建项目成功", Success: true})
 }
 

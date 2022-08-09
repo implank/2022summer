@@ -24,11 +24,6 @@ func CreateGroup(c *gin.Context) {
 		return
 	}
 	poster := c.MustGet("user").(database.User)
-	group := database.Group{
-		GroupName: data.GroupName,
-		GroupInfo: data.GroupInfo,
-		UserID:    poster.UserID,
-	}
 	doc := database.Document{
 		DocumentName: "团队:" + data.GroupName + " 的文档目录",
 		Status:       1,
@@ -36,10 +31,24 @@ func CreateGroup(c *gin.Context) {
 		IsFixed:      0,
 	}
 	_ = service.CreateDocument(&doc)
+	group := database.Group{
+		GroupName:  data.GroupName,
+		GroupInfo:  data.GroupInfo,
+		UserID:     poster.UserID,
+		DocumentID: doc.DocumentID,
+	}
 	if err := service.CreateGroup(&group); err != nil {
 		c.JSON(http.StatusOK, response.DBERROR)
 		return
 	}
+	doc = database.Document{
+		DocumentName: "项目文档区",
+		Status:       1,
+		DirID:        doc.DocumentID,
+		IsDir:        1,
+		IsFixed:      1,
+	}
+	_ = service.CreateDocument(&doc)
 	c.JSON(http.StatusOK, response.CreateGroupA{
 		CommonA: response.CommonA{
 			Message: "创建成功",

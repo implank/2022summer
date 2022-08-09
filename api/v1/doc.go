@@ -302,7 +302,7 @@ func CreateDocFile(c *gin.Context) {
 	}
 	files := service.GetDocumentsInDir(Dir.DocumentID)
 	for _, file := range files {
-		if file.DocumentName == data.Filename {
+		if file.DocumentName == data.FileName {
 			c.JSON(http.StatusOK, response.CreateDocFileA{
 				Message: "文件已存在",
 				Success: false,
@@ -311,10 +311,10 @@ func CreateDocFile(c *gin.Context) {
 		}
 	}
 	doc := database.Document{
-		DocumentName: data.Filename,
+		DocumentName: data.FileName,
 		Status:       1,
 		ProjID:       Dir.ProjID,
-		DirID:        Dir.DirID,
+		DirID:        data.DirID,
 		IsDir:        data.IsDir,
 	}
 	err := service.CreateDocument(&doc)
@@ -350,11 +350,17 @@ func GetDocFiles(c *gin.Context) {
 		})
 		return
 	}
+	dir, _ := service.QueryDocumentByDocumentID(group.DocumentID)
 	files := Tree(group.DocumentID)
 	c.JSON(http.StatusOK, response.GetDocFilesA{
 		Message: "获取文件列表成功",
 		Success: true,
-		Files:   files,
+		File: database.File{
+			FileID:         dir.DocumentID,
+			FileName:       dir.DocumentName,
+			IsDir:          dir.IsDir,
+			ContainedFiles: files,
+		},
 	})
 }
 
@@ -364,15 +370,16 @@ func Tree(DocumentID uint64) (files []database.File) {
 		if document.IsDir == 1 {
 			files = append(files, database.File{
 				FileID:         document.DocumentID,
-				Filename:       document.DocumentName,
+				FileName:       document.DocumentName,
 				IsDir:          1,
 				ContainedFiles: Tree(document.DocumentID),
 			})
 		} else {
 			files = append(files, database.File{
-				FileID:   document.DocumentID,
-				Filename: document.DocumentName,
-				IsDir:    0,
+				FileID:         document.DocumentID,
+				FileName:       document.DocumentName,
+				IsDir:          0,
+				ContainedFiles: []database.File{},
 			})
 		}
 	}
