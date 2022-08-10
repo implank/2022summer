@@ -24,3 +24,8 @@ type UploadImageA struct {
 	Success bool   `json:"success"`
 	Url     string `json:"url"`
 }
+type ConvertHtmlToPdfA struct {
+	Message string `json:"message"`
+	Success bool   `json:"success"`
+	Url     string `json:"url"`
+}

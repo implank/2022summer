@@ -360,7 +360,7 @@ func ReadAllMessages(c *gin.Context) {
 }
 
 // UploadAvatar
-// @Summary 上传头像
+// @Summary 上传头像 前缀为/media/avatars/xxx
 // @Tags 用户模块
 // @Param 			 avatar  formData  file true "avatar"
 // @Produce json

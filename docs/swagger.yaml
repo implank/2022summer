@@ -222,6 +222,15 @@ definitions:
       ppage_id:
         type: integer
     type: object
+  response.ConvertHtmlToPdfA:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+      url:
+        type: string
+    type: object
   response.CopyProjA:
     properties:
       message:
@@ -1465,6 +1474,42 @@ paths:
       summary: Uml 移出回收站
       tags:
       - 回收站
+  /convert_html_to_docx:
+    post:
+      parameters:
+      - description: htmlfile
+        in: formData
+        name: htmlfile
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ConvertHtmlToPdfA'
+      summary: 上传html文件，转换为docx文件 url前缀为 api/v1/temp/xxxx.docx
+      tags:
+      - 项目管理的第二页
+  /convert_html_to_pdf:
+    post:
+      parameters:
+      - description: htmlfile
+        in: formData
+        name: htmlfile
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ConvertHtmlToPdfA'
+      summary: 上传html文件，转换为pdf文件 url前缀为 api/v1/temp/xxxx.pdf
+      tags:
+      - 项目管理的第二页
   /doc/create_doc_file:
     post:
       consumes:
@@ -2366,7 +2411,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.UploadImageA'
-      summary: 上传图片
+      summary: 上传图片 前缀为/media/images/xxxx
       tags:
       - 项目管理的第二页
   /user/accept_invitation:
@@ -2528,7 +2573,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.UploadAvatarA'
-      summary: 上传头像
+      summary: 上传头像 前缀为/media/avatars/xxx
       tags:
       - 用户模块
 swagger: "2.0"

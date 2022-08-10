@@ -313,6 +313,62 @@ const docTemplate = `{
                 }
             }
         },
+        "/convert_html_to_docx": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "项目管理的第二页"
+                ],
+                "summary": "上传html文件，转换为docx文件 url前缀为 api/v1/temp/xxxx.docx",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "htmlfile",
+                        "name": "htmlfile",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.ConvertHtmlToPdfA"
+                        }
+                    }
+                }
+            }
+        },
+        "/convert_html_to_pdf": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "项目管理的第二页"
+                ],
+                "summary": "上传html文件，转换为pdf文件 url前缀为 api/v1/temp/xxxx.pdf",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "htmlfile",
+                        "name": "htmlfile",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.ConvertHtmlToPdfA"
+                        }
+                    }
+                }
+            }
+        },
         "/doc/create_doc_file": {
             "post": {
                 "consumes": [
@@ -1719,7 +1775,7 @@ const docTemplate = `{
                 "tags": [
                     "项目管理的第二页"
                 ],
-                "summary": "上传图片",
+                "summary": "上传图片 前缀为/media/images/xxxx",
                 "parameters": [
                     {
                         "type": "file",
@@ -1975,7 +2031,7 @@ const docTemplate = `{
                 "tags": [
                     "用户模块"
                 ],
-                "summary": "上传头像",
+                "summary": "上传头像 前缀为/media/avatars/xxx",
                 "parameters": [
                     {
                         "type": "file",
@@ -2310,6 +2366,39 @@ const docTemplate = `{
                 }
             }
         },
+        "response.CloseSharedPPageA": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.CloseSharedPPageQ": {
+            "type": "object",
+            "properties": {
+                "ppage_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "response.ConvertHtmlToPdfA": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
         "response.CopyProjA": {
             "type": "object",
             "properties": {
@@ -2534,25 +2623,6 @@ const docTemplate = `{
                 }
             }
         },
-        "response.CloseSharedPPageA": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "response.CloseSharedPPageQ": {
-            "type": "object",
-            "properties": {
-                "ppage_id": {
-                    "type": "integer"
-                }
-            }
-        },
         "response.DeleteDocumentA": {
             "type": "object",
             "properties": {
@@ -2668,6 +2738,28 @@ const docTemplate = `{
             ],
             "properties": {
                 "document_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "response.GenSharedPPageTokenA": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                },
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.GenSharedPPageTokenQ": {
+            "type": "object",
+            "properties": {
+                "ppage_id": {
                     "type": "integer"
                 }
             }
@@ -3473,28 +3565,6 @@ const docTemplate = `{
             ],
             "properties": {
                 "document_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "response.GenSharedPPageTokenA": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string"
-                },
-                "success": {
-                    "type": "boolean"
-                },
-                "token": {
-                    "type": "string"
-                }
-            }
-        },
-        "response.GenSharedPPageTokenQ": {
-            "type": "object",
-            "properties": {
-                "ppage_id": {
                     "type": "integer"
                 }
             }

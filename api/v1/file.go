@@ -7,6 +7,7 @@ import (
 	"2022summer/utils"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"os/exec"
 	"path"
 	"strings"
 	"time"
@@ -39,7 +40,7 @@ func GetFilesByName(c *gin.Context) {
 }
 
 // UploadImage
-// @Summary 上传图片
+// @Summary 上传图片 前缀为/media/images/xxxx
 // @Tags 项目管理的第二页
 // @Param 			 avatar  formData  file true "avatar"
 // @Produce json
@@ -63,5 +64,59 @@ func UploadImage(c *gin.Context) {
 		Message: "上传成功",
 		Success: true,
 		Url:     url,
+	})
+}
+
+// ConvertHtmlToPdf
+// @Summary 上传html文件，转换为pdf文件 url前缀为 api/v1/temp/xxxx.pdf
+// @Tags 项目管理的第二页
+// @Param 			 htmlfile  formData  file true "htmlfile"
+// @Produce json
+// @Success 200 {object} response.ConvertHtmlToPdfA
+// @Router /convert_html_to_pdf [post]
+func ConvertHtmlToPdf(c *gin.Context) {
+	file, _ := c.FormFile("htmlfile")
+	saveDir := global.VP.Get("temp_dir").(string)
+	savePath := path.Join(saveDir, file.Filename)
+	_ = c.SaveUploadedFile(file, savePath)
+	raw := time.Now().String() + file.Filename
+	md5 := utils.GetMd5(raw)
+	outFileName := md5 + ".pdf"
+	err := exec.Command("pandoc", savePath, "-f", "html", "-t", "pdf", "-s", "-o", path.Join(saveDir, outFileName)).Run()
+	if err != nil {
+		panic(err)
+	}
+	_ = exec.Command("rm", savePath).Run()
+	c.JSON(http.StatusOK, response.ConvertHtmlToPdfA{
+		Message: "上传成功",
+		Success: true,
+		Url:     outFileName,
+	})
+}
+
+// ConvertHtmlToDocx
+// @Summary 上传html文件，转换为docx文件 url前缀为 api/v1/temp/xxxx.docx
+// @Tags 项目管理的第二页
+// @Param 			 htmlfile  formData  file true "htmlfile"
+// @Produce json
+// @Success 200 {object} response.ConvertHtmlToPdfA
+// @Router /convert_html_to_docx [post]
+func ConvertHtmlToDocx(c *gin.Context) {
+	file, _ := c.FormFile("htmlfile")
+	saveDir := global.VP.Get("temp_dir").(string)
+	savePath := path.Join(saveDir, file.Filename)
+	_ = c.SaveUploadedFile(file, savePath)
+	raw := time.Now().String() + file.Filename
+	md5 := utils.GetMd5(raw)
+	outFileName := md5 + ".docx"
+	err := exec.Command("pandoc", savePath, "-f", "html", "-t", "docx", "-s", "-o", path.Join(saveDir, outFileName)).Run()
+	if err != nil {
+		panic(err)
+	}
+	_ = exec.Command("rm", savePath).Run()
+	c.JSON(http.StatusOK, response.ConvertHtmlToPdfA{
+		Message: "上传成功",
+		Success: true,
+		Url:     outFileName,
 	})
 }

@@ -22,6 +22,10 @@ func InitMedia() {
 	if os.IsNotExist(err) {
 		_ = os.MkdirAll("./media/documents", 0755)
 	}
+	_, err = os.Stat(global.VP.Get("temp_dir").(string))
+	if os.IsNotExist(err) {
+		_ = os.MkdirAll(global.VP.Get("temp_dir").(string), 0755)
+	}
 	_, err = os.Stat(global.VP.Get("avatar_dir").(string))
 	if os.IsNotExist(err) {
 		_ = os.MkdirAll(global.VP.Get("avatar_dir").(string), 0755)

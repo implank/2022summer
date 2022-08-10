@@ -73,6 +73,8 @@ func SetupRouter(r *gin.Engine) {
 	}
 
 	baseGroup.POST("/upload_image", v1.UploadImage)
+	baseGroup.POST("/convert_html_to_pdf", v1.ConvertHtmlToPdf)
+	baseGroup.POST("/convert_html_to_docx", v1.ConvertHtmlToDocx)
 
 	pPageGroup := r.Group("/api/v1/ppage", middleware.AuthRequired())
 	{
