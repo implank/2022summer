@@ -27,6 +27,7 @@ func GetFilesByNameBur(Name string, status int, groupID uint64) (ppages []databa
 		"AND projs.group_id = ? "+
 		"AND document_name like '%"+Name+"%' "+
 		"AND documents.status = ? "+
+		"AND documents.is_dir = 0 "+
 		"ORDER BY documents.document_id DESC;", groupID, status).Find(&documents).RecordNotFound()
 	return ppages, umls, documents
 }
