@@ -208,14 +208,21 @@ func ModifyInfo(c *gin.Context) {
 	if data.Sex == "男" || data.Sex == "女" {
 		poster.Sex = data.Sex
 	}
-	if err := service.UpdateUser(&poster); err != nil {
+	err := service.UpdateUser(&poster)
+	if err != nil {
 		c.JSON(http.StatusOK, response.ModifyInfoA{
 			CommonA: response.CommonA{
-				Message: "修改成功",
-				Success: true,
+				Message: "修改失败",
+				Success: false,
 			},
 		})
 	}
+	c.JSON(http.StatusOK, response.ModifyInfoA{
+		CommonA: response.CommonA{
+			Message: "修改成功",
+			Success: true,
+		},
+	})
 }
 
 // GetMessages
