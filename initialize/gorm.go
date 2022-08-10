@@ -46,6 +46,7 @@ func InitMySQL() {
 		//project
 		&database.Proj{},
 		&database.PPage{},
+		&database.SharedPPage{},
 		&database.Uml{},
 		&database.Document{},
 	)
