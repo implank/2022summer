@@ -5,8 +5,10 @@ import (
 	"2022summer/model/response"
 	"2022summer/service"
 	"2022summer/utils"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"time"
 )
 
 // GetProjPPages
@@ -155,4 +157,146 @@ func MovePPageToBin(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, response.MovePPageToBinA{Message: "移入回收站成功", Success: true})
+}
+
+// GenSharedPPageToken
+// @Summary 获取设计原型的共享页面的token
+// @Tags 设计原型
+// @Accept json
+// @Produce json
+// @Param data body response.GenSharedPPageTokenQ true "设计原型的页面ID"
+// @Success 200 {object} response.GenSharedPPageTokenA
+// @Router /ppage/gen_shared_ppage_token [post]
+func GenSharedPPageToken(c *gin.Context) {
+	var data response.GenSharedPPageTokenQ
+	if err := utils.ShouldBindAndValid(c, &data); err != nil {
+		c.JSON(http.StatusOK, response.GenSharedPPageTokenA{
+			Message: "输入数据不符合要求",
+			Success: false,
+		})
+		return
+	}
+	pPage, notFound := service.QueryPPageByPPageID(data.PPageID)
+	if notFound {
+		c.JSON(http.StatusOK, response.GenSharedPPageTokenA{
+			Message: "设计原型不存在",
+			Success: false,
+		})
+		return
+	}
+	if pPage.Status == 2 {
+		c.JSON(http.StatusOK, response.GenSharedPPageTokenA{
+			Message: "设计原型已经移入回收站",
+			Success: false,
+		})
+		return
+	}
+	raw := fmt.Sprintf("%d", data.PPageID) + time.Now().String()
+	md5 := utils.GetMd5(raw)
+	sharedPPage := database.SharedPPage{
+		PPageID:   data.PPageID,
+		ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),
+		Token:     md5,
+	}
+	err := service.CreateSharedPPage(&sharedPPage)
+	if err != nil {
+		c.JSON(http.StatusOK, response.GenSharedPPageTokenA{
+			Message: "生成token失败",
+			Success: false,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, response.GenSharedPPageTokenA{
+		Message: "生成token成功",
+		Success: true,
+		Token:   md5,
+	})
+}
+
+// GetSharedPPage
+// @Summary 获取设计原型的共享页面
+// @Tags 设计原型
+// @Accept json
+// @Produce json
+// @Param data body response.GetSharedPPageQ true "设计原型的页面ID"
+// @Success 200 {object} response.GetSharedPPageA
+// @Router /get_shared_ppage [post]
+func GetSharedPPage(c *gin.Context) {
+	var data response.GetSharedPPageQ
+	if err := utils.ShouldBindAndValid(c, &data); err != nil {
+		c.JSON(http.StatusOK, response.GetSharedPPageA{
+			Message: "输入数据不符合要求",
+			Success: false,
+		})
+		return
+	}
+	sharedPPage, notFound := service.QuerySharedPPageByToken(data.Token)
+	if notFound {
+		c.JSON(http.StatusOK, response.GetSharedPPageA{
+			Message: "共享页面不存在",
+			Success: false,
+		})
+		return
+	}
+	if sharedPPage.ExpiresAt <= time.Now().Unix() {
+		c.JSON(http.StatusOK, response.GetSharedPPageA{
+			Message: "共享页面已过期",
+			Success: false,
+		})
+		_ = service.DeleteSharedPPage(&sharedPPage)
+		return
+	}
+	pPage, notFound := service.QueryPPageByPPageID(sharedPPage.PPageID)
+	if notFound {
+		c.JSON(http.StatusOK, response.GetSharedPPageA{
+			Message: "设计原型不存在",
+			Success: false,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, response.GetSharedPPageA{
+		Message: "获取共享页面成功",
+		Success: true,
+		PPage:   pPage,
+	})
+}
+
+// CloseSharedPPage
+// @Summary 关闭设计原型的共享页面
+// @Tags 设计原型
+// @Accept json
+// @Produce json
+// @Param data body response.CloseSharedPPageQ true "设计原型的页面ID"
+// @Success 200 {object} response.CloseSharedPPageA
+// @Router /ppage/close_shared_ppage [post]
+func CloseSharedPPage(c *gin.Context) {
+	var data response.CloseSharedPPageQ
+	if err := utils.ShouldBindAndValid(c, &data); err != nil {
+		c.JSON(http.StatusOK, response.CloseSharedPPageA{
+			Message: "输入数据不符合要求",
+			Success: false,
+		})
+		return
+	}
+	_, notFound := service.QueryPPageByPPageID(data.PPageID)
+	if notFound {
+		c.JSON(http.StatusOK, response.CloseSharedPPageA{
+			Message: "设计原型不存在",
+			Success: false,
+		})
+		return
+	}
+	sharedPPage, notFound := service.QuerySharedPPageByPPageID(data.PPageID)
+	if notFound {
+		c.JSON(http.StatusOK, response.CloseSharedPPageA{
+			Message: "共享页面不存在",
+			Success: false,
+		})
+		return
+	}
+	_ = service.DeleteSharedPPage(&sharedPPage)
+	c.JSON(http.StatusOK, response.CloseSharedPPageA{
+		Message: "关闭共享页面成功",
+		Success: true,
+	})
 }

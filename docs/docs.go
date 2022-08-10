@@ -643,6 +643,39 @@ const docTemplate = `{
                 }
             }
         },
+        "/get_shared_ppage": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "设计原型"
+                ],
+                "summary": "获取设计原型的共享页面",
+                "parameters": [
+                    {
+                        "description": "设计原型的页面ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.GetSharedPPageQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.GetSharedPPageA"
+                        }
+                    }
+                }
+            }
+        },
         "/group/create_group": {
             "post": {
                 "consumes": [
@@ -920,6 +953,39 @@ const docTemplate = `{
                 }
             }
         },
+        "/ppage/close_shared_ppage": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "设计原型"
+                ],
+                "summary": "关闭设计原型的共享页面",
+                "parameters": [
+                    {
+                        "description": "设计原型的页面ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.CloseSharedPPageQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.CloseSharedPPageA"
+                        }
+                    }
+                }
+            }
+        },
         "/ppage/create_ppage": {
             "post": {
                 "consumes": [
@@ -948,6 +1014,39 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/response.CreatePPageA"
+                        }
+                    }
+                }
+            }
+        },
+        "/ppage/gen_shared_ppage_token": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "设计原型"
+                ],
+                "summary": "获取设计原型的共享页面的token",
+                "parameters": [
+                    {
+                        "description": "设计原型的页面ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.GenSharedPPageTokenQ"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.GenSharedPPageTokenA"
                         }
                     }
                 }
@@ -2249,6 +2348,9 @@ const docTemplate = `{
         "response.CreateDocumentA": {
             "type": "object",
             "properties": {
+                "document_id": {
+                    "type": "integer"
+                },
                 "message": {
                     "type": "string"
                 },
@@ -2406,6 +2508,25 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "message_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "response.CloseSharedPPageA": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.CloseSharedPPageQ": {
+            "type": "object",
+            "properties": {
+                "ppage_id": {
                     "type": "integer"
                 }
             }
@@ -3076,6 +3197,28 @@ const docTemplate = `{
                 }
             }
         },
+        "response.GetSharedPPageA": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "ppage": {
+                    "$ref": "#/definitions/database.PPage"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.GetSharedPPageQ": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
         "response.GetUmlByIDA": {
             "type": "object",
             "properties": {
@@ -3296,6 +3439,28 @@ const docTemplate = `{
             ],
             "properties": {
                 "document_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "response.GenSharedPPageTokenA": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                },
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.GenSharedPPageTokenQ": {
+            "type": "object",
+            "properties": {
+                "ppage_id": {
                     "type": "integer"
                 }
             }
@@ -3630,8 +3795,7 @@ const docTemplate = `{
         "response.UpdateProjQ": {
             "type": "object",
             "required": [
-                "proj_id",
-                "proj_name"
+                "proj_id"
             ],
             "properties": {
                 "proj_id": {

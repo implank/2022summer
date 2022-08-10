@@ -39,8 +39,9 @@ type CreateDocumentQ struct {
 }
 
 type CreateDocumentA struct {
-	Message string `json:"message"`
-	Success bool   `json:"success"`
+	Message    string `json:"message"`
+	Success    bool   `json:"success"`
+	DocumentID uint64 `json:"document_id"`
 }
 
 type UploadDocumentQ struct {

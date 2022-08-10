@@ -133,17 +133,22 @@ func CreateDocument(c *gin.Context) {
 		return
 	}
 	proj, _ := service.QueryProjByProjID(data.ProjID)
-	err := service.CreateDocument(&database.Document{
+	document := database.Document{
 		DocumentName: data.DocumentName,
 		Status:       1,
 		ProjID:       data.ProjID,
 		DirID:        proj.DocumentID,
-	})
+	}
+	err := service.CreateDocument(&document)
 	if err != nil {
 		c.JSON(http.StatusOK, response.CreateDocumentA{Message: "创建文档失败", Success: false})
 		return
 	}
-	c.JSON(http.StatusOK, response.CreateDocumentA{Message: "创建文档成功", Success: true})
+	c.JSON(http.StatusOK, response.CreateDocumentA{
+		Message:    "创建文档成功",
+		Success:    true,
+		DocumentID: document.DocumentID,
+	})
 }
 
 // UploadDocument
