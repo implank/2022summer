@@ -18,3 +18,8 @@ type GetFilesByNameA struct {
 	CountDocuments uint64              `json:"count_documents"`
 	Documents      []database.Document `json:"documents"`
 }
+type UploadImageA struct {
+	Message string `json:"message"`
+	Success bool   `json:"success"`
+	Url     string `json:"url"`
+}

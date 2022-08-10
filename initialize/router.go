@@ -27,6 +27,7 @@ func SetupRouter(r *gin.Engine) {
 	{
 		baseGroup.POST("/register", v1.Register)
 		baseGroup.POST("/login", v1.Login)
+		baseGroup.Static("/media", "./media")
 	}
 
 	userGroup := baseGroup.Group("/user", middleware.AuthRequired())
@@ -38,6 +39,7 @@ func SetupRouter(r *gin.Engine) {
 		userGroup.POST("/decline_invitation", v1.DeclineInvitation)
 		userGroup.POST("/accept_invitation", v1.AcceptInvitation)
 		userGroup.POST("/read_all_messages", v1.ReadAllMessages)
+		userGroup.POST("/upload_avatar", v1.UploadAvatar)
 	}
 
 	groupGroup := baseGroup.Group("/group", middleware.AuthRequired())
@@ -69,6 +71,8 @@ func SetupRouter(r *gin.Engine) {
 	{
 		fileGroup.POST("/get_files_by_name", v1.GetFilesByName) // 搜索框，只搜不在回收站的
 	}
+
+	r.Group("/api/v1").POST("/upload_image", v1.UploadImage)
 
 	pPageGroup := r.Group("/api/v1/ppage", middleware.AuthRequired())
 	{

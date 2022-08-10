@@ -1,11 +1,15 @@
 package v1
 
 import (
+	"2022summer/global"
 	"2022summer/model/response"
 	"2022summer/service"
 	"2022summer/utils"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"path"
+	"strings"
+	"time"
 )
 
 // GetFilesByName
@@ -32,4 +36,32 @@ func GetFilesByName(c *gin.Context) {
 		Umls:           umls,
 		CountDocuments: uint64(len(documents)),
 		Documents:      documents})
+}
+
+// UploadImage
+// @Summary 上传图片
+// @Tags 项目管理的第二页
+// @Param 			 avatar  formData  file true "avatar"
+// @Produce json
+// @Success 200 {object} response.UploadImageA
+// @Router /upload_image [post]
+func UploadImage(c *gin.Context) {
+	file, err := c.FormFile("avatar")
+	if err != nil {
+		c.JSON(http.StatusOK, response.PARAMERROR)
+		return
+	}
+	raw := time.Now().String() + file.Filename
+	md5 := utils.GetMd5(raw)
+	suffix := strings.Split(file.Filename, ".")[1]
+	saveDir := global.VP.Get("image_dir").(string)
+	saveName := md5 + "." + suffix
+	savePath := path.Join(saveDir, saveName)
+	_ = c.SaveUploadedFile(file, savePath)
+	url := saveName
+	c.JSON(http.StatusOK, response.UploadImageA{
+		Message: "上传成功",
+		Success: true,
+		Url:     url,
+	})
 }

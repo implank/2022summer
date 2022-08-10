@@ -1,6 +1,9 @@
 package initialize
 
-import "os"
+import (
+	"2022summer/global"
+	"os"
+)
 
 func InitMedia() {
 	_, err := os.Stat("./media")
@@ -18,6 +21,14 @@ func InitMedia() {
 	_, err = os.Stat("./media/documents")
 	if os.IsNotExist(err) {
 		_ = os.MkdirAll("./media/documents", 0755)
+	}
+	_, err = os.Stat(global.VP.Get("avatar_dir").(string))
+	if os.IsNotExist(err) {
+		_ = os.MkdirAll(global.VP.Get("avatar_dir").(string), 0755)
+	}
+	_, err = os.Stat(global.VP.Get("image_dir").(string))
+	if os.IsNotExist(err) {
+		_ = os.MkdirAll(global.VP.Get("image_dir").(string), 0755)
 	}
 	return
 }

@@ -12,7 +12,7 @@ func main() {
 	initialize.InitMySQL()
 	defer initialize.Close()
 
-	// initialize.InitMedia()
+	initialize.InitMedia()
 
 	r := gin.Default()
 	initialize.SetupRouter(r)

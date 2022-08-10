@@ -1612,6 +1612,34 @@ const docTemplate = `{
                 }
             }
         },
+        "/upload_image": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "项目管理的第二页"
+                ],
+                "summary": "上传图片",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "avatar",
+                        "name": "avatar",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.UploadImageA"
+                        }
+                    }
+                }
+            }
+        },
         "/user/accept_invitation": {
             "post": {
                 "consumes": [
@@ -1835,6 +1863,34 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/response.ReadAllMessagesA"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/upload_avatar": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户模块"
+                ],
+                "summary": "上传头像",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "avatar",
+                        "name": "avatar",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.UploadAvatarA"
                         }
                     }
                 }
@@ -2084,6 +2140,9 @@ const docTemplate = `{
             "properties": {
                 "age": {
                     "type": "integer"
+                },
+                "avatar_url": {
+                    "type": "string"
                 },
                 "email": {
                     "type": "string"
@@ -3615,6 +3674,23 @@ const docTemplate = `{
                 }
             }
         },
+        "response.UploadAvatarA": {
+            "type": "object",
+            "properties": {
+                "avatar_url": {
+                    "type": "string"
+                },
+                "code": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
         "response.UploadDocumentA": {
             "type": "object",
             "properties": {
@@ -3640,6 +3716,20 @@ const docTemplate = `{
                 },
                 "document_id": {
                     "type": "integer"
+                }
+            }
+        },
+        "response.UploadImageA": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                },
+                "url": {
+                    "type": "string"
                 }
             }
         },

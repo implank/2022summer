@@ -165,6 +165,8 @@ definitions:
     properties:
       age:
         type: integer
+      avatar_url:
+        type: string
       email:
         type: string
       password:
@@ -1154,6 +1156,17 @@ definitions:
     - uml_id
     - uml_name
     type: object
+  response.UploadAvatarA:
+    properties:
+      avatar_url:
+        type: string
+      code:
+        type: integer
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
   response.UploadDocumentA:
     properties:
       code:
@@ -1171,6 +1184,15 @@ definitions:
         type: string
       document_id:
         type: integer
+    type: object
+  response.UploadImageA:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+      url:
+        type: string
     type: object
   response.UploadUmlA:
     properties:
@@ -2203,6 +2225,24 @@ paths:
       summary: Uml 修改 Uml 内容
       tags:
       - Uml
+  /upload_image:
+    post:
+      parameters:
+      - description: avatar
+        in: formData
+        name: avatar
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.UploadImageA'
+      summary: 上传图片
+      tags:
+      - 项目管理的第二页
   /user/accept_invitation:
     post:
       consumes:
@@ -2345,6 +2385,24 @@ paths:
           schema:
             $ref: '#/definitions/response.ReadAllMessagesA'
       summary: 标记所有消息为已读
+      tags:
+      - 用户模块
+  /user/upload_avatar:
+    post:
+      parameters:
+      - description: avatar
+        in: formData
+        name: avatar
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.UploadAvatarA'
+      summary: 上传头像
       tags:
       - 用户模块
 swagger: "2.0"

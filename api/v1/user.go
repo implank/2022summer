@@ -1,14 +1,19 @@
 package v1
 
 import (
+	"2022summer/global"
 	"2022summer/model/database"
 	"2022summer/model/response"
 	"2022summer/service"
 	"2022summer/utils"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
+	"path"
 	"regexp"
+	"strings"
+	"time"
 )
 
 // Register
@@ -351,5 +356,38 @@ func ReadAllMessages(c *gin.Context) {
 			Message: "操作成功",
 			Success: true,
 		},
+	})
+}
+
+// UploadAvatar
+// @Summary 上传头像
+// @Tags 用户模块
+// @Param 			 avatar  formData  file true "avatar"
+// @Produce json
+// @Success 200 {object} response.UploadAvatarA
+// @Router /user/upload_avatar [post]
+func UploadAvatar(c *gin.Context) {
+	poster := c.MustGet("user").(database.User)
+	file, err := c.FormFile("avatar")
+	if err != nil {
+		c.JSON(http.StatusOK, response.PARAMERROR)
+		return
+	}
+	raw := fmt.Sprintf("%d", poster.UserID) + time.Now().String() + file.Filename
+	md5 := utils.GetMd5(raw)
+	suffix := strings.Split(file.Filename, ".")[1]
+	saveDir := global.VP.Get("avatar_dir").(string)
+	saveName := md5 + "." + suffix
+	savePath := path.Join(saveDir, saveName)
+	c.SaveUploadedFile(file, savePath)
+	url := saveName
+	poster.AvatarUrl = url
+	service.UpdateUser(&poster)
+	c.JSON(http.StatusOK, response.UploadAvatarA{
+		CommonA: response.CommonA{
+			Message: "上传成功",
+			Success: true,
+		},
+		AvatarUrl: url,
 	})
 }

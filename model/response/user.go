@@ -71,3 +71,7 @@ type ReadAllMessagesQ struct {
 type ReadAllMessagesA struct {
 	CommonA
 }
+type UploadAvatarA struct {
+	CommonA
+	AvatarUrl string `json:"avatar_url"`
+}
