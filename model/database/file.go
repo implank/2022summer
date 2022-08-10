@@ -38,6 +38,16 @@ type PPageID struct {
 	PPageName string `json:"ppage_name"`
 }
 
+type UmlID struct {
+	UmlID   uint64 `json:"uml_id"`
+	UmlName string `json:"uml_name"`
+}
+
+type DocumentID struct {
+	DocumentID   uint64 `json:"document_id"`
+	DocumentName string `json:"document_name"`
+}
+
 type File struct {
 	FileID         uint64 `json:"file_id"`
 	FileName       string `json:"file_name"`

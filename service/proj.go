@@ -12,8 +12,8 @@ func QueryProjByProjName(projName string, groupID uint64) (proj database.Proj, n
 	return proj, notFound
 }
 
-func GetProjsByProjNameBur(projName string) (projs []database.Proj) { // 模糊搜索
-	global.DB.Order("proj_id DESC").Where("proj_name like '%" + projName + "%' and status = 1").Find(&projs).RecordNotFound()
+func GetProjsByProjNameBur(projName string, groupID uint64) (projs []database.Proj) { // 模糊搜索
+	global.DB.Order("proj_id DESC").Where("proj_name like '%"+projName+"%' and status = 1 and group_id = ?", groupID).Find(&projs).RecordNotFound()
 	return projs
 }
 

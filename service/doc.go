@@ -6,8 +6,9 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-func GetProjDocuments(projID uint64, status int) (documents []database.Document) {
-	global.DB.Order("document_id DESC").Where("proj_id = ? and status = ? and is_dir != 1", projID, status).Find(&documents).RecordNotFound()
+func GetProjDocuments(projID uint64, status int) (documents []database.DocumentID) {
+	global.DB.Table("documents").Select("document_id, document_name").Order("document_id DESC").
+		Where("proj_id = ? and status = ? and is_dir != 1", projID, status).Find(&documents).RecordNotFound()
 	return documents
 }
 

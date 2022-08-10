@@ -244,7 +244,7 @@ func GetProjByName(c *gin.Context) {
 		c.JSON(http.StatusOK, response.GetProjByNameA{Message: "输入数据不符合要求", Success: false})
 		return
 	}
-	projs := service.GetProjsByProjNameBur(data.ProjName)
+	projs := service.GetProjsByProjNameBur(data.ProjName, data.GroupID)
 	x := len(projs)
 	if x == 0 {
 		c.JSON(http.StatusOK, response.GetProjByNameA{

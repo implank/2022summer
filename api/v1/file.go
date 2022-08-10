@@ -26,9 +26,9 @@ func GetFilesByName(c *gin.Context) {
 		c.JSON(http.StatusOK, response.GetFilesByNameA{Message: "输入数据不符合要求", Success: false})
 		return
 	}
-	ppages, umls, documents := service.GetFilesByNameBur(data.Name, 1)
+	ppages, umls, documents := service.GetFilesByNameBur(data.Name, 1, data.GroupID)
 	c.JSON(http.StatusOK, response.GetFilesByNameA{
-		Message:        "成功搜索到以下项目",
+		Message:        "成功搜索到以下内容",
 		Success:        true,
 		CountPPage:     uint64(len(ppages)),
 		PPage:          ppages,

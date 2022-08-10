@@ -7,9 +7,6 @@ import (
 	"2022summer/utils"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"os"
-	"path"
-	"strings"
 )
 
 // DeleteProj
@@ -31,7 +28,7 @@ func DeleteProj(c *gin.Context) {
 		c.JSON(http.StatusOK, response.DeleteProjA{Message: "项目不存在", Success: false})
 		return
 	}
-	documents := service.GetProjDocuments(data.ProjID, 2) // TODO 或许以下几行代码可以删掉
+	/*documents := service.GetProjDocuments(data.ProjID, 2)
 	for _, value := range documents {
 		filename := strings.Split(value.DocumentURL, "/")[len(strings.Split(value.DocumentURL, "/"))-1]
 		saveDir := "./media/documents/"
@@ -50,7 +47,7 @@ func DeleteProj(c *gin.Context) {
 			c.JSON(http.StatusOK, response.DeleteDocumentA{Message: "删除项目失败", Success: false})
 			return
 		}
-	}
+	}*/
 	err := service.DeleteProj(&proj)
 	if err != nil {
 		c.JSON(http.StatusOK, response.DeleteProjA{Message: "删除项目失败", Success: false})
@@ -231,13 +228,13 @@ func DeleteDocument(c *gin.Context) {
 		c.JSON(http.StatusOK, response.DeleteDocumentA{Message: "文档不存在", Success: false})
 		return
 	}
-	filename := strings.Split(document.DocumentURL, "/")[len(strings.Split(document.DocumentURL, "/"))-1] // TODO 或许以下几行代码可以删掉
+	/*filename := strings.Split(document.DocumentURL, "/")[len(strings.Split(document.DocumentURL, "/"))-1]
 	saveDir := "./media/documents/"
 	savePath := path.Join(saveDir, filename)
 	if err := os.Remove(savePath); err != nil {
 		c.JSON(http.StatusOK, response.DeleteDocumentA{Message: "删除文档失败", Success: false})
 		return
-	}
+	}*/
 	err := service.DeleteDocument(&document)
 	if err != nil {
 		c.JSON(http.StatusOK, response.DeleteDocumentA{Message: "删除文档失败", Success: false})

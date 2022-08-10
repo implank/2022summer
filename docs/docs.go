@@ -1941,6 +1941,17 @@ const docTemplate = `{
                 }
             }
         },
+        "database.DocumentID": {
+            "type": "object",
+            "properties": {
+                "document_id": {
+                    "type": "integer"
+                },
+                "document_name": {
+                    "type": "string"
+                }
+            }
+        },
         "database.File": {
             "type": "object",
             "properties": {
@@ -2131,6 +2142,17 @@ const docTemplate = `{
                 },
                 "uml_url": {
                     "description": "先写上",
+                    "type": "string"
+                }
+            }
+        },
+        "database.UmlID": {
+            "type": "object",
+            "properties": {
+                "uml_id": {
+                    "type": "integer"
+                },
+                "uml_name": {
                     "type": "string"
                 }
             }
@@ -2572,7 +2594,7 @@ const docTemplate = `{
                 "documents": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/database.Document"
+                        "$ref": "#/definitions/database.DocumentID"
                     }
                 },
                 "message": {
@@ -2581,7 +2603,7 @@ const docTemplate = `{
                 "ppage": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/database.PPage"
+                        "$ref": "#/definitions/database.PPageID"
                     }
                 },
                 "success": {
@@ -2590,14 +2612,20 @@ const docTemplate = `{
                 "umls": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/database.Uml"
+                        "$ref": "#/definitions/database.UmlID"
                     }
                 }
             }
         },
         "response.GetFilesByNameQ": {
             "type": "object",
+            "required": [
+                "group_id"
+            ],
             "properties": {
+                "group_id": {
+                    "type": "integer"
+                },
                 "name": {
                     "type": "string"
                 }
@@ -2868,7 +2896,13 @@ const docTemplate = `{
         },
         "response.GetProjByNameQ": {
             "type": "object",
+            "required": [
+                "group_id"
+            ],
             "properties": {
+                "group_id": {
+                    "type": "integer"
+                },
                 "proj_name": {
                     "type": "string"
                 }
@@ -2922,7 +2956,7 @@ const docTemplate = `{
                 "documents": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/database.Document"
+                        "$ref": "#/definitions/database.DocumentID"
                     }
                 },
                 "message": {
@@ -3060,7 +3094,7 @@ const docTemplate = `{
                 "umls": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/database.Uml"
+                        "$ref": "#/definitions/database.UmlID"
                     }
                 }
             }

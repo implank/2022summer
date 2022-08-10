@@ -7,10 +7,10 @@ type GetProjUmlsQ struct {
 }
 
 type GetProjUmlsA struct {
-	Message string         `json:"message"`
-	Success bool           `json:"success"`
-	Count   uint64         `json:"count"`
-	Umls    []database.Uml `json:"umls"`
+	Message string           `json:"message"`
+	Success bool             `json:"success"`
+	Count   uint64           `json:"count"`
+	Umls    []database.UmlID `json:"umls"`
 }
 
 type GetUmlByIDQ struct {

@@ -30,6 +30,13 @@ definitions:
         description: 1 正常、2 回收站
         type: integer
     type: object
+  database.DocumentID:
+    properties:
+      document_id:
+        type: integer
+      document_name:
+        type: string
+    type: object
   database.File:
     properties:
       contained_files:
@@ -159,6 +166,13 @@ definitions:
         type: string
       uml_url:
         description: 先写上
+        type: string
+    type: object
+  database.UmlID:
+    properties:
+      uml_id:
+        type: integer
+      uml_name:
         type: string
     type: object
   database.User:
@@ -443,25 +457,29 @@ definitions:
         type: integer
       documents:
         items:
-          $ref: '#/definitions/database.Document'
+          $ref: '#/definitions/database.DocumentID'
         type: array
       message:
         type: string
       ppage:
         items:
-          $ref: '#/definitions/database.PPage'
+          $ref: '#/definitions/database.PPageID'
         type: array
       success:
         type: boolean
       umls:
         items:
-          $ref: '#/definitions/database.Uml'
+          $ref: '#/definitions/database.UmlID'
         type: array
     type: object
   response.GetFilesByNameQ:
     properties:
+      group_id:
+        type: integer
       name:
         type: string
+    required:
+    - group_id
     type: object
   response.GetFilesInBinA:
     properties:
@@ -636,8 +654,12 @@ definitions:
     type: object
   response.GetProjByNameQ:
     properties:
+      group_id:
+        type: integer
       proj_name:
         type: string
+    required:
+    - group_id
     type: object
   response.GetProjCreateA:
     properties:
@@ -671,7 +693,7 @@ definitions:
         type: integer
       documents:
         items:
-          $ref: '#/definitions/database.Document'
+          $ref: '#/definitions/database.DocumentID'
         type: array
       message:
         type: string
@@ -761,7 +783,7 @@ definitions:
         type: boolean
       umls:
         items:
-          $ref: '#/definitions/database.Uml'
+          $ref: '#/definitions/database.UmlID'
         type: array
     type: object
   response.GetProjUmlsQ:

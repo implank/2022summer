@@ -7,10 +7,10 @@ type GetProjDocumentsQ struct {
 }
 
 type GetProjDocumentsA struct {
-	Message   string              `json:"message"`
-	Success   bool                `json:"success"`
-	Count     uint64              `json:"count"`
-	Documents []database.Document `json:"documents"`
+	Message   string                `json:"message"`
+	Success   bool                  `json:"success"`
+	Count     uint64                `json:"count"`
+	Documents []database.DocumentID `json:"documents"`
 }
 
 type EnterDocumentQ struct {

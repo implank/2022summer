@@ -6,8 +6,9 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-func GetProjUmls(projID uint64, status int) (umls []database.Uml) {
-	global.DB.Order("uml_id DESC").Where("proj_id = ? and status = ?", projID, status).Find(&umls).RecordNotFound()
+func GetProjUmls(projID uint64, status int) (umls []database.UmlID) {
+	global.DB.Table("umls").Select("uml_id, uml_name").Order("uml_id DESC").
+		Where("proj_id = ? and status = ?", projID, status).Find(&umls).RecordNotFound()
 	return umls
 }
 

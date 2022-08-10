@@ -78,6 +78,7 @@ type GetProjJoinA struct {
 
 type GetProjByNameQ struct {
 	ProjName string `json:"proj_name" binding:"omitempty"`
+	GroupID  uint64 `json:"group_id" binding:"required"`
 }
 
 type GetProjByNameA struct {
