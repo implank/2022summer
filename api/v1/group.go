@@ -239,7 +239,7 @@ func RemoveMember(c *gin.Context) {
 		c.JSON(http.StatusOK, response.RemoveMemberA{CommonA: response.NOAUTH})
 		return
 	}
-	if err := service.DeleteIdentity(&identity1); err != nil {
+	if err := service.DeleteIdentity(&identity2); err != nil {
 		c.JSON(http.StatusOK, response.RemoveMemberA{CommonA: response.DBERROR})
 		return
 	}
