@@ -315,6 +315,9 @@ const docTemplate = `{
         },
         "/convert_html_to_docx": {
             "post": {
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -324,11 +327,13 @@ const docTemplate = `{
                 "summary": "上传html文件，转换为docx文件 url前缀为 api/v1/temp/xxxx.docx",
                 "parameters": [
                     {
-                        "type": "file",
-                        "description": "htmlfile",
-                        "name": "htmlfile",
-                        "in": "formData",
-                        "required": true
+                        "description": "html内容",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.ConvertHtmlToPdfQ"
+                        }
                     }
                 ],
                 "responses": {
@@ -343,6 +348,9 @@ const docTemplate = `{
         },
         "/convert_html_to_pdf": {
             "post": {
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -352,11 +360,13 @@ const docTemplate = `{
                 "summary": "上传html文件，转换为pdf文件 url前缀为 api/v1/temp/xxxx.pdf",
                 "parameters": [
                     {
-                        "type": "file",
-                        "description": "htmlfile",
-                        "name": "htmlfile",
-                        "in": "formData",
-                        "required": true
+                        "description": "html内容",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.ConvertHtmlToPdfQ"
+                        }
                     }
                 ],
                 "responses": {
@@ -2395,6 +2405,14 @@ const docTemplate = `{
                     "type": "boolean"
                 },
                 "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.ConvertHtmlToPdfQ": {
+            "type": "object",
+            "properties": {
+                "content": {
                     "type": "string"
                 }
             }

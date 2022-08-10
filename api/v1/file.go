@@ -7,6 +7,7 @@ import (
 	"2022summer/utils"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"os"
 	"os/exec"
 	"path"
 	"strings"
@@ -70,19 +71,25 @@ func UploadImage(c *gin.Context) {
 // ConvertHtmlToPdf
 // @Summary 上传html文件，转换为pdf文件 url前缀为 api/v1/temp/xxxx.pdf
 // @Tags 项目管理的第二页
-// @Param 			 htmlfile  formData  file true "htmlfile"
+// @Accept json
 // @Produce json
+// @Param data body response.ConvertHtmlToPdfQ true "html内容"
 // @Success 200 {object} response.ConvertHtmlToPdfA
 // @Router /convert_html_to_pdf [post]
 func ConvertHtmlToPdf(c *gin.Context) {
-	file, _ := c.FormFile("htmlfile")
+	var data response.ConvertHtmlToPdfQ
+	if err := utils.ShouldBindAndValid(c, &data); err != nil {
+		c.JSON(http.StatusOK, response.PARAMERROR)
+		return
+	}
 	saveDir := global.VP.Get("temp_dir").(string)
-	savePath := path.Join(saveDir, file.Filename)
-	_ = c.SaveUploadedFile(file, savePath)
-	raw := time.Now().String() + file.Filename
+	savePath := path.Join(saveDir, "temp")
+	file, err := os.OpenFile(savePath, os.O_WRONLY|os.O_CREATE, 0666)
+	_, _ = file.Write([]byte(data.Content))
+	raw := time.Now().String() + "temp"
 	md5 := utils.GetMd5(raw)
 	outFileName := md5 + ".pdf"
-	err := exec.Command("pandoc", savePath, "-f", "html", "-t", "pdf", "-s", "-o", path.Join(saveDir, outFileName)).Run()
+	err = exec.Command("pandoc", savePath, "-s", "-o", path.Join(saveDir, outFileName), "--pdf-engine=wkhtmltopdf").Run()
 	if err != nil {
 		panic(err)
 	}
@@ -97,19 +104,25 @@ func ConvertHtmlToPdf(c *gin.Context) {
 // ConvertHtmlToDocx
 // @Summary 上传html文件，转换为docx文件 url前缀为 api/v1/temp/xxxx.docx
 // @Tags 项目管理的第二页
-// @Param 			 htmlfile  formData  file true "htmlfile"
+// @Accept json
 // @Produce json
+// @Param data body response.ConvertHtmlToPdfQ true "html内容"
 // @Success 200 {object} response.ConvertHtmlToPdfA
 // @Router /convert_html_to_docx [post]
 func ConvertHtmlToDocx(c *gin.Context) {
-	file, _ := c.FormFile("htmlfile")
+	var data response.ConvertHtmlToPdfQ
+	if err := utils.ShouldBindAndValid(c, &data); err != nil {
+		c.JSON(http.StatusOK, response.PARAMERROR)
+		return
+	}
 	saveDir := global.VP.Get("temp_dir").(string)
-	savePath := path.Join(saveDir, file.Filename)
-	_ = c.SaveUploadedFile(file, savePath)
-	raw := time.Now().String() + file.Filename
+	savePath := path.Join(saveDir, "temp")
+	file, err := os.OpenFile(savePath, os.O_WRONLY|os.O_CREATE, 0666)
+	_, _ = file.Write([]byte(data.Content))
+	raw := time.Now().String() + "temp"
 	md5 := utils.GetMd5(raw)
 	outFileName := md5 + ".docx"
-	err := exec.Command("pandoc", savePath, "-f", "html", "-t", "docx", "-s", "-o", path.Join(saveDir, outFileName)).Run()
+	err = exec.Command("pandoc", savePath, "-f", "html", "-t", "docx", "-s", "-o", path.Join(saveDir, outFileName)).Run()
 	if err != nil {
 		panic(err)
 	}

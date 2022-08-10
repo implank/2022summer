@@ -231,6 +231,11 @@ definitions:
       url:
         type: string
     type: object
+  response.ConvertHtmlToPdfQ:
+    properties:
+      content:
+        type: string
+    type: object
   response.CopyProjA:
     properties:
       message:
@@ -1476,12 +1481,15 @@ paths:
       - 回收站
   /convert_html_to_docx:
     post:
+      consumes:
+      - application/json
       parameters:
-      - description: htmlfile
-        in: formData
-        name: htmlfile
+      - description: html内容
+        in: body
+        name: data
         required: true
-        type: file
+        schema:
+          $ref: '#/definitions/response.ConvertHtmlToPdfQ'
       produces:
       - application/json
       responses:
@@ -1494,12 +1502,15 @@ paths:
       - 项目管理的第二页
   /convert_html_to_pdf:
     post:
+      consumes:
+      - application/json
       parameters:
-      - description: htmlfile
-        in: formData
-        name: htmlfile
+      - description: html内容
+        in: body
+        name: data
         required: true
-        type: file
+        schema:
+          $ref: '#/definitions/response.ConvertHtmlToPdfQ'
       produces:
       - application/json
       responses:
