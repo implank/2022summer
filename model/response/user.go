@@ -38,6 +38,7 @@ type ModifyPasswordA struct {
 type ModifyInfoQ struct {
 	Username string `json:"username"`
 	Age      uint   `json:"age"`
+	RealName string `json:"real_name"`
 	Sex      string `json:"sex"`
 	Email    string `json:"email"`
 }

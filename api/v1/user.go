@@ -204,6 +204,7 @@ func ModifyInfo(c *gin.Context) {
 	poster.Username = data.Username
 	poster.Email = data.Email
 	poster.Age = data.Age
+	poster.RealName = data.RealName
 	if data.Sex == "男" || data.Sex == "女" {
 		poster.Sex = data.Sex
 	}

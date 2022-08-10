@@ -3532,6 +3532,9 @@ const docTemplate = `{
                 "email": {
                     "type": "string"
                 },
+                "real_name": {
+                    "type": "string"
+                },
                 "sex": {
                     "type": "string"
                 },
