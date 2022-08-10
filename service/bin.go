@@ -29,6 +29,6 @@ func GetProjDocumentsInBin(groupID uint64) (documents []database.Document) {
 		"WHERE projs.proj_id = documents.proj_id "+
 		"AND projs.status = 1 AND documents.status = 2 "+
 		"AND projs.group_id = ? "+
-		"ORDER BY document_id DESC;", groupID).Find(&documents).RecordNotFound()
+		"ORDER BY documents.document_id DESC;", groupID).Find(&documents).RecordNotFound()
 	return documents
 }
