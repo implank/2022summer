@@ -210,6 +210,18 @@ definitions:
       message_id:
         type: integer
     type: object
+  response.CloseSharedPPageA:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.CloseSharedPPageQ:
+    properties:
+      ppage_id:
+        type: integer
+    type: object
   response.CopyProjA:
     properties:
       message:
@@ -249,6 +261,8 @@ definitions:
     type: object
   response.CreateDocumentA:
     properties:
+      document_id:
+        type: integer
       message:
         type: string
       success:
@@ -428,6 +442,20 @@ definitions:
         type: integer
     required:
     - document_id
+    type: object
+  response.GenSharedPPageTokenA:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+      token:
+        type: string
+    type: object
+  response.GenSharedPPageTokenQ:
+    properties:
+      ppage_id:
+        type: integer
     type: object
   response.GetDocFilesA:
     properties:
@@ -792,6 +820,20 @@ definitions:
         type: integer
     required:
     - proj_id
+    type: object
+  response.GetSharedPPageA:
+    properties:
+      message:
+        type: string
+      ppage:
+        $ref: '#/definitions/database.PPage'
+      success:
+        type: boolean
+    type: object
+  response.GetSharedPPageQ:
+    properties:
+      token:
+        type: string
     type: object
   response.GetUmlByIDA:
     properties:
@@ -1159,7 +1201,6 @@ definitions:
         type: integer
     required:
     - proj_id
-    - proj_name
     type: object
   response.UpdateUmlA:
     properties:
@@ -1634,6 +1675,27 @@ paths:
       summary: 搜索框，只搜不在回收站的
       tags:
       - 项目管理的第二页
+  /get_shared_ppage:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 设计原型的页面ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.GetSharedPPageQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.GetSharedPPageA'
+      summary: 获取设计原型的共享页面
+      tags:
+      - 设计原型
   /group/create_group:
     post:
       consumes:
@@ -1807,6 +1869,27 @@ paths:
             $ref: '#/definitions/response.LoginA'
       tags:
       - 基本模块
+  /ppage/close_shared_ppage:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 设计原型的页面ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.CloseSharedPPageQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.CloseSharedPPageA'
+      summary: 关闭设计原型的共享页面
+      tags:
+      - 设计原型
   /ppage/create_ppage:
     post:
       consumes:
@@ -1826,6 +1909,27 @@ paths:
           schema:
             $ref: '#/definitions/response.CreatePPageA'
       summary: 创建设计原型的一个页面
+      tags:
+      - 设计原型
+  /ppage/gen_shared_ppage_token:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 设计原型的页面ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/response.GenSharedPPageTokenQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.GenSharedPPageTokenA'
+      summary: 获取设计原型的共享页面的token
       tags:
       - 设计原型
   /ppage/get_ppage_by_id:

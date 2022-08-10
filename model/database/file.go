@@ -9,6 +9,12 @@ type PPage struct { // 设计原型的页面
 	ProjID    uint64 `gorm:"not null;" json:"proj_id"`
 }
 
+type SharedPPage struct { // 分享的页面
+	PPageID   uint64 `gorm:"not null;" json:"ppage_id"`
+	ExpiresAt int64  `gorm:"not null;" json:"expires_at"`
+	Token     string `gorm:"size:1024;not null;" json:"token"`
+}
+
 type Uml struct {
 	UmlID   uint64 `gorm:"primary_key;not null;" json:"uml_id"`
 	UmlName string `gorm:"size:255;not null;" json:"uml_name"`

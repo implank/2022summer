@@ -48,3 +48,23 @@ func DeletePPage(pPage *database.PPage) (err error) {
 	err = global.DB.Delete(&pPage).Error
 	return err
 }
+
+func CreateSharedPPage(sharedPPage *database.SharedPPage) (err error) {
+	err = global.DB.Create(&sharedPPage).Error
+	return err
+}
+
+func DeleteSharedPPage(sharedPPage *database.SharedPPage) (err error) {
+	err = global.DB.Delete(&sharedPPage).Error
+	return err
+}
+
+func QuerySharedPPageByToken(token string) (sharedPPage database.SharedPPage, notFound bool) {
+	notFound = global.DB.Where("token = ?", token).First(&sharedPPage).RecordNotFound()
+	return sharedPPage, notFound
+}
+
+func QuerySharedPPageByPPageID(pPageID uint64) (sharedPPage database.SharedPPage, notFound bool) {
+	notFound = global.DB.Where("p_page_id = ?", pPageID).First(&sharedPPage).RecordNotFound()
+	return sharedPPage, notFound
+}

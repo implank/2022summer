@@ -18,7 +18,7 @@ type CreateProjA struct {
 
 type UpdateProjQ struct {
 	ProjID   uint64 `json:"proj_id" binding:"required"`
-	ProjName string `json:"proj_name" binding:"required"`
+	ProjName string `json:"proj_name" binding:"omitempty"`
 	ProjInfo string `json:"proj_info" binding:"omitempty"`
 	Top      int    `json:"top" binding:"omitempty"`
 }

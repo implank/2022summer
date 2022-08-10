@@ -53,3 +53,26 @@ type MovePPageToBinA struct {
 	Message string `json:"message"`
 	Success bool   `json:"success"`
 }
+type GenSharedPPageTokenQ struct {
+	PPageID uint64 `json:"ppage_id"`
+}
+type GenSharedPPageTokenA struct {
+	Message string `json:"message"`
+	Success bool   `json:"success"`
+	Token   string `json:"token"`
+}
+type GetSharedPPageQ struct {
+	Token string `json:"token"`
+}
+type GetSharedPPageA struct {
+	Message string         `json:"message"`
+	Success bool           `json:"success"`
+	PPage   database.PPage `json:"ppage"`
+}
+type CloseSharedPPageQ struct {
+	PPageID uint64 `json:"ppage_id"`
+}
+type CloseSharedPPageA struct {
+	Message string `json:"message"`
+	Success bool   `json:"success"`
+}

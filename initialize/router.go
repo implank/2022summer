@@ -72,16 +72,20 @@ func SetupRouter(r *gin.Engine) {
 		fileGroup.POST("/get_files_by_name", v1.GetFilesByName) // 搜索框，只搜不在回收站的
 	}
 
-	r.Group("/api/v1").POST("/upload_image", v1.UploadImage)
+	baseGroup.POST("/upload_image", v1.UploadImage)
 
 	pPageGroup := r.Group("/api/v1/ppage", middleware.AuthRequired())
 	{
-		pPageGroup.POST("/get_proj_ppages", v1.GetProjPPages)    // 获取某个项目的不在回收站的设计原型的页面
-		pPageGroup.POST("/get_ppage_by_id", v1.GetPPageByID)     // 获取设计原型的某个页面
-		pPageGroup.POST("/create_ppage", v1.CreatePPage)         // 创建设计原型的一个页面
-		pPageGroup.POST("/update_ppage", v1.UpdatePPage)         // 修改设计原型的某个页面的名称或数据
-		pPageGroup.POST("/move_ppage_to_bin", v1.MovePPageToBin) // 设计原型移入回收站
+		pPageGroup.POST("/get_proj_ppages", v1.GetProjPPages)              // 获取某个项目的不在回收站的设计原型的页面
+		pPageGroup.POST("/get_ppage_by_id", v1.GetPPageByID)               // 获取设计原型的某个页面
+		pPageGroup.POST("/create_ppage", v1.CreatePPage)                   // 创建设计原型的一个页面
+		pPageGroup.POST("/update_ppage", v1.UpdatePPage)                   // 修改设计原型的某个页面的名称或数据
+		pPageGroup.POST("/move_ppage_to_bin", v1.MovePPageToBin)           // 设计原型移入回收站
+		pPageGroup.POST("/gen_shared_ppage_token", v1.GenSharedPPageToken) // 删除设计原型的某个页面
+		pPageGroup.POST("/close_shared_ppage", v1.CloseSharedPPage)
 	}
+
+	baseGroup.POST("/get_shared_ppage", v1.GetSharedPPage)
 
 	umlGroup := r.Group("/api/v1/uml", middleware.AuthRequired())
 	{
