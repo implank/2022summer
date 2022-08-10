@@ -48,6 +48,7 @@ func Register(c *gin.Context) {
 	user := database.User{
 		Username: data.Username,
 		Password: string(HashedPassword),
+		Email:    data.Email,
 	}
 	if err := service.CreateUser(&user); err != nil {
 		c.JSON(http.StatusOK, response.RegisterA{
@@ -180,7 +181,8 @@ func ModifyInfo(c *gin.Context) {
 		return
 	}
 	poster := c.MustGet("user").(database.User)
-	if _, notFound := service.QueryUserByUsername(data.Username); !notFound {
+	user, notFound := service.QueryUserByUsername(data.Username)
+	if !notFound && user.UserID != poster.UserID {
 		c.JSON(http.StatusOK, response.ModifyInfoA{
 			CommonA: response.CommonA{
 				Message: "用户名已存在",
@@ -189,19 +191,22 @@ func ModifyInfo(c *gin.Context) {
 		})
 		return
 	}
-	if _, notFound := service.QueryUserByEmail(data.Email); !notFound {
-		c.JSON(http.StatusOK, response.ModifyInfoA{
-			CommonA: response.CommonA{
-				Message: "邮箱已存在",
-				Success: false,
-			},
-		})
-		return
-	}
+	//user, notFound = service.QueryUserByEmail(data.Email)
+	//if _, notFound := service.QueryUserByEmail(data.Email); !notFound {
+	//	c.JSON(http.StatusOK, response.ModifyInfoA{
+	//		CommonA: response.CommonA{
+	//			Message: "邮箱已存在",
+	//			Success: false,
+	//		},
+	//	})
+	//	return
+	//}
 	poster.Username = data.Username
 	poster.Email = data.Email
 	poster.Age = data.Age
-	poster.Sex = data.Sex
+	if data.Sex == "男" || data.Sex == "女" {
+		poster.Sex = data.Sex
+	}
 	if err := service.UpdateUser(&poster); err != nil {
 		c.JSON(http.StatusOK, response.ModifyInfoA{
 			CommonA: response.CommonA{

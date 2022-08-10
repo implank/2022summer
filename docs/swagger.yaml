@@ -1119,6 +1119,8 @@ definitions:
     type: object
   response.RegisterQ:
     properties:
+      email:
+        type: string
       password:
         type: string
       username:
